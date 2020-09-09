@@ -6,6 +6,9 @@
 # Files genetated by Visual Studio 
 bin/
 obj/
+glfw/
+glm/
+imgui/
 
 # Linux project files
 Makefile
