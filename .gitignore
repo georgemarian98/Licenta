@@ -3,16 +3,33 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Files genetated by Visual Studio 
+bin/
+obj/
+
+# Linux project files
+Makefile
+libs/Makefile
+**/*.make
+
+# Windows project files
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.user
+**/*.vcxproj.filters
+.vs/
+
+# ImGui ini file
+imgui.ini
+
+.vscode
+
 # User-specific files
 *.rsuser
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-
-*.sln
-*.vcxproj
-*.vcxproj.user
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
