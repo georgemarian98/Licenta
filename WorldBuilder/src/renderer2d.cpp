@@ -1,6 +1,6 @@
+#include "3DWBpch.h"
 #include "renderer2d.h"
 
-#include "gl_utils.h"
 
 Renderer2D::Renderer2D(Shader &shader, WindowData *windowData, int maxBatchQuadCount)
     : m_Shader(shader), m_WindowData(windowData), m_MaxBatchVertexCount(maxBatchQuadCount * 4)
@@ -16,19 +16,19 @@ bool Renderer2D::Create()
     m_VertexData = new Renderer2DVertexData[m_MaxBatchVertexCount];
     m_VertexDataPointer = m_VertexData;
 
-    GL(glGenVertexArrays(1, &m_Vao));
-    GL(glBindVertexArray(m_Vao));
+    glGenVertexArrays(1, &m_Vao);
+    glBindVertexArray(m_Vao);
 
-    GL(glGenBuffers(1, &m_Vbo));
-    GL(glBindBuffer(GL_ARRAY_BUFFER, m_Vbo));
-    GL(glBufferData(GL_ARRAY_BUFFER, sizeof(Renderer2DVertexData) * m_MaxBatchVertexCount, nullptr, GL_DYNAMIC_DRAW));
+    glGenBuffers(1, &m_Vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Renderer2DVertexData) * m_MaxBatchVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
-    GL(glEnableVertexAttribArray(0));
-    GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer2DVertexData), (void *)0));
-    GL(glEnableVertexAttribArray(1));
-    GL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Renderer2DVertexData), (void *)sizeof(glm::vec3)));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer2DVertexData), (void *)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Renderer2DVertexData), (void *)sizeof(glm::vec3));
 
-    GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     int *indices_data = new int[m_MaxBatchVertexCount / 4 * 6];
 
@@ -45,10 +45,10 @@ bool Renderer2D::Create()
         offset += 6;
     }
 
-    GL(glGenBuffers(1, &m_Ibo));
-    GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo));
-    GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * m_MaxBatchVertexCount / 4 * 6, indices_data, GL_DYNAMIC_DRAW));
-    GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    glGenBuffers(1, &m_Ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * m_MaxBatchVertexCount / 4 * 6, indices_data, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     delete[] indices_data;
 
@@ -59,9 +59,9 @@ void Renderer2D::Destroy()
 {
     delete[] m_VertexData;
 
-    GL(glDeleteBuffers(1, &m_Vbo));
-    GL(glDeleteBuffers(1, &m_Ibo));
-    GL(glDeleteVertexArrays(1, &m_Vao));
+    glDeleteBuffers(1, &m_Vbo);
+    glDeleteBuffers(1, &m_Ibo);
+    glDeleteVertexArrays(1, &m_Vao);
 }
 
 void Renderer2D::Start()
@@ -69,7 +69,9 @@ void Renderer2D::Start()
     m_ProjectionMatrix = glm::ortho(0.0f, (float)m_WindowData->width, (float)m_WindowData->height, 0.0f, 0.0f, -1000.0f);
 
     m_Shader.Bind();
-    m_Shader.UniformMat4("u_Projection", m_ProjectionMatrix);
+    glCheckError( );
+    m_Shader.UploadUniformMat4("u_Projection", m_ProjectionMatrix);
+    glCheckError( );
     m_Shader.Unbind();
 
     m_VertexCount = 0;
@@ -113,13 +115,13 @@ void Renderer2D::DrawQuad(glm::vec2 position, glm::vec2 scale, glm::vec4 color)
 
 void Renderer2D::DrawImGui()
 {
-#ifdef DEBUG
+//#ifdef DEBUG
     ImGui::Begin("Renderer 2D");
     ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
     ImGui::Text("Batch count: %d", m_TotalBatchCount);
     ImGui::Text("Quad count: %d", m_TotalVertexCount / 4);
     ImGui::End();
-#endif
+//#endif
 }
 
 void Renderer2D::DrawBatch()
@@ -127,26 +129,26 @@ void Renderer2D::DrawBatch()
     if (m_VertexCount == 0)
         return;
 
-    GL(glBindBuffer(GL_ARRAY_BUFFER, m_Vbo));
-    GL(glBufferSubData(GL_ARRAY_BUFFER, 0, m_VertexCount * sizeof(Renderer2DVertexData), m_VertexData));
+    glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_VertexCount * sizeof(Renderer2DVertexData), m_VertexData);
 
     m_Shader.Bind();
-    GL(glBindVertexArray(m_Vao));
-    GL(glEnableVertexAttribArray(0));
-    GL(glEnableVertexAttribArray(1));
+    glBindVertexArray(m_Vao);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
-    GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ibo);
 
-    GL(glDrawElements(GL_TRIANGLES, m_VertexCount / 4 * 6, GL_UNSIGNED_INT, (void *)0));
+    glDrawElements(GL_TRIANGLES, m_VertexCount / 4 * 6, GL_UNSIGNED_INT, (void *)0);
 
-    GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    GL(glDisableVertexAttribArray(0));
-    GL(glDisableVertexAttribArray(1));
-    GL(glBindVertexArray(0));
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glBindVertexArray(0);
     m_Shader.Unbind();
 
-    GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     m_TotalBatchCount++;
     m_TotalVertexCount += m_VertexCount;

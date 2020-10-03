@@ -1,8 +1,8 @@
 #pragma once
 
 #include "engine.h"
-#include "shader.h"
-#include "window.h"
+#include "OpenGL/Shader.h"
+#include "core/Window.h"
 
 #define DEFAULT_MAX_BATCH_QUAD_COUNT 100 * 100
 
@@ -43,7 +43,7 @@ public:
     void DrawImGui();
 
 private:
-    Shader &m_Shader;
+    Shader& m_Shader;
 
     glm::mat4 m_ProjectionMatrix;
     glm::mat4 m_ViewMatrix;

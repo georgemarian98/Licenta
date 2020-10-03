@@ -26,6 +26,9 @@ project "3DWorldBuilder"
    targetdir (outputdir .. "%{cfg.buildcfg}" )
    objdir (outputdir ..  "obj/%{cfg.buildcfg}" )
    
+   pchheader "3DWBpch.h"
+   includedirs { "src/" }
+   
    files { 
       "src/**.h", 
       "src/**.hpp",
@@ -50,6 +53,7 @@ project "3DWorldBuilder"
         defines { "_X11" }
         
    filter "system:windows"
+        systemversion "latest"
         defines { "_WINDOWS" }
 
 include "deps/glfw.lua"

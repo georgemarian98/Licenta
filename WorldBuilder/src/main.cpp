@@ -1,9 +1,8 @@
-#include <stdio.h>
+#include "3DWBpch.h"
 
 #include "engine.h"
-#include "window.h"
-#include "shader.h"
-#include "gl_utils.h"
+#include "core/Window.h"
+#include "OpenGL/Shader.h"
 #include "renderer2d.h"
 
 #pragma warning(disable:4098)
@@ -13,14 +12,21 @@ int main()
     glm::vec3 vector(1, 0, 1);
     printf("%f %f %f\n", vector.x, vector.y, vector.z);
 
-    Window window("OpenGL Boilerplate!!!", 960, 540, true);
-    window.Create();
+    Window window("OpenGL Boilerplate!!!", 960, 540);
+    //window.Create();
+    window.SetVsync(true);
 
-    Shader shader("Basic", "res/basic.vert", "res/basic.frag");
-    if (!shader.Create())
-        return 1;
+    Shader shader("shaders/basic.vert", "shaders/basic.frag");
+    glCheckError( );
 
-    Renderer2D renderer(shader, window.GetDataPointer(), 100);
+    WindowData data
+    {
+        "OpenGL Boilerplate!!!",
+        960,
+        540,
+        false
+    };
+    Renderer2D renderer(shader, &data, 1000);
     renderer.Create();
 
     // Setup ImGui
@@ -30,21 +36,20 @@ int main()
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(window.GetGlfwWindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    bool show_demo_window = true;
+    bool show_demo_window = false;
 
-    while (!window.ShouldClose())
+    while (window.ShouldClose() == false)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
         renderer.Start();
-        
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             float x = (float)rand()/(float)(RAND_MAX);
             float y = (float)rand()/(float)(RAND_MAX);
-            renderer.DrawQuad(glm::vec2(x * window.GetSize().x, y * window.GetSize().y), glm::vec2(10.0f, 10.0f), glm::vec4(x, y * 0.5f, 0.2f, 1.0f));
+            renderer.DrawQuad(glm::vec2(x * window.GetWindowSize().x, y * window.GetWindowSize().y), glm::vec2(10.0f, 10.0f), glm::vec4(x, y * 0.5f, 0.2f, 1.0f));
         }
 
         renderer.End();
@@ -66,7 +71,5 @@ int main()
 
     renderer.Destroy();
 
-    shader.Destroy();
-
-    window.Destroy();
+    //shader.Destroy();
 }
