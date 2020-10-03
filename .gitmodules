@@ -7,3 +7,7 @@
 [submodule "WorldBuilder/deps/imgui"]
 	path = WorldBuilder/deps/imgui
 	url = https://github.com/ocornut/imgui.git
+
+[submodule "assimp"]
+	path = WorldBuilder/deps/assimp
+	url = https://github.com/assimp/assimp.git

@@ -7,17 +7,14 @@
 
 #pragma warning(disable:4098)
 
+
+
 int main()
 {
-    glm::vec3 vector(1, 0, 1);
-    printf("%f %f %f\n", vector.x, vector.y, vector.z);
-
     Window window("OpenGL Boilerplate!!!", 960, 540);
-    //window.Create();
     window.SetVsync(true);
 
     Shader shader("shaders/basic.vert", "shaders/basic.frag");
-    glCheckError( );
 
     WindowData data
     {
@@ -43,7 +40,7 @@ int main()
 
     while (window.ShouldClose() == false)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         renderer.Start();
         for (int i = 0; i < 10000; i++) {
@@ -60,8 +57,7 @@ int main()
 
         renderer.DrawImGui();
 
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
+        //ImGui::ShowDemoWindow(&show_demo_window);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -70,6 +66,4 @@ int main()
     }
 
     renderer.Destroy();
-
-    //shader.Destroy();
 }

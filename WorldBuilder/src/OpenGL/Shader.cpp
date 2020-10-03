@@ -49,6 +49,7 @@ void Shader::Create(const std::string& VertexShaderFileName, const std::string& 
 	}
 
 	glLinkProgram(this->m_ShaderProgram);
+	glCheckError( );
 
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
@@ -72,6 +73,8 @@ void Shader::Create(const std::string& VertexShaderFileName, const std::string& 
 
 		m_Uniforms.insert(std::pair<const char*, GLuint>(name, uniformLocation));
 	}
+
+	glCheckError( );
 }
 
 Shader::Shader(const std::string& VertexShaderFileName, const  std::string& FragmentShaderFileName)
