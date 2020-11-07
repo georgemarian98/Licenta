@@ -5,9 +5,11 @@
 #include "OpenGL/Shader.h"
 #include "renderer2d.h"
 
-#pragma warning(disable:4098)
+//#pragma warning(disable:4098)
 
-//#include <assimp/Importer.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 int main()
 {
@@ -16,28 +18,26 @@ int main()
 
     Shader shader("shaders/basic.vert", "shaders/basic.frag");
 
-    WindowData data
-    {
-        "OpenGL Boilerplate!!!",
-        960,
-        540,
-        false
-    };
+    WindowData data{"OpenGL Boilerplate!!!", 960, 540, false};
     Renderer2D renderer(shader, &data, 1000);
     renderer.Create();
 
     // Setup ImGui
-
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-
     ImGui::StyleColorsDark();
-
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
+    //dfd
+    Assimp::Importer imp;
+    auto model = imp.ReadFile("D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\Sponza\\sponza.obj", aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+
+    if(!model){
+        std::cout << "probleme\n";
+        return false;
+    }
 
     bool show_demo_window = false;
-
     while (window.ShouldClose() == false)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
