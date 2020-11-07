@@ -4,3 +4,6 @@
 [submodule "WorldBuilder/deps/imgui"]
 	path = WorldBuilder/deps/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "WorldBuilder/deps/glm"]
+	path = WorldBuilder/deps/glm
+	url = https://github.com/g-truc/glm.git
