@@ -1,0 +1,3 @@
+[submodule "WorldBuilder/deps/glfw"]
+	path = WorldBuilder/deps/glfw
+	url = https://github.com/glfw/glfw.git
