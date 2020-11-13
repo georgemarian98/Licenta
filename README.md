@@ -5,8 +5,6 @@
 # Install
 For clonning, use the following command: `git clone --recursive https://github.com/georgemarian98/Licenta.git` to load the submodules as well.
 
-To generate Visual Studio 2019 solution go to scripts and run `VSProjectGenerate.bat`
-
 # Goals
 
 The main features that i want to implement in this project are:
