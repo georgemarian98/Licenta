@@ -58,11 +58,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>3DWBpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -81,11 +81,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>3DWBpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -106,27 +106,33 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\3DWBpch.h" />
+    <ClInclude Include="src\core\Application.h" />
+    <ClInclude Include="src\Renderer\Mesh.h" />
+    <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\OpenGL\Errors.h" />
     <ClInclude Include="src\OpenGL\Shader.h" />
     <ClInclude Include="src\OpenGL\SkyBox.h" />
     <ClInclude Include="src\OpenGL\VertexArray.h" />
-    <ClInclude Include="src\OpenGL\stb_image.h" />
+    <ClInclude Include="deps\stb\stb_image.h" />
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\Window.h" />
-    <ClInclude Include="src\engine.h" />
-    <ClInclude Include="src\renderer2d.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\3DWBpch.cpp" />
+    <ClCompile Include="src\core\Application.cpp" />
+    <ClCompile Include="src\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\OpenGL\Shader.cpp" />
     <ClCompile Include="src\OpenGL\SkyBox.cpp" />
     <ClCompile Include="src\OpenGL\VertexArray.cpp" />
-    <ClCompile Include="src\OpenGL\stb_image.cpp" />
+    <ClCompile Include="deps\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\renderer2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps\GLFW.vcxproj">

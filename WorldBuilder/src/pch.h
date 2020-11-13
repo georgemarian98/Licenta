@@ -19,7 +19,7 @@
 #include <unordered_map>
 
 #include "OpenGL/Errors.h"
-#include "OpenGL/stb_image.h"
+#include "stb_image.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>

@@ -1,4 +1,4 @@
-#include "3DWBpch.h"
+#include "pch.h"
 #include "VertexArray.h"
 
 VertexArray::VertexArray(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)

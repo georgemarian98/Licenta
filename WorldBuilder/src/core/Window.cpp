@@ -1,4 +1,4 @@
-#include "3DWBpch.h"
+#include "pch.h"
 #include "Window.h"
 
 Window::Window(const char* name, int width, int height) : m_Size(width,height)

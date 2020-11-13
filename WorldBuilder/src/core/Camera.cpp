@@ -1,4 +1,4 @@
-#include "3DWBpch.h"
+#include "pch.h"
 #include "Camera.h"
 
 #define CAMERA_SPEED 10.0f
