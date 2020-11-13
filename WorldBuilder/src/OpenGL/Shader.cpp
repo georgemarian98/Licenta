@@ -104,7 +104,7 @@ GLint Shader::GetUniformLocation(const std::string& Name)
 	bool found =  m_Uniforms.find(Name) != m_Uniforms.end( );
 	if(found == false){
 		m_Uniforms[Name] = glGetUniformLocation(m_ShaderProgram, Name.c_str( ));
-		std::cerr << "Uniform name unkown!!";
+		std::cerr << Name << " :Uniform name unkown!!\n";
 	}
 
 	return m_Uniforms[Name];
