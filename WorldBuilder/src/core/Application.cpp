@@ -2,10 +2,6 @@
 
 #include "Application.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include "Renderer/Model.h"
 
 std::shared_ptr<Application> Application::GetInstance(const char* Name, uint32_t Width, uint32_t Height)
@@ -23,7 +19,7 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	m_Width(Width), m_Height(Height), m_Window(Name, Width, Height), m_Camera(Width, Height), 
 	m_ModelShader("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl")
 {
-	//m_Window.SetVsync(false);
+	m_Window.SetVsync(true);
 
 	// Setup ImGui
 	IMGUI_CHECKVERSION( );
@@ -42,7 +38,7 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	});
 
 	m_ModelShader.Bind( );
-	m_ModelShader.UploadUniformMat4("projection", m_Camera.getPojection());
+	m_ModelShader.UploadUniformMat4("projection", m_Camera.GetPojection());
 	m_ModelShader.Unbind( );
 }
 
@@ -67,7 +63,7 @@ void Application::Run( )
 
 		m_ModelShader.Bind( );
 
-		m_ModelShader.UploadUniformMat4("view", m_Camera.getViewMatrix());
+		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
@@ -87,9 +83,9 @@ void Application::Run( )
 void Application::Mouse(GLFWwindow* window, double xpos, double ypos)
 {
 	static bool firstMouse = true;
-	static double lastX = m_Width / 2;
-	static double lastY = m_Height / 2;
-	const float sensitivity = 0.05f;
+	static double lastX = m_Width / 2.0;
+	static double lastY = m_Height / 2.0;
+	constexpr float sensitivity = 0.05f;
 
 	if(firstMouse){
 		lastX = xpos;
@@ -108,7 +104,7 @@ void Application::Mouse(GLFWwindow* window, double xpos, double ypos)
 	m_Camera.rotate(yoffset, xoffset);
 
 	m_ModelShader.Bind();
-	m_ModelShader.UploadUniformMat4("view", m_Camera.getViewMatrix( ));
+	m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix( ));
 }
 
 void Application::KeyboardInput( )

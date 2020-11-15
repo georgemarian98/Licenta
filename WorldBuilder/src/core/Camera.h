@@ -13,32 +13,32 @@ enum class MOVE_DIRECTION{
 class Camera{
 public:
 	Camera( ) = default;
-	Camera(int  width, int height,const glm::vec3& cameraPosition = glm::vec3(0.0f, 5.0f, 5.0f),const glm::vec3& cameraTarget = glm::vec3(0.0f, 0.0f, -10.0f));
+	Camera(int  Width, int Height,const glm::vec3& CameraPosition = glm::vec3(0.0f, 5.0f, 5.0f),const glm::vec3& CameraTarget = glm::vec3(0.0f, 0.0f, -10.0f));
 
-	void setProjection(int width, int height);
+	void setProjection(int Width, int Height);
 
-	void move(MOVE_DIRECTION direction, double timeStep);
+	void move(MOVE_DIRECTION Direction, double TimeStep);
 
 	//yaw - rotate around y axis
 	//pitch - rotate around x axis
-	void rotate(double pitch, double yaw);
+	void rotate(double Pitch, double Yaw);
 
-	glm::mat4 getViewMatrix( );
-	glm::mat4 getPojection( )    { return projection; };
-	glm::vec3 getCameraTarget( ) { return cameraTarget; };
-	glm::vec3 getPosition( )     { return cameraPosition; };
+	glm::mat4 GetViewMatrix( );
+	glm::mat4 GetPojection( )    { return m_Projection; };
+	glm::vec3 GetCameraTarget( ) { return m_CameraTarget; };
+	glm::vec3 GetPosition( )     { return m_CameraPosition; };
 
 private:
-	double m_yaw = -90.0f;
-	double m_pitch = 0;
+	double m_Yaw = -90.0f;
+	double m_Pitch = 0;
 
-	glm::vec3 cameraPosition;
-	glm::vec3 cameraTarget;
-	glm::vec3 cameraDirection;
-	glm::vec3 cameraRightDirection;
+	glm::vec3 m_CameraPosition;
+	glm::vec3 m_CameraTarget;
+	glm::vec3 m_CameraDirection;
+	glm::vec3 m_CameraRightDirection;
 
 	glm::vec3 Up;
-	glm::mat4 projection;
+	glm::mat4 m_Projection;
 };
 
 #endif /* Camera_hpp */

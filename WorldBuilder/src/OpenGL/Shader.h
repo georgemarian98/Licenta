@@ -4,11 +4,11 @@
 class Shader{
 public:
 	Shader( ) = default;
-	Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName);
-	Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName);
+	Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName);
+	Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName);
 	~Shader( );
 
-	void Create(const std::string& vertexShaderFileName, const std::string& fragmentShaderFileName, const std::string& geometryShaderFileName = "");
+	void Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName = "");
 	void Destroy( );
 	
 	void Bind( );
@@ -25,12 +25,12 @@ public:
 	void UploadUniformMat4(const std::string& Name, const glm::mat4& Matrix);
 
 private:
-	void CreateShader(const std::string& File, GLuint& Id, GLuint Type);
+	void CreateShader(const char* File, GLuint& Id, GLuint Type);
 
-	void ShaderLog(GLuint shaderId, bool Compile = true);
+	void ShaderLog(GLuint ShaderId, bool Compile = true);
 	GLint GetUniformLocation(const std::string& Name);
 
-	std::string readShaderFile(const std::string& FileName);
+	std::string readShaderFile(const char* FileName);
 
 private:
 	GLuint m_ShaderProgram = 0;

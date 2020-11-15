@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "Window.h"
 
-Window::Window(const char* name, int width, int height) : m_Size(width,height)
+Window::Window(const char* Name, int Width, int Height) : m_Size(Width,Height)
 {
+	strncpy(m_Name, Name, sizeof(m_Name));
+
 	if(!glfwInit( )){
 		fprintf(stderr, "ERROR: could not start GLFW3\n");
 		glfwTerminate( );
@@ -15,7 +17,7 @@ Window::Window(const char* name, int width, int height) : m_Size(width,height)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	m_Window = glfwCreateWindow(width, height, "OpenGL Project", NULL, NULL);
+	m_Window = glfwCreateWindow(Width, Height, Name, NULL, NULL);
 	if(m_Window == NULL){
 		fprintf(stderr, "ERROR: could not open window with GLFW3\n");
 		glCheckError();

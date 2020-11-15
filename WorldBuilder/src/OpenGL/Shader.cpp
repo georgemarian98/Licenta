@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Shader.h"
 
-std::string Shader::readShaderFile(const std::string& FileName)
+std::string Shader::readShaderFile(const char* FileName)
 {
 	std::ifstream shaderFile;
 	std::stringstream shaderStringStream;
@@ -19,7 +19,7 @@ std::string Shader::readShaderFile(const std::string& FileName)
 	return shaderStringStream.str( );
 }
 
-void Shader::CreateShader(const std::string& File, GLuint& Id, GLuint Type)
+void Shader::CreateShader(const char* File, GLuint& Id, GLuint Type)
 {
 	std::string v = readShaderFile(File);
 	const GLchar* vertexShaderString = v.c_str( );
@@ -29,22 +29,23 @@ void Shader::CreateShader(const std::string& File, GLuint& Id, GLuint Type)
 	ShaderLog(Id);
 }
 
-void Shader::Create(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
+void Shader::Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName)
 {
 	GLuint vertexShaderID = -1;
 	GLuint fragmentShaderID = -1;
 	GLuint geometryShaderID = -1;
+	int enableGeometryShader = strcmp(GeometryShaderFileName, "");
 
 	CreateShader(VertexShaderFileName, vertexShaderID, GL_VERTEX_SHADER);
 	CreateShader(FragmentShaderFileName, fragmentShaderID, GL_FRAGMENT_SHADER);
-	if(GeometryShaderFileName.empty() == false){
-		CreateShader(GeometryShaderFileName, vertexShaderID, GL_VERTEX_SHADER);
+	if(enableGeometryShader != 0){
+		CreateShader(GeometryShaderFileName, geometryShaderID, GL_VERTEX_SHADER);
 	}
 
 	this->m_ShaderProgram = glCreateProgram( );
 	glAttachShader(this->m_ShaderProgram, vertexShaderID);
 	glAttachShader(this->m_ShaderProgram, fragmentShaderID);
-	if(GeometryShaderFileName.empty() == false){
+	if(enableGeometryShader != 0){
 		glAttachShader(this->m_ShaderProgram, geometryShaderID);
 	}
 
@@ -53,7 +54,7 @@ void Shader::Create(const std::string& VertexShaderFileName, const std::string& 
 
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
-	if(GeometryShaderFileName.empty( ) == false){
+	if(enableGeometryShader != 0){
 		glDeleteShader(geometryShaderID);
 	}
 	ShaderLog(this->m_ShaderProgram, false);
@@ -77,15 +78,23 @@ void Shader::Create(const std::string& VertexShaderFileName, const std::string& 
 	glCheckError( );
 }
 
-Shader::Shader(const std::string& VertexShaderFileName, const  std::string& FragmentShaderFileName)
-	: m_Name(VertexShaderFileName + "  " + FragmentShaderFileName)
+Shader::Shader(const char* VertexShaderFileName, const  char* FragmentShaderFileName)
+	: m_Name(VertexShaderFileName)
 {
+	m_Name += "  ";
+	m_Name += FragmentShaderFileName;
+
 	Create(VertexShaderFileName, FragmentShaderFileName);
 }
 
-Shader::Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
-	: m_Name(VertexShaderFileName + "  " + FragmentShaderFileName + " " + GeometryShaderFileName)
+Shader::Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName)
+	: m_Name(VertexShaderFileName)
 {
+	m_Name += "  ";
+	m_Name += FragmentShaderFileName;
+	m_Name += "  ";
+	m_Name += GeometryShaderFileName;
+
 	Create(VertexShaderFileName, FragmentShaderFileName, GeometryShaderFileName);
 }
 
