@@ -10,7 +10,11 @@ void Model::Draw(Shader& shader)
 void Model::loadModel(std::string path)
 {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | 
+                                                 aiProcess_GenSmoothNormals | 
+                                                 aiProcess_FlipUVs | 
+                                                 aiProcess_CalcTangentSpace | 
+                                                 aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
@@ -142,9 +146,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
     return textures;
 }
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
+unsigned int  Model::TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
     std::string filename = std::string(path);
+    // '\\' temp
     filename = directory + '\\' + filename;
 
     unsigned int textureID;
@@ -153,7 +158,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
     int width, height, nrComponents;
     unsigned char* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
     if(data){
-        GLenum format;
+        GLenum format = 0;
         if(nrComponents == 1)
             format = GL_RED;
         else if(nrComponents == 3)

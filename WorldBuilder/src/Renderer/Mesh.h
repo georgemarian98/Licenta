@@ -14,7 +14,7 @@ class Mesh{
 public:
     // mesh data
     std::vector<Vertex>       vertices;
-    std::vector<unsigned int> indices;
+    std::vector<uint32_t> indices;
     std::vector<Texture>      textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, std::vector<Texture> textures);
