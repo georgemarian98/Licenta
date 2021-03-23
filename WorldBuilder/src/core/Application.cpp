@@ -4,6 +4,12 @@
 
 #include "Renderer/Model.h"
 
+std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
+{
+	g << vec.x << ", " << vec.y << ", " << vec.z << "\n";
+	return g;
+}
+
 std::shared_ptr<Application> Application::GetInstance(const char* Name, uint32_t Width, uint32_t Height)
 {	
 	static std::shared_ptr<Application> m_AppInstance = nullptr;
@@ -50,7 +56,11 @@ void Application::Run( )
 	// -----------
 	//Model ourModel("D:\\Facultate\\An 3\\Grafica\\models\\chandelier\\Lamp150(OBJ).obj");
 	//Model ourModel("D:\\Facultate\\An 3\\Grafica\\models\\backpack\\backpack.obj");
-	Model ourModel("D:\\Facultate\\An 3\\Grafica\\models\\nanosuit\\nanosuit.obj");
+	Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
+	glm::vec3 position(0.0f, 5.0f, 0.0f);
+	glm::vec3 scale(1.0f, 1.0f, 1.0f);
+	glm::vec3 rotation(0.0f, 5.0f, 0.0f);
+	bool active = true;
 
 	while(m_Window.ShouldClose( ) == false){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -66,10 +76,25 @@ void Application::Run( )
 		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
 
 		// render the loaded model
+		ImGui::ShowDemoWindow( );
+
+		
+		ImGui::Begin("Properties", &active);
+		
+		ImGui::DragFloat3("Translation", glm::value_ptr(position), 0.5f);
+		ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.5f);
+		ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.5f);
+
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 5.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::translate(model, position); 
+		model = glm::scale(model, scale);	
+		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 		m_ModelShader.UploadUniformMat4("model", model);
+
+		ImGui::End( );
+		
 		ourModel.Draw(m_ModelShader);
 		m_ModelShader.Unbind( );
 		
@@ -101,10 +126,10 @@ void Application::Mouse(GLFWwindow* window, double xpos, double ypos)
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
-	m_Camera.rotate(yoffset, xoffset);
+	//m_Camera.rotate(yoffset, xoffset);
 
-	m_ModelShader.Bind();
-	m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix( ));
+	//m_ModelShader.Bind();
+	//m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix( ));
 }
 
 void Application::KeyboardInput( )

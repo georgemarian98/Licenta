@@ -7,22 +7,23 @@
 struct Texture{
     uint32_t id;
     std::string type;
-    std::string path;  // we store the path of the texture to compare with other textures
+    std::string path;  
 };
 
 class Mesh{
 public:
-    // mesh data
-    std::vector<Vertex>       vertices;
-    std::vector<uint32_t> indices;
-    std::vector<Texture>      textures;
-
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, std::vector<Texture> textures);
+    Mesh(Mesh&& Mesh);
+
     void Draw(Shader& shader);
 private:
-    //  render data
+    void setupMesh( );
+
+private:
     unsigned int VAO, VBO, EBO;
 
-    void setupMesh( );
+    std::vector<Vertex>   vertices;
+    std::vector<uint32_t> indices;
+    std::vector<Texture>  textures;
 };
 

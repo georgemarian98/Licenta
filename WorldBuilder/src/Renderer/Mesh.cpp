@@ -1,13 +1,17 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) :
+    vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
 {
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
-
     setupMesh( );
+}
+
+Mesh::Mesh( Mesh&& Mesh) :
+    vertices(std::move(Mesh.vertices)), indices(std::move(Mesh.indices)), textures(std::move(Mesh.textures)),
+    VAO(Mesh.VAO), VBO(Mesh.VBO), EBO(Mesh.EBO)
+{
+
 }
 
 void Mesh::setupMesh( )

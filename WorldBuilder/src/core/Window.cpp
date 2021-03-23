@@ -33,7 +33,7 @@ Window::Window(const char* Name, int Width, int Height) : m_Size(Width,Height)
 		fprintf(stderr, "Failed to init GLAD\n");
 		return;
 	}
-	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSwapInterval(0);
 
 	// get version info
