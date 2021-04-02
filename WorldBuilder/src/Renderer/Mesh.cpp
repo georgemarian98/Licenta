@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) :
-    vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures) :
+    vertices(vertices), indices(indices), textures(textures)
 {
     setupMesh( );
 }
 
-Mesh::Mesh( Mesh&& Mesh) :
+Mesh::Mesh(Mesh&& Mesh) noexcept:
     vertices(std::move(Mesh.vertices)), indices(std::move(Mesh.indices)), textures(std::move(Mesh.textures)),
     VAO(Mesh.VAO), VBO(Mesh.VBO), EBO(Mesh.EBO)
 {
@@ -55,11 +55,11 @@ void Mesh::setupMesh( )
 void Mesh::Draw(Shader& shader)
 {
     // bind appropriate textures
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-    for(unsigned int i = 0; i < textures.size( ); i++){
+    uint32_t diffuseNr = 1;
+    uint32_t specularNr = 1;
+    uint32_t normalNr = 1;
+    uint32_t heightNr = 1;
+    for(uint32_t i = 0; i < textures.size( ); i++){
         glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         std::string number;

@@ -3,15 +3,15 @@
 
 void Model::Draw(Shader& shader)
 {
-    DrawNodes(m_rootMesh, shader);
+    DrawNodes(m_rootMesh, shader); 
 }
 
-void Model::DrawNodes(MeshNode* Node, Shader& shader)
+void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader)
 {
     //Begin     ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Leaf %d", i);
     //Get matrix from imGui
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
-        Node->m_Meshes[i].Draw(shader);
+        Node->m_Meshes[i]->Draw(shader);
     //Pop Tree
 
     for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
@@ -34,35 +34,23 @@ void Model::loadModel(std::string path)
     }
     m_Directory = path.substr(0, path.find_last_of('/'));
 
-    //m_Meshes.reserve(scene->mNumMeshes);
-    //m_rootMesh->m_Meshes.reserve(scene->mNumMeshes);
-
-    //NodeMesh = processNode(....)
     m_rootMesh = processNode(scene->mRootNode, scene);
 }
 
-MeshNode* Model::processNode(aiNode* node, const aiScene* scene)
+std::unique_ptr<MeshNode> Model::processNode(aiNode* node, const aiScene* scene)
 {
-    /*
-        new NodeMesh
-        for i to 0, node->NumMeshes
-            NodeMesh->Meshes.add( std::move(processMesh....) )
+    std::unique_ptr<MeshNode> newNode = std::make_unique<MeshNode>();
+    newNode->m_Name = node->mName.C_Str( );
 
-        for i to 0,num->Children:
-            childreNode = processNode(....)    
-            NodeMesh->Childred.push_back(childrenNode)
-
-        return NodeMesh
-    */
-    MeshNode* newNode = new MeshNode( );
-    newNode->name = node->mName.C_Str( );
     for(uint32_t i = 0; i < node->mNumMeshes; i++){
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        newNode->m_Meshes.push_back(processMesh(mesh, scene));
+        auto tempMesh = processMesh(mesh, scene);
+
+        newNode->m_Meshes.push_back( std::make_unique<Mesh>( std::move(tempMesh) ));
     }
 
     for(uint32_t i = 0; i < node->mNumChildren; i++){
-        MeshNode* childNode = processNode(node->mChildren[i], scene);
+        std::unique_ptr<MeshNode> childNode = processNode(node->mChildren[i], scene);
         newNode->AddChild(childNode);
     }
 
@@ -119,11 +107,11 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     indices.reserve(3u * mesh->mNumFaces);
-    for(unsigned int i = 0; i < mesh->mNumFaces; i++){
+    for(uint32_t i = 0; i < mesh->mNumFaces; i++){
         aiFace face = mesh->mFaces[i];
 
         // retrieve all indices of the face and store them in the indices vector
-        for(unsigned int j = 0; j < face.mNumIndices; j++)
+        for(uint32_t j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
@@ -216,12 +204,8 @@ unsigned int  Model::TextureFromFile(const char* path, const std::string& direct
 }
 
 ////////////////////////////  MeshNode
-//MeshNode::MeshNode(Mesh& m) : position(0.0f, 5.0f, 0.0f), scale(1.0f, 1.0f, 1.0f), rotation(0.0f, 5.0f, 0.0f)
-//{
-//    m_Mesh = std::make_shared<Mesh>(std::move(m));
-//}
 
-void MeshNode::AddChild(MeshNode* ChildMesh)
+void MeshNode::AddChild(std::unique_ptr<MeshNode>& ChildMesh)
 {
     m_ChildrenNodes.push_back( std::move(ChildMesh));
 }
