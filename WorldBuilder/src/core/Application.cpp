@@ -50,14 +50,14 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 
 void Application::Run( )
 {
-	//stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(true);
 	
 	// load models
-	// -----------
-	//Model ourModel("D:\\Facultate\\An 3\\Grafica\\models\\chandelier\\Lamp150(OBJ).obj");
-	//Model ourModel("D:\\Facultate\\An 3\\Grafica\\models\\backpack\\backpack.obj");
-	Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
-	glm::vec3 position(0.0f, 5.0f, 0.0f);
+	//Model ourModel("D:/Proiecte/Proiect-Grafica/Proiect/Proiect/objects/Sponza/sponza.obj");
+	//Model ourModel("D:/Facultate/An 3/Grafica/models/chandelier/Lamp150(OBJ).obj");
+	Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
+	//Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
+	glm::vec3 position(0.0f, 5.0f, -10.0f);
 	glm::vec3 scale(1.0f, 1.0f, 1.0f);
 	glm::vec3 rotation(0.0f, 5.0f, 0.0f);
 	bool active = true;
@@ -77,17 +77,21 @@ void Application::Run( )
 
 		// render the loaded model
 		ImGui::ShowDemoWindow( );
-
-		
 		ImGui::Begin("Properties", &active);
 		
-		ImGui::DragFloat3("Translation", glm::value_ptr(position), 0.5f);
-		ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.5f);
-		ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.5f);
+		if(ImGui::TreeNode("Model")){
+			ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+			ImGui::DragFloat3("Translation", glm::value_ptr(position), 0.5f);
+			ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.5f);
+			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.5f);
 
+			ImGui::TreePop( );
+		}
+
+		//Model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, position); 
-		model = glm::scale(model, scale);	
+		model = glm::translate(model, position);
+		model = glm::scale(model, scale);
 		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));

@@ -3,8 +3,20 @@
 
 void Model::Draw(Shader& shader)
 {
-    for(uint32_t i = 0; i < m_Meshes.size( ); i++)
-        m_Meshes[i].Draw(shader);
+    DrawNodes(m_rootMesh, shader);
+}
+
+void Model::DrawNodes(MeshNode* Node, Shader& shader)
+{
+    //Begin     ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Leaf %d", i);
+    //Get matrix from imGui
+    for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
+        Node->m_Meshes[i].Draw(shader);
+    //Pop Tree
+
+    for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
+        DrawNodes(Node->m_ChildrenNodes[i], shader);
+    }
 }
 
 void Model::loadModel(std::string path)
@@ -22,21 +34,39 @@ void Model::loadModel(std::string path)
     }
     m_Directory = path.substr(0, path.find_last_of('/'));
 
-    m_Meshes.reserve(scene->mNumMeshes);
-    processNode(scene->mRootNode, scene);
+    //m_Meshes.reserve(scene->mNumMeshes);
+    //m_rootMesh->m_Meshes.reserve(scene->mNumMeshes);
+
+    //NodeMesh = processNode(....)
+    m_rootMesh = processNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+MeshNode* Model::processNode(aiNode* node, const aiScene* scene)
 {
-    // process all the node's meshes (if any)
-    for(unsigned int i = 0; i < node->mNumMeshes; i++){
+    /*
+        new NodeMesh
+        for i to 0, node->NumMeshes
+            NodeMesh->Meshes.add( std::move(processMesh....) )
+
+        for i to 0,num->Children:
+            childreNode = processNode(....)    
+            NodeMesh->Childred.push_back(childrenNode)
+
+        return NodeMesh
+    */
+    MeshNode* newNode = new MeshNode( );
+    newNode->name = node->mName.C_Str( );
+    for(uint32_t i = 0; i < node->mNumMeshes; i++){
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        m_Meshes.push_back(processMesh(mesh, scene));
+        newNode->m_Meshes.push_back(processMesh(mesh, scene));
     }
-    // then do the same for each of its children
-    for(unsigned int i = 0; i < node->mNumChildren; i++){
-        processNode(node->mChildren[i], scene);
+
+    for(uint32_t i = 0; i < node->mNumChildren; i++){
+        MeshNode* childNode = processNode(node->mChildren[i], scene);
+        newNode->AddChild(childNode);
     }
+
+    return newNode;
 }
 
 Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
@@ -178,19 +208,20 @@ unsigned int  Model::TextureFromFile(const char* path, const std::string& direct
         stbi_image_free(data);
     }
     else{
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        std::cout << "Texture failed to load at path: " << filename << std::endl;
         stbi_image_free(data);
     }
 
     return textureID;
 }
 
-MeshNode::MeshNode(Mesh& m) : translate(glm::mat4(1.0f))
-{
-    m_Mesh = std::make_shared<Mesh>(std::move(m));
-}
+////////////////////////////  MeshNode
+//MeshNode::MeshNode(Mesh& m) : position(0.0f, 5.0f, 0.0f), scale(1.0f, 1.0f, 1.0f), rotation(0.0f, 5.0f, 0.0f)
+//{
+//    m_Mesh = std::make_shared<Mesh>(std::move(m));
+//}
 
-void MeshNode::AddChild(std::shared_ptr<MeshNode> ChildMesh)
+void MeshNode::AddChild(MeshNode* ChildMesh)
 {
     m_ChildrenNodes.push_back( std::move(ChildMesh));
 }

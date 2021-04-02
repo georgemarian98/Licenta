@@ -22,31 +22,38 @@ public:
     void Draw(Shader& shader);
 
 private:
+    void DrawNodes(MeshNode* Node, Shader& shader);
+
     void loadModel(std::string path);
-    void processNode(aiNode* node, const aiScene* scene);
+    MeshNode* processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
-    unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+    uint32_t TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 private:
-    // model data
-    std::vector<Mesh> m_Meshes;
+    MeshNode* m_rootMesh;
     std::vector<Texture> m_Textures_loaded;
     std::string m_Directory;
 };
 
 
 class MeshNode{
-
+    friend Model;
 public:
-    MeshNode( ) = default;
+    MeshNode( ) : position(0.0f, 5.0f, 0.0f), scale(1.0f, 1.0f, 1.0f), rotation(0.0f, 5.0f, 0.0f) { };
 
-    MeshNode(Mesh&);
+    //MeshNode(Mesh&);
 
-    void AddChild(std::shared_ptr<MeshNode> Node);
+    void AddChild(MeshNode* Node);
+    //void AddChild(std::shared_ptr<MeshNode> Node);
+
 private:
-    std::shared_ptr<Mesh> m_Mesh;
-    std::vector< std::shared_ptr<MeshNode>> m_ChildrenNodes;
+    std::vector< Mesh > m_Meshes;
+    std::vector< MeshNode* > m_ChildrenNodes;
 
-    glm::mat4 translate;
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::vec3 rotation;
+
+    std::string name;
 };
