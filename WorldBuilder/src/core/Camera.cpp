@@ -4,7 +4,7 @@
 #define CAMERA_SPEED 10.0f
 
 Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm::vec3& CameraTarget) :
-	m_CameraPosition(CameraPosition), m_CameraTarget(CameraTarget), Up(glm::vec3(0.0f, 1.0f, 0.0f))
+	m_CameraPosition(CameraPosition), m_CameraTarget(CameraTarget), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
 {
 	m_CameraDirection = glm::normalize(CameraPosition - CameraTarget);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
@@ -15,7 +15,7 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 
 glm::mat4 Camera::GetViewMatrix( )
 {
-	return  glm::lookAt(m_CameraPosition, m_CameraPosition + m_CameraTarget, Up);
+	return  glm::lookAt(m_CameraPosition, m_CameraPosition + m_CameraTarget, m_Up);
 }
 
 void Camera::setProjection(int Width, int Height)
@@ -43,10 +43,10 @@ void Camera::move(MOVE_DIRECTION Direction, double TimeStep)
 	}
 }
 
-void Camera::rotate(double pitch, double yaw)
+void Camera::rotate(double Pitch, double Yaw)
 {
-	m_Pitch += pitch;
-	m_Yaw += yaw;
+	m_Pitch += Pitch;
+	m_Yaw += Yaw;
 
 	m_Pitch = (m_Pitch > 89.0f) ? 89.0f : m_Pitch;
 	m_Pitch = (m_Pitch < -89.0f) ? -89.0f : m_Pitch;
@@ -58,6 +58,6 @@ void Camera::rotate(double pitch, double yaw)
 	m_CameraTarget = glm::normalize(front);
 
 	m_CameraRightDirection = glm::normalize(glm::cross(m_CameraTarget, glm::vec3(0.0f, 1.0f, 0.0f)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	Up = glm::normalize(glm::cross(m_CameraRightDirection, m_CameraTarget));
+	m_Up = glm::normalize(glm::cross(m_CameraRightDirection, m_CameraTarget));
 	m_CameraDirection = -m_CameraTarget;
 }

@@ -15,7 +15,7 @@ private:
 	Application(Application& ) = delete;
 	Application(const char* Name, uint32_t Width, uint32_t Height);
 
-	void Mouse(GLFWwindow* window, double xpos, double ypos);
+	void Mouse(GLFWwindow* Window, double Xpos, double Ypos);
 	void KeyboardInput( );
 private:
 	uint32_t m_Width = 0, m_Height = 0;

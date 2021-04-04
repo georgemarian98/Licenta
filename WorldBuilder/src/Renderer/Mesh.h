@@ -4,26 +4,20 @@
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/Shader.h"
 
-struct Texture{
-    uint32_t id;
-    std::string type;
-    std::string path;  
-};
-
 class Mesh{
 public:
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Texture>& textures);
+    Mesh(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices, const std::vector<Texture>& Textures);
     Mesh(Mesh&& Mesh) noexcept;
 
-    void Draw(Shader& shader);
+    void Draw(Shader& Shader);
 private:
-    void setupMesh( );
+    void SetupMesh( );
 
 private:
-    unsigned int VAO, VBO, EBO;
+    uint32_t VAO, VBO, EBO;
 
-    std::vector<Vertex>   vertices;
-    std::vector<uint32_t> indices;
-    std::vector<Texture>  textures;
+    std::vector<Vertex>   m_Vertices;
+    std::vector<uint32_t> m_Indices;
+    std::vector<Texture>  m_Textures;
 };
 

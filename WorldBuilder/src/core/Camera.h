@@ -37,7 +37,7 @@ private:
 	glm::vec3 m_CameraDirection;
 	glm::vec3 m_CameraRightDirection;
 
-	glm::vec3 Up;
+	glm::vec3 m_Up;
 	glm::mat4 m_Projection;
 };
 

@@ -3,7 +3,7 @@
 
 Window::Window(const char* Name, int Width, int Height) : m_Size(Width,Height)
 {
-	strncpy(m_Name, Name, sizeof(m_Name));
+	strncpy_s(m_Name, Name, sizeof(m_Name));
 
 	if(!glfwInit( )){
 		fprintf(stderr, "ERROR: could not start GLFW3\n");

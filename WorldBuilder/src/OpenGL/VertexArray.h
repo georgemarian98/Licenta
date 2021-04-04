@@ -1,20 +1,14 @@
-#include "glad/glad.h"
 #include <vector>	
 #include <glm/glm.hpp>
 
-struct Vertex{
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TexCoords;
-	glm::vec3 Tangent;
-	glm::vec3 Bitangent;
-};
+#include "glad/glad.h"
+#include "Renderer/VertexData.h"
 
 class VertexArray{
 
 public:
 	VertexArray( ) = default;
-	VertexArray(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+	VertexArray(const std::vector<Vertex>& Vertices, const std::vector<GLuint>& Indices);
 	~VertexArray( );
 
 	void Bind( );

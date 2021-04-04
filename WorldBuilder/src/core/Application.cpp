@@ -50,16 +50,17 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 
 void Application::Run( )
 {
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 	
 	// load models
 	//Model ourModel("D:/Proiecte/Proiect-Grafica/Proiect/Proiect/objects/Sponza/sponza.obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/chandelier/Lamp150(OBJ).obj");
-	Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
-	//Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
-	glm::vec3 position(0.0f, 5.0f, -10.0f);
+	//Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
+	Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
+
+	glm::vec3 position(0.0f, 5.0f, 2.0f);
 	glm::vec3 scale(1.0f, 1.0f, 1.0f);
-	glm::vec3 rotation(0.0f, 5.0f, 0.0f);
+	glm::vec3 rotation(0.0f, 0.0f, 0.0f);
 	bool active = true;
 
 	while(m_Window.ShouldClose( ) == false){
@@ -109,7 +110,7 @@ void Application::Run( )
 	}
 }
 
-void Application::Mouse(GLFWwindow* window, double xpos, double ypos)
+void Application::Mouse(GLFWwindow* Window, double Xpos, double Ypos)
 {
 	static bool firstMouse = true;
 	static double lastX = m_Width / 2.0;
@@ -117,15 +118,15 @@ void Application::Mouse(GLFWwindow* window, double xpos, double ypos)
 	constexpr float sensitivity = 0.05f;
 
 	if(firstMouse){
-		lastX = xpos;
-		lastY = ypos;
+		lastX = Xpos;
+		lastY = Ypos;
 		firstMouse = false;
 	}
 
-	double xoffset = xpos - lastX;
-	double yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
+	double xoffset = Xpos - lastX;
+	double yoffset = lastY - Ypos;
+	lastX = Xpos;
+	lastY = Ypos;
 
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;

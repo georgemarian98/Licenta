@@ -117,6 +117,7 @@
     <ClInclude Include="deps\stb\stb_image.h" />
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\Window.h" />
+    <ClInclude Include="src\Renderer\VertexData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Renderer\Model.cpp" />

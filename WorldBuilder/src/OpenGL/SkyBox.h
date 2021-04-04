@@ -13,17 +13,17 @@
 
 class SkyBox{
 	public:
-		SkyBox(const char* vertexPath, const char* fragmentPath);
+		SkyBox(const char* VertexPath, const char* FragmentPath);
 		~SkyBox( );
 
-		void Load(const std::vector<const GLchar*>& cubeMapFaces, const glm::mat4& projection);
-		void Draw(const glm::mat4& viewMatrix);
+		void Load(const std::vector<const GLchar*>& CubeMapFaces, const glm::mat4& Projection);
+		void Draw(const glm::mat4& ViewMatrix);
 
-		void SetProjection(const glm::mat4& projection) { m_Projection = projection; };
+		void SetProjection(const glm::mat4& Projection) { m_Projection = Projection; };
 
 	private:
 		void InitSkyBox( );
-		GLuint LoadSkyBoxTextures(const std::vector<const GLchar*>& cubeMapFaces);
+		GLuint LoadSkyBoxTextures(const std::vector<const GLchar*>& CubeMapFaces);
 
 	private:
 		GLuint m_VAO = 0;

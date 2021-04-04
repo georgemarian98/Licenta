@@ -3,7 +3,7 @@
 
 void Model::Draw(Shader& shader)
 {
-    DrawNodes(m_rootMesh, shader); 
+    DrawNodes(m_RootMesh, shader); 
 }
 
 void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader)
@@ -19,10 +19,10 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader)
     }
 }
 
-void Model::loadModel(std::string path)
+void Model::loadModel(const std::string_view& Path)
 {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | 
+    const aiScene* scene = import.ReadFile(Path.data(), aiProcess_Triangulate |
                                                  aiProcess_GenSmoothNormals | 
                                                  aiProcess_FlipUVs | 
                                                  aiProcess_CalcTangentSpace | 
@@ -32,72 +32,71 @@ void Model::loadModel(std::string path)
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
         return;
     }
-    m_Directory = path.substr(0, path.find_last_of('/'));
+    m_Directory = Path.substr(0, Path.find_last_of('/'));
 
-    m_rootMesh = processNode(scene->mRootNode, scene);
+    m_RootMesh = processNode(scene->mRootNode, scene);
 }
 
-std::unique_ptr<MeshNode> Model::processNode(aiNode* node, const aiScene* scene)
+std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
 {
     std::unique_ptr<MeshNode> newNode = std::make_unique<MeshNode>();
-    newNode->m_Name = node->mName.C_Str( );
+    newNode->m_Name = Node->mName.C_Str( );
 
-    for(uint32_t i = 0; i < node->mNumMeshes; i++){
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        auto tempMesh = processMesh(mesh, scene);
+    for(uint32_t i = 0; i < Node->mNumMeshes; i++){
+        aiMesh* mesh = Scene->mMeshes[Node->mMeshes[i]];
+        auto tempMesh = processMesh(mesh, Scene);
 
         newNode->m_Meshes.push_back( std::make_unique<Mesh>( std::move(tempMesh) ));
     }
 
-    for(uint32_t i = 0; i < node->mNumChildren; i++){
-        std::unique_ptr<MeshNode> childNode = processNode(node->mChildren[i], scene);
+    for(uint32_t i = 0; i < Node->mNumChildren; i++){
+        std::unique_ptr<MeshNode> childNode = processNode(Node->mChildren[i], Scene);
         newNode->AddChild(childNode);
     }
 
     return newNode;
 }
 
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+Mesh Model::processMesh(aiMesh* ImportedMesh, const aiScene* scene)
 {
-    // data to fill
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
     std::vector<Texture> textures;
 
-    vertices.reserve(mesh->mNumVertices);
-    // walk through each of the mesh's vertices
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++){
+    vertices.reserve(ImportedMesh->mNumVertices);
+
+    for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
         Vertex vertex;
         glm::vec3 vector;
         // positions
-        vector.x = mesh->mVertices[i].x;
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
+        vector.x = ImportedMesh->mVertices[i].x;
+        vector.y = ImportedMesh->mVertices[i].y;
+        vector.z = ImportedMesh->mVertices[i].z;
         vertex.Position = vector;
-        // normals
-        if(mesh->HasNormals( )){
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
+
+        if(ImportedMesh->HasNormals( )){
+            vector.x = ImportedMesh->mNormals[i].x;
+            vector.y = ImportedMesh->mNormals[i].y;
+            vector.z = ImportedMesh->mNormals[i].z;
             vertex.Normal = vector;
         }
-        // texture coordinates
-        if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+
+        if(ImportedMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
             glm::vec2 vec;
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
+            vec.x = ImportedMesh->mTextureCoords[0][i].x;
+            vec.y = ImportedMesh->mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
             // tangent
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
+            vector.x = ImportedMesh->mTangents[i].x;
+            vector.y = ImportedMesh->mTangents[i].y;
+            vector.z = ImportedMesh->mTangents[i].z;
             vertex.Tangent = vector;
 
             // bitangent
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
+            vector.x = ImportedMesh->mBitangents[i].x;
+            vector.y = ImportedMesh->mBitangents[i].y;
+            vector.z = ImportedMesh->mBitangents[i].z;
             vertex.Bitangent = vector;
         }
         else
@@ -106,75 +105,74 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
         vertices.push_back(vertex);
     }
 
-    indices.reserve(3u * mesh->mNumFaces);
-    for(uint32_t i = 0; i < mesh->mNumFaces; i++){
-        aiFace face = mesh->mFaces[i];
+    indices.reserve(3u * ImportedMesh->mNumFaces);
+    for(uint32_t i = 0; i < ImportedMesh->mNumFaces; i++){
+        aiFace face = ImportedMesh->mFaces[i];
 
         // retrieve all indices of the face and store them in the indices vector
         for(uint32_t j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterial* material = scene->mMaterials[ImportedMesh->mMaterialIndex];
 
-    // 1. diffuse maps
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
 
-    // 2. specular maps
     std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end( ), specularMaps.begin( ), specularMaps.end( ));
 
-    // 3. normal maps
     std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
     textures.insert(textures.end( ), normalMaps.begin( ), normalMaps.end( ));
 
-    // 4. height maps
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
-    // return a mesh object created from the extracted mesh data
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName)
 {
+    static std::vector<Texture> loadedTextures;
+
     std::vector<Texture> textures;
-    for(unsigned int i = 0; i < mat->GetTextureCount(type); i++){
+    uint32_t textureCount = Material->GetTextureCount(Type);
+
+    for(uint32_t i = 0; i < textureCount; i++){
         aiString str;
-        mat->GetTexture(type, i, &str);
-        // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+        Material->GetTexture(Type, i, &str);
         bool skip = false;
-        for(unsigned int j = 0; j < m_Textures_loaded.size( ); j++){
-            if(std::strcmp(m_Textures_loaded[j].path.c_str( ), str.C_Str( )) == 0){
-                textures.push_back(m_Textures_loaded[j]);
+
+        for(auto& texture : loadedTextures){
+            if(texture.path == std::string_view(str.C_Str( ))){
+                textures.push_back(texture);
                 skip = true; 
                 break;
             }
         }
 
-        if(skip == false){   // if texture hasn't been loaded already, load it
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str( ), m_Directory);
-            texture.type = typeName;
-            texture.path = str.C_Str( );
-            textures.push_back(texture);
-            m_Textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+        if(skip == false){ 
+            uint32_t id = TextureFromFile(str.C_Str( ));
+            std::string type = TypeName.data();
+            std::string path = str.C_Str( );
+
+            Texture& texture = textures.emplace_back(id, type, path); 
+            loadedTextures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
         }
     }
     return textures;
 }
 
-unsigned int  Model::TextureFromFile(const char* path, const std::string& directory, bool gamma)
+uint32_t  Model::TextureFromFile(const char* Path)
 {
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
+    std::string filename = std::string(Path);
+    filename = m_Directory + '/' + filename;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
-    unsigned char* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
+    uint8_t* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
     if(data){
         GLenum format = 0;
         if(nrComponents == 1)

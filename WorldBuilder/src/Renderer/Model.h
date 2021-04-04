@@ -15,24 +15,23 @@ class MeshNode;
 
 class Model{
 public:
-    Model(const char* path)
+    Model(const char* Path)
     {
-        loadModel(path);
+        loadModel(Path);
     }
     void Draw(Shader& shader);
 
 private:
     void DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader);
 
-    void loadModel(std::string path);
-    std::unique_ptr<MeshNode> processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+    void loadModel(const std::string_view& Path);
+    std::unique_ptr<MeshNode> processNode(aiNode* Node, const aiScene* Scene);
+    Mesh processMesh(aiMesh* Mesh, const aiScene* Scene);
+    std::vector<Texture> loadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName);
 
-    uint32_t TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+    uint32_t TextureFromFile(const char* Path);
 private:
-    std::unique_ptr<MeshNode> m_rootMesh;
-    std::vector<Texture> m_Textures_loaded;
+    std::unique_ptr<MeshNode> m_RootMesh;
     std::string m_Directory;
 };
 
@@ -42,9 +41,7 @@ class MeshNode{
 public:
     MeshNode( ) : m_Position(0.0f, 5.0f, 0.0f), m_Scale(1.0f, 1.0f, 1.0f), m_Rotation(0.0f, 5.0f, 0.0f) { };
 
-
     void AddChild(std::unique_ptr<MeshNode>& Node);
-    //void AddChild(std::shared_ptr<MeshNode> Node);
 
 private:
     std::vector< std::unique_ptr<Mesh> > m_Meshes;

@@ -10,19 +10,19 @@
 #include "SkyBox.h"
 
 
-void SkyBox::Load(const std::vector<const GLchar*>& cubeMapFaces, const glm::mat4& projection)
+void SkyBox::Load(const std::vector<const GLchar*>& CubeMapFaces, const glm::mat4& Projection)
 {
-	m_CubemapTexture = LoadSkyBoxTextures(cubeMapFaces);
-	m_Projection = projection;
+	m_CubemapTexture = LoadSkyBoxTextures(CubeMapFaces);
+	m_Projection = Projection;
 	InitSkyBox( );
 }
 
-void SkyBox::Draw(const glm::mat4& viewMatrix)
+void SkyBox::Draw(const glm::mat4& ViewMatrix)
 {
 	glDepthFunc(GL_LEQUAL);
 	m_Shader.Bind( );
 
-	glm::mat4 transformedView = glm::mat4(glm::mat3(viewMatrix));
+	glm::mat4 transformedView = glm::mat4(glm::mat3(ViewMatrix));
 	m_Shader.UploadUniformMat4("view", transformedView);
 	m_Shader.UploadUniformMat4("projection", m_Projection);
 	m_Shader.UploadUniformInt("skybox", 0);
@@ -36,7 +36,7 @@ void SkyBox::Draw(const glm::mat4& viewMatrix)
 	glDepthFunc(GL_LESS);
 }
 
-GLuint SkyBox::LoadSkyBoxTextures(const std::vector<const GLchar*>& skyBoxFaces)
+GLuint SkyBox::LoadSkyBoxTextures(const std::vector<const GLchar*>& SkyBoxFaces)
 {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -45,14 +45,14 @@ GLuint SkyBox::LoadSkyBoxTextures(const std::vector<const GLchar*>& skyBoxFaces)
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(false);
 
-	for(unsigned int i = 0; i < skyBoxFaces.size( ); i++){
-		unsigned char* data = stbi_load(skyBoxFaces[i], &width, &height, &nrChannels, 0);
+	for(uint32_t i = 0; i < SkyBoxFaces.size( ); i++){
+		uint8_t* data = stbi_load(SkyBoxFaces[i], &width, &height, &nrChannels, 0);
 		if(data){
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			stbi_image_free(data);
 		}
 		else{
-			std::cerr << "Cubemap texture failed to load at path: " << skyBoxFaces[i] << std::endl;
+			std::cerr << "Cubemap texture failed to load at path: " << SkyBoxFaces[i] << std::endl;
 			stbi_image_free(data);
 		}
 	}
@@ -124,7 +124,7 @@ void SkyBox::InitSkyBox( )
 	glBindVertexArray(0);
 }
 
-SkyBox::SkyBox(const char* vertexPath, const char* fragmentPath) : m_Shader(vertexPath, fragmentPath)
+SkyBox::SkyBox(const char* VertexPath, const char* FragmentPath) : m_Shader(VertexPath, FragmentPath)
 {
 	m_Projection = glm::mat4(1.0f);
 }

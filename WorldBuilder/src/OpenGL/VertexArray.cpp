@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VertexArray.h"
 
-VertexArray::VertexArray(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)
+VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<GLuint>& Indices)
 {
 	// Create buffers/arrays
 	glGenVertexArrays(1, &this->m_VAO);
@@ -11,10 +11,10 @@ VertexArray::VertexArray(const std::vector<Vertex>& vertices, const std::vector<
 	glBindVertexArray(this->m_VAO);
 	// Load data into vertex buffers
 	glBindBuffer(GL_ARRAY_BUFFER, this->m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size( ) * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, Vertices.size( ) * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size( ) * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size( ) * sizeof(GLuint), &Indices[0], GL_STATIC_DRAW);
 
 	// Set the vertex attribute pointers
 	// Vertex Positions
