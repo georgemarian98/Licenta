@@ -44,9 +44,9 @@ std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
 
     for(uint32_t i = 0; i < Node->mNumMeshes; i++){
         aiMesh* mesh = Scene->mMeshes[Node->mMeshes[i]];
-        auto tempMesh = processMesh(mesh, Scene);
+        auto& tempMesh = processMesh(mesh, Scene);
 
-        newNode->m_Meshes.push_back( std::make_unique<Mesh>( std::move(tempMesh) ));
+        newNode->m_Meshes.push_back(std::move(tempMesh));
     }
 
     for(uint32_t i = 0; i < Node->mNumChildren; i++){
@@ -57,7 +57,7 @@ std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
     return newNode;
 }
 
-Mesh Model::processMesh(aiMesh* ImportedMesh, const aiScene* scene)
+std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -128,7 +128,7 @@ Mesh Model::processMesh(aiMesh* ImportedMesh, const aiScene* scene)
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
-    return Mesh(vertices, indices, textures);
+    return std::make_unique<Mesh>(vertices, indices, textures);
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName)

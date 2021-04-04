@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VertexArray.h"
 
-VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<GLuint>& Indices)
+VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices)
 {
 	// Create buffers/arrays
 	glGenVertexArrays(1, &this->m_VAO);
@@ -26,12 +26,27 @@ VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<
 	// Vertex Texture Coords
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));
+	// vertex tangent
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+	// vertex bitangent
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
 	glBindVertexArray(0);
 }
 
+VertexArray::VertexArray(VertexArray&& Other) : m_VAO(Other.m_VAO), m_VBO(Other.m_VBO), m_EBO(Other.m_EBO)
+{
+	std::cout << "Move VA\n";
+	Other.m_VAO = 0;
+	Other.m_VBO = 0;
+	Other.m_EBO = 0;
+}
+
 VertexArray::~VertexArray( )
 {
+	std::cout << "Destroy VA\n";
 	glDeleteBuffers(1, &m_VBO);
 	glDeleteBuffers(1, &m_EBO);
 	glDeleteVertexArrays(1, &m_VAO);

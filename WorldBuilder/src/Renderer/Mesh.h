@@ -10,11 +10,9 @@ public:
     Mesh(Mesh&& Mesh) noexcept;
 
     void Draw(Shader& Shader);
-private:
-    void SetupMesh( );
 
 private:
-    uint32_t VAO, VBO, EBO;
+    std::unique_ptr<VertexArray> m_Vertexbuffer;
 
     std::vector<Vertex>   m_Vertices;
     std::vector<uint32_t> m_Indices;
