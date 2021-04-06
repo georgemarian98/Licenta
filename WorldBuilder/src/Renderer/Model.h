@@ -8,6 +8,8 @@
 
 #include "Mesh.h"
 
+#include <UI/ModelPanel.h>
+
 /// <summary>
 /// Code inspired from the tutorial: https://learnopengl.com/Model-Loading/Assimp
 /// </summary>
@@ -17,9 +19,12 @@ class Model{
 public:
     Model(const char* Path)
     {
+        m_ModelView = std::make_shared<ModelPanel>( );
         loadModel(Path);
+
     }
     void Draw(Shader& shader);
+    std::shared_ptr<ModelPanel> GetModelView( ) { return m_ModelView; };
 
 private:
     void DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader);
@@ -33,6 +38,8 @@ private:
 private:
     std::unique_ptr<MeshNode> m_RootMesh;
     std::string m_Directory;
+
+    std::shared_ptr<ModelPanel> m_ModelView;
 };
 
 

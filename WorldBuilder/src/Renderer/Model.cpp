@@ -8,11 +8,23 @@ void Model::Draw(Shader& shader)
 
 void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader)
 {
-    //Begin     ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Leaf %d", i);
-    //Get matrix from imGui
+    try{
+        auto& [translation, scale, rotation] = m_ModelView->GetMatrices(Node->m_Name);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, translation);
+        model = glm::scale(model, scale);
+        model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        shader.UploadUniformMat4("model", model);
+    }
+    catch(int i){
+        //continua normal, exceptia este aruncata doar daca este un nod necorespunzator
+    }
+    
+
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
         Node->m_Meshes[i]->Draw(shader);
-    //Pop Tree
 
     for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
         DrawNodes(Node->m_ChildrenNodes[i], shader);
@@ -29,26 +41,29 @@ void Model::loadModel(const std::string_view& Path)
                                                  aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
         return;
     }
     m_Directory = Path.substr(0, Path.find_last_of('/'));
 
     m_RootMesh = processNode(scene->mRootNode, scene);
+    m_ModelView->SetModelName( scene->mRootNode->mName.C_Str() );
 }
 
 std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
 {
     std::unique_ptr<MeshNode> newNode = std::make_unique<MeshNode>();
     newNode->m_Name = Node->mName.C_Str( );
+    
 
     for(uint32_t i = 0; i < Node->mNumMeshes; i++){
         aiMesh* mesh = Scene->mMeshes[Node->mMeshes[i]];
         auto& tempMesh = processMesh(mesh, Scene);
 
+        m_ModelView->AddChild(mesh->mName.C_Str());
         newNode->m_Meshes.push_back(std::move(tempMesh));
     }
-
+    //modelView->addChild(newNode->m_Name);
     for(uint32_t i = 0; i < Node->mNumChildren; i++){
         std::unique_ptr<MeshNode> childNode = processNode(Node->mChildren[i], Scene);
         newNode->AddChild(childNode);
@@ -64,7 +79,7 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* sc
     std::vector<Texture> textures;
 
     vertices.reserve(ImportedMesh->mNumVertices);
-
+    
     for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
         Vertex vertex;
         glm::vec3 vector;

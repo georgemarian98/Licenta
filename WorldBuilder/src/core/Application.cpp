@@ -63,6 +63,9 @@ void Application::Run( )
 	glm::vec3 rotation(0.0f, 0.0f, 0.0f);
 	bool active = true;
 
+	auto modelView = ourModel.GetModelView( );
+	m_Window.SetVsync(false);
+
 	while(m_Window.ShouldClose( ) == false){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -77,27 +80,10 @@ void Application::Run( )
 		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
 
 		// render the loaded model
-		ImGui::ShowDemoWindow( );
+		//ImGui::ShowDemoWindow( );
+
 		ImGui::Begin("Properties", &active);
-		
-		if(ImGui::TreeNode("Model")){
-			ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-			ImGui::DragFloat3("Translation", glm::value_ptr(position), 0.5f);
-			ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.5f);
-			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.5f);
-
-			ImGui::TreePop( );
-		}
-
-		//Model
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, position);
-		model = glm::scale(model, scale);
-		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		m_ModelShader.UploadUniformMat4("model", model);
-
+		modelView->Draw( );
 		ImGui::End( );
 		
 		ourModel.Draw(m_ModelShader);

@@ -118,6 +118,7 @@
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\Renderer\VertexData.h" />
+    <ClInclude Include="src\UI\ModelPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Renderer\Model.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\UI\ModelPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps\GLFW.vcxproj">

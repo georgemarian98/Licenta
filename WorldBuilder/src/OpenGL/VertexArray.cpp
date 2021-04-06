@@ -38,7 +38,6 @@ VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<
 
 VertexArray::VertexArray(VertexArray&& Other) : m_VAO(Other.m_VAO), m_VBO(Other.m_VBO), m_EBO(Other.m_EBO)
 {
-	std::cout << "Move VA\n";
 	Other.m_VAO = 0;
 	Other.m_VBO = 0;
 	Other.m_EBO = 0;
@@ -46,7 +45,6 @@ VertexArray::VertexArray(VertexArray&& Other) : m_VAO(Other.m_VAO), m_VBO(Other.
 
 VertexArray::~VertexArray( )
 {
-	std::cout << "Destroy VA\n";
 	glDeleteBuffers(1, &m_VBO);
 	glDeleteBuffers(1, &m_EBO);
 	glDeleteVertexArrays(1, &m_VAO);
