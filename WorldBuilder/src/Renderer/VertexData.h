@@ -16,3 +16,9 @@ struct Texture{
 
     Texture(uint32_t id, std::string type, std::string path) :id(id), type(type), path(path) { };
 };
+
+struct Transforms{
+	glm::vec3 Translation = glm::vec3(0.0f);
+	glm::vec3 Scale = glm::vec3(1.0f);
+	glm::vec3 Rotation = glm::vec3(0.0f);
+};

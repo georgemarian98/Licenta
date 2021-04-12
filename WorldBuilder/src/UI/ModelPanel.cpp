@@ -5,22 +5,24 @@
 void ModelPanel::AddChild(std::string Name)
 {
 	m_Panels.insert({Name, 
-					std::make_tuple<glm::vec3, glm::vec3, glm::vec3>(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f))});
+					std::make_tuple<glm::vec3, glm::vec3, glm::vec3>(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 }
 
-const std::tuple<glm::vec3, glm::vec3, glm::vec3>& ModelPanel::GetMatrices(std::string Name) 
+const std::tuple<glm::vec3, glm::vec3, glm::vec3>& ModelPanel::GetMatrices(std::string Name, bool& Status)
 {
-	bool found = m_Panels.find(Name) != m_Panels.end( );
-	if(found == true){
+	Status = m_Panels.find(Name) != m_Panels.end( );
+	if(Status == true){
 		return  m_Panels[Name];
 	}
-	
-	throw 0;
 }
 
-void ModelPanel::Draw( )
+void ModelPanel::Draw( ) 
 {	
-	if(ImGui::TreeNode(m_ModelName.c_str( ))){
+	ImGui::DragFloat3("Translation", glm::value_ptr(m_MainTransforms.Translation), 0.5f);
+	ImGui::DragFloat3("Rotation", glm::value_ptr(m_MainTransforms.Rotation), 0.5f);
+	ImGui::DragFloat3("Scale", glm::value_ptr(m_MainTransforms.Scale), 0.5f);
+
+	if(ImGui::TreeNode(m_Name.c_str( ))){
 
 		for(auto& [key, value] : m_Panels){
 

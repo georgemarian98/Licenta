@@ -28,7 +28,7 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	m_Window.SetVsync(true);
 
 	// Setup ImGui
-	IMGUI_CHECKVERSION( );
+	//IMGUI_CHECKVERSION( );
 	ImGui::CreateContext( );
 	ImGui::StyleColorsDark( );
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
@@ -37,10 +37,18 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	//temp
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
+	glCullFace(GL_BACK); // cull back face
+	glFrontFace(GL_CCW); // GL_CCW for counter clock-wise
 
 	glfwSetCursorPosCallback(m_Window, [ ](GLFWwindow* window, double xpos, double ypos){
 		auto app = Application::GetInstance( );
 		app->Mouse(window, xpos, ypos);
+	});
+
+	glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
+		auto app = Application::GetInstance( );
+		app->ResizeWindow(window, width, height);
 	});
 
 	m_ModelShader.Bind( );
@@ -53,15 +61,11 @@ void Application::Run( )
 	//stbi_set_flip_vertically_on_load(true);
 	
 	// load models
-	//Model ourModel("D:/Proiecte/Proiect-Grafica/Proiect/Proiect/objects/Sponza/sponza.obj");
+	//Model ourModel("D:/Proiecte/hw3d/hw3d/Models/Sponza/sponza.obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/chandelier/Lamp150(OBJ).obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
-	Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
-
-	glm::vec3 position(0.0f, 5.0f, 2.0f);
-	glm::vec3 scale(1.0f, 1.0f, 1.0f);
-	glm::vec3 rotation(0.0f, 0.0f, 0.0f);
-	bool active = true;
+	Model ourModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj");
+	//Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
 
 	auto modelView = ourModel.GetModelView( );
 	m_Window.SetVsync(false);
@@ -69,29 +73,18 @@ void Application::Run( )
 	while(m_Window.ShouldClose( ) == false){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		ImGui_ImplOpenGL3_NewFrame( );
-		ImGui_ImplGlfw_NewFrame( );
-		ImGui::NewFrame( );
-
 		KeyboardInput( );
 
 		m_ModelShader.Bind( );
 
 		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
 
+
 		// render the loaded model
-		//ImGui::ShowDemoWindow( );
-
-		ImGui::Begin("Properties", &active);
-		modelView->Draw( );
-		ImGui::End( );
-		
 		ourModel.Draw(m_ModelShader);
-		m_ModelShader.Unbind( );
-		
-		ImGui::Render( );
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData( ));
+		m_ModelShader.Unbind( );		
 
+		ImGUIDraw(modelView);
 		m_Window.Update( );
 	}
 }
@@ -150,4 +143,43 @@ void Application::KeyboardInput( )
 	if(glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS){
 		m_Camera.move(MOVE_DIRECTION::MOVE_LEFT, TS);
 	}
+}
+
+void Application::ResizeWindow(GLFWwindow* window, int width, int height)
+{
+	fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
+
+	//glfwGetFramebufferSize(m_Window, &m_width, &m_height);
+	m_Camera.setProjection(width, height);
+
+	glm::mat4 projection = m_Camera.GetPojection( );
+
+	m_ModelShader.Bind( );
+	m_ModelShader.UploadUniformMat4("projection", projection);
+
+	//textureShader.useShaderProgram( );
+	//textureShader.UploadUniformMat4("projection", projection);
+
+	//sky.setProjection(projection);
+
+	glViewport(0, 0, width, height);
+}
+
+void Application::ImGUIDraw(std::shared_ptr<ModelPanel>& ModelView)
+{
+	static bool active = true;
+
+	ImGui_ImplOpenGL3_NewFrame( );
+	ImGui_ImplGlfw_NewFrame( );
+	ImGui::NewFrame( );
+
+	//ImGui::ShowDemoWindow( );
+
+	ImGui::Begin("Properties");
+	ModelView->Draw();
+	ImGui::End( );
+
+
+	ImGui::Render( );
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData( ));
 }

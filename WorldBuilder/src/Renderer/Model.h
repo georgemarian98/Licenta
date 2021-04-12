@@ -11,7 +11,7 @@
 #include <UI/ModelPanel.h>
 
 /// <summary>
-/// Code inspired from the tutorial: https://learnopengl.com/Model-Loading/Assimp
+/// Code inspired from: https://learnopengl.com/Model-Loading/Assimp
 /// </summary>
 class MeshNode;
 
@@ -27,7 +27,8 @@ public:
     std::shared_ptr<ModelPanel> GetModelView( ) { return m_ModelView; };
 
 private:
-    void DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader);
+    void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
+    void DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Transforms NodeMatricies);
 
     void loadModel(const std::string_view& Path);
     std::unique_ptr<MeshNode> processNode(aiNode* Node, const aiScene* Scene);
@@ -46,17 +47,13 @@ private:
 class MeshNode{
     friend Model;
 public:
-    MeshNode( ) : m_Position(0.0f, 5.0f, 0.0f), m_Scale(1.0f, 1.0f, 1.0f), m_Rotation(0.0f, 5.0f, 0.0f) { };
+    MeshNode( ) = default;
 
     void AddChild(std::unique_ptr<MeshNode>& Node);
 
 private:
     std::vector< std::unique_ptr<Mesh> > m_Meshes;
     std::vector< std::unique_ptr<MeshNode> > m_ChildrenNodes;
-
-    glm::vec3 m_Position;
-    glm::vec3 m_Scale;
-    glm::vec3 m_Rotation;
 
     std::string m_Name;
 };

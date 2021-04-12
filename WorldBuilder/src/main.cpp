@@ -3,8 +3,7 @@
 #include "core/Application.h"
 #include "OpenGL/Errors.h"
 
-#include <string>
-#include <string_view>
+#include <Renderer/VertexData.h>
 
 int main()
 {

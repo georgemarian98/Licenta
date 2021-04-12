@@ -119,6 +119,7 @@
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\Renderer\VertexData.h" />
     <ClInclude Include="src\UI\ModelPanel.h" />
+    <ClInclude Include="src\UI\Panel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Renderer\Model.cpp" />

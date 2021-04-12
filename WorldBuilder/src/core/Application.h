@@ -4,6 +4,9 @@
 #include "Window.h"
 #include "Camera.h"
 #include "OpenGL/Shader.h"
+
+#include "UI/ModelPanel.h"
+
 class Application{
 
 public:
@@ -17,10 +20,15 @@ private:
 
 	void Mouse(GLFWwindow* Window, double Xpos, double Ypos);
 	void KeyboardInput( );
+	void ResizeWindow(GLFWwindow* window, int width, int height);
+
+	void ImGUIDraw(std::shared_ptr<ModelPanel>& panel);
 private:
 	uint32_t m_Width = 0, m_Height = 0;
 	Window m_Window;
 	Camera m_Camera;
 	Shader m_ModelShader;
+
+	/// Temp 
 };
 

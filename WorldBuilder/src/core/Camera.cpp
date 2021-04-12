@@ -2,6 +2,9 @@
 #include "Camera.h"
 
 #define CAMERA_SPEED 10.0f
+#define NEAR_PLANE 0.1f
+#define FAR_PLANE 10000.0f
+
 
 Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm::vec3& CameraTarget) :
 	m_CameraPosition(CameraPosition), m_CameraTarget(CameraTarget), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
@@ -10,7 +13,7 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	m_CameraRightDirection = glm::normalize(glm::cross(up, m_CameraDirection));
 
-	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, 0.1f, 1000.0f);
+	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 }
 
 glm::mat4 Camera::GetViewMatrix( )
@@ -20,7 +23,7 @@ glm::mat4 Camera::GetViewMatrix( )
 
 void Camera::setProjection(int Width, int Height)
 {
-	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, 0.1f, 1000.0f);
+	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 }
 
 void Camera::move(MOVE_DIRECTION Direction, double TimeStep)

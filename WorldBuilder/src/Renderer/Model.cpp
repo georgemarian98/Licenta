@@ -3,31 +3,38 @@
 
 void Model::Draw(Shader& shader)
 {
-    DrawNodes(m_RootMesh, shader); 
+    Transforms matricies = m_ModelView->GetMainTransfors( );
+    DrawNodes(m_RootMesh, shader, matricies); 
 }
 
-void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader)
+
+void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Transforms NodeMatricies)
 {
-    try{
-        auto& [translation, scale, rotation] = m_ModelView->GetMatrices(Node->m_Name);
+    bool status;
+    auto& [translation, scale, rotation] = m_ModelView->GetMatrices(Node->m_Name, status);
+
+    if(status == true){
+        NodeMatricies.Translation += translation;
+        NodeMatricies.Scale += scale;
+        NodeMatricies.Rotation += rotation;
+
+
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, translation);
-        model = glm::scale(model, scale);
-        model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::translate(model, NodeMatricies.Translation);
+        model = glm::scale(model, NodeMatricies.Scale);
+        model = glm::rotate(model, NodeMatricies.Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, NodeMatricies.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
         shader.UploadUniformMat4("model", model);
     }
-    catch(int i){
-        //continua normal, exceptia este aruncata doar daca este un nod necorespunzator
-    }
+    
     
 
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
         Node->m_Meshes[i]->Draw(shader);
 
     for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
-        DrawNodes(Node->m_ChildrenNodes[i], shader);
+        DrawNodes(Node->m_ChildrenNodes[i], shader, NodeMatricies);
     }
 }
 
@@ -48,13 +55,14 @@ void Model::loadModel(const std::string_view& Path)
 
     m_RootMesh = processNode(scene->mRootNode, scene);
     m_ModelView->SetModelName( scene->mRootNode->mName.C_Str() );
+
+    PrintTree(m_RootMesh, 0);
 }
 
 std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
 {
     std::unique_ptr<MeshNode> newNode = std::make_unique<MeshNode>();
     newNode->m_Name = Node->mName.C_Str( );
-    
 
     for(uint32_t i = 0; i < Node->mNumMeshes; i++){
         aiMesh* mesh = Scene->mMeshes[Node->mMeshes[i]];
@@ -63,7 +71,7 @@ std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
         m_ModelView->AddChild(mesh->mName.C_Str());
         newNode->m_Meshes.push_back(std::move(tempMesh));
     }
-    //modelView->addChild(newNode->m_Name);
+
     for(uint32_t i = 0; i < Node->mNumChildren; i++){
         std::unique_ptr<MeshNode> childNode = processNode(Node->mChildren[i], Scene);
         newNode->AddChild(childNode);
@@ -159,7 +167,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* Material, aiTexture
         bool skip = false;
 
         for(auto& texture : loadedTextures){
-            if(texture.path == std::string_view(str.C_Str( ))){
+            if(texture.path == std::string(str.C_Str( ))){
                 textures.push_back(texture);
                 skip = true; 
                 break;
@@ -214,6 +222,18 @@ uint32_t  Model::TextureFromFile(const char* Path)
     }
 
     return textureID;
+}
+
+void Model::PrintTree(std::unique_ptr<MeshNode>& Node, int level)
+{
+    for(int i = 0; i < level; i++){
+        std::cout << "   ";
+    }
+    std::cout << Node->m_Name << std::endl;
+
+    for(auto& child : Node->m_ChildrenNodes){
+        PrintTree(child, level + 1);
+    }
 }
 
 ////////////////////////////  MeshNode
