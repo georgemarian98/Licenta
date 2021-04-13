@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "Model.h"
 
-void Model::Draw(Shader& shader)
+void Model::Draw(const std::unique_ptr<Shader>& shader)
 {
     Transforms matricies = m_ModelView->GetMainTransfors( );
     DrawNodes(m_RootMesh, shader, matricies); 
 }
 
 
-void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Transforms NodeMatricies)
+void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& shader, Transforms NodeMatricies)
 {
     bool status;
     auto& [translation, scale, rotation] = m_ModelView->GetMatrices(Node->m_Name, status);
@@ -25,7 +25,7 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Tra
         model = glm::rotate(model, NodeMatricies.Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, NodeMatricies.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.UploadUniformMat4("model", model);
+        shader->UploadUniformMat4("model", model);
     }
     
     

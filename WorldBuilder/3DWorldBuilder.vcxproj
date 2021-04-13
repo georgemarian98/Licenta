@@ -106,6 +106,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\RenderPass.h" />
+    <ClInclude Include="src\Renderer\Pass.h" />
+    <ClInclude Include="src\Renderer\Scene.h" />
+    <ClInclude Include="src\OpenGL\Framebuffer.h" />
     <ClInclude Include="src\Renderer\Model.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\Renderer\Mesh.h" />
@@ -122,6 +126,9 @@
     <ClInclude Include="src\UI\Panel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
+    <ClCompile Include="src\Renderer\Scene.cpp" />
+    <ClCompile Include="src\OpenGL\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\Model.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\Renderer\Mesh.cpp" />

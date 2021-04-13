@@ -21,8 +21,7 @@ std::shared_ptr<Application> Application::GetInstance(const char* Name, uint32_t
 }
 
 Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
-	m_Width(Width), m_Height(Height), m_Window(Name, Width, Height), m_Camera(Width, Height), 
-	m_ModelShader("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl")
+	m_Width(Width), m_Height(Height), m_Window(Name, Width, Height), m_Camera(Width, Height)
 {
 	// Setup ImGui
 	ImGui::CreateContext( );
@@ -30,7 +29,11 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
-	m_SceneBuffer = std::make_shared<Framebuffer>(m_Width, m_Height);
+	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
+	m_Scene = std::make_unique<Scene>();
+
+	std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl");
+	m_Scene->AddPass(renderPass);
 
 	//temp
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -48,10 +51,6 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 		auto app = Application::GetInstance( );
 		app->ResizeWindow(window, width, height);
 	});
-
-	m_ModelShader.Bind( );
-	m_ModelShader.UploadUniformMat4("projection", m_Camera.GetPojection());
-	m_ModelShader.Unbind( );
 }
 
 void Application::Run( )
@@ -62,10 +61,10 @@ void Application::Run( )
 	//Model ourModel("D:/Proiecte/hw3d/hw3d/Models/Sponza/sponza.obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/chandelier/Lamp150(OBJ).obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
-	Model ourModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj");
+	//Model ourModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj");
 	//Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
-
-	auto modelView = ourModel.GetModelView( );
+	
+	auto modelView = m_Scene->AddModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj");
 	m_Window.SetVsync(false);
 
 	while(m_Window.ShouldClose( ) == false){
@@ -74,13 +73,7 @@ void Application::Run( )
 		m_SceneBuffer->Bind( );
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		m_ModelShader.Bind( );
-
-		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
-
-		// render the loaded model
-		ourModel.Draw(m_ModelShader);
-		m_ModelShader.Unbind( );		
+		m_Scene->Draw(m_Camera);
 
 		m_SceneBuffer->Unbind( );
 
@@ -170,7 +163,7 @@ void Application::ImGUIDraw(std::shared_ptr<ModelPanel>& ModelView)
 	ImGui::Begin("View");
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail( );
 
-	uint32_t textureID = m_SceneBuffer->GetColorId( );
+	uint64_t textureID = m_SceneBuffer->GetColorId( );
 	ImGui::Image(reinterpret_cast<void*>(textureID), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
 	ImGui::End( );
 
@@ -201,11 +194,6 @@ void Application::Mouse(GLFWwindow* Window, double Xpos, double Ypos)
 
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
-
-	//m_Camera.rotate(yoffset, xoffset);
-
-	//m_ModelShader.Bind();
-	//m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix( ));
 }
 
 void Application::KeyboardInput( )
@@ -241,18 +229,6 @@ void Application::ResizeWindow(GLFWwindow* window, int width, int height)
 {
 	fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
 
-	//glfwGetFramebufferSize(m_Window, &m_width, &m_height);
 	m_Camera.setProjection(width, height);
-
-	glm::mat4 projection = m_Camera.GetPojection( );
-
-	m_ModelShader.Bind( );
-	m_ModelShader.UploadUniformMat4("projection", projection);
-
-	//textureShader.useShaderProgram( );
-	//textureShader.UploadUniformMat4("projection", projection);
-
-	//sky.setProjection(projection);
-
-	glViewport(0, 0, width, height);
+	m_SceneBuffer->Resize(width, height);
 }

@@ -23,12 +23,12 @@ public:
         loadModel(Path);
 
     }
-    void Draw(Shader& shader);
+    void Draw(const std::unique_ptr<Shader>& shader);
     std::shared_ptr<ModelPanel> GetModelView( ) { return m_ModelView; };
 
 private:
     void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
-    void DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Transforms NodeMatricies);
+    void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& shader, Transforms NodeMatricies);
 
     void loadModel(const std::string_view& Path);
     std::unique_ptr<MeshNode> processNode(aiNode* Node, const aiScene* Scene);

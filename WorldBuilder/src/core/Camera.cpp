@@ -16,7 +16,7 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 }
 
-glm::mat4 Camera::GetViewMatrix( )
+glm::mat4 Camera::GetViewMatrix( ) const 
 {
 	return  glm::lookAt(m_CameraPosition, m_CameraPosition + m_CameraTarget, m_Up);
 }

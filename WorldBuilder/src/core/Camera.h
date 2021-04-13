@@ -23,10 +23,10 @@ public:
 	//pitch - rotate around x axis
 	void rotate(double Pitch, double Yaw);
 
-	glm::mat4 GetViewMatrix( );
-	glm::mat4 GetPojection( )    { return m_Projection; };
-	glm::vec3 GetCameraTarget( ) { return m_CameraTarget; };
-	glm::vec3 GetPosition( )     { return m_CameraPosition; };
+	glm::mat4 GetViewMatrix( )   const ;
+	glm::mat4 GetPojection( )    const { return m_Projection; };
+	glm::vec3 GetCameraTarget( ) const { return m_CameraTarget; };
+	glm::vec3 GetPosition( )     const { return m_CameraPosition; };
 
 private:
 	double m_Yaw = -90.0f;

@@ -6,6 +6,7 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/Framebuffer.h"
 
+#include "Renderer/Scene.h"
 #include "UI/ModelPanel.h"
 
 class Application{
@@ -28,8 +29,8 @@ private:
 	uint32_t m_Width = 0, m_Height = 0;
 	Window m_Window;
 	Camera m_Camera;
-	Shader m_ModelShader;
 
-	std::shared_ptr<Framebuffer> m_SceneBuffer;
+	std::unique_ptr<Framebuffer> m_SceneBuffer;
+	std::unique_ptr<Scene> m_Scene;
 };
 

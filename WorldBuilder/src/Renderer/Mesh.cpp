@@ -14,7 +14,7 @@ Mesh::Mesh(Mesh&& Mesh) noexcept:
 
 }
 
-void Mesh::Draw(Shader& shader)
+void Mesh::Draw(const std::unique_ptr<Shader>& shader)
 {
     // bind appropriate textures
     uint32_t diffuseNr = 1;
@@ -39,7 +39,7 @@ void Mesh::Draw(Shader& shader)
             number = std::to_string(heightNr++); 
 
         // now set the sampler to the correct texture unit
-        shader.UploadUniformInt((name + number).c_str( ), i);
+        shader->UploadUniformInt((name + number).c_str( ), i);
         glBindTexture(GL_TEXTURE_2D, m_Textures[i].id);
     }
 

@@ -9,7 +9,7 @@ public:
     Mesh(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices, const std::vector<Texture>& Textures);
     Mesh(Mesh&& Mesh) noexcept;
 
-    void Draw(Shader& Shader);
+    void Draw(const std::unique_ptr<Shader>& Shader);
 
 private:
     std::unique_ptr<VertexArray> m_Vertexbuffer;
