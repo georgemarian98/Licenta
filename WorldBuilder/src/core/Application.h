@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Camera.h"
 #include "OpenGL/Shader.h"
+#include "OpenGL/Framebuffer.h"
 
 #include "UI/ModelPanel.h"
 
@@ -29,6 +30,6 @@ private:
 	Camera m_Camera;
 	Shader m_ModelShader;
 
-	/// Temp 
+	std::shared_ptr<Framebuffer> m_SceneBuffer;
 };
 

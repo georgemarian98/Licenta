@@ -24,13 +24,13 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	m_Width(Width), m_Height(Height), m_Window(Name, Width, Height), m_Camera(Width, Height), 
 	m_ModelShader("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl")
 {
-	m_Window.SetVsync(true);
-
 	// Setup ImGui
 	ImGui::CreateContext( );
 	ImGui::StyleColorsDark( );
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
+
+	m_SceneBuffer = std::make_shared<Framebuffer>(m_Width, m_Height);
 
 	//temp
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -69,18 +69,20 @@ void Application::Run( )
 	m_Window.SetVsync(false);
 
 	while(m_Window.ShouldClose( ) == false){
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 		KeyboardInput( );
+
+		m_SceneBuffer->Bind( );
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		m_ModelShader.Bind( );
 
 		m_ModelShader.UploadUniformMat4("view", m_Camera.GetViewMatrix());
 
-
 		// render the loaded model
 		ourModel.Draw(m_ModelShader);
 		m_ModelShader.Unbind( );		
+
+		m_SceneBuffer->Unbind( );
 
 		ImGUIDraw(modelView);
 		m_Window.Update( );
@@ -97,7 +99,7 @@ void Application::ImGUIDraw(std::shared_ptr<ModelPanel>& ModelView)
 	ImGui_ImplGlfw_NewFrame( );
 	ImGui::NewFrame( );
 
-	ImGui::ShowDemoWindow( );
+	//ImGui::ShowDemoWindow( );
 
 	{//Docking
 
@@ -164,12 +166,14 @@ void Application::ImGUIDraw(std::shared_ptr<ModelPanel>& ModelView)
 	ImGui::Begin("Properties");
 	ModelView->Draw( );
 	ImGui::End( );
+	
+	ImGui::Begin("View");
+	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail( );
 
-	//ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail( );
-	//m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
+	uint32_t textureID = m_SceneBuffer->GetColorId( );
+	ImGui::Image(reinterpret_cast<void*>(textureID), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
+	ImGui::End( );
 
-	//uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID( );
-	//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
 	ImGui::End( );// end dock
 

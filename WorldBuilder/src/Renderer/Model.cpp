@@ -15,7 +15,7 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, Shader& shader, Tra
 
     if(status == true){
         NodeMatricies.Translation += translation;
-        NodeMatricies.Scale += scale;
+        NodeMatricies.Scale *= scale;
         NodeMatricies.Rotation += rotation;
 
 
