@@ -24,7 +24,6 @@ private:
 	void KeyboardInput( );
 	void ResizeWindow(GLFWwindow* window, int width, int height);
 
-	void ImGUIDraw(std::shared_ptr<ModelPanel>& panel);
 private:
 	uint32_t m_Width = 0, m_Height = 0;
 	Window m_Window;
@@ -33,4 +32,5 @@ private:
 	std::unique_ptr<Framebuffer> m_SceneBuffer;
 	std::unique_ptr<Scene> m_Scene;
 };
+
 

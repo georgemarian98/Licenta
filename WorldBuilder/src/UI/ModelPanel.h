@@ -1,20 +1,29 @@
 #pragma once
 #include <unordered_map>
 #include "glm/glm.hpp"
-#include "UI/Panel.h"
+
 #include "Renderer/VertexData.h"
 
-class ModelPanel : public Panel{
+class UIManager;
+
+class ModelPanel{
 public:
+    friend class UIManager;
+
     ModelPanel( ) = default;
 
     void AddChild(std::string Name);
     void SetModelName(std::string Name) { m_Name = Name; };
-    const std::tuple<glm::vec3, glm::vec3, glm::vec3>& GetMatrices(std::string Name, bool& Status);
+    const Transforms& GetMatrices(std::string Name, bool& Status);
 
-    Transforms GetMainTransfors( ) { return m_MainTransforms; };
-    void Draw( ) override;
+    const Transforms& GetMainTransfors( ) { return m_MainTransforms; };
+    void Draw(std::string& SelectedNode);
+
 private:
-    std::unordered_map < std::string, std::tuple<glm::vec3, glm::vec3, glm::vec3> > m_Panels; //translation, scale, rotation
+    Transforms& FindMatricies(std::string Name, bool& Status);
+    Transforms* GetMatricies(std::string Name, bool& Status);
+private:
+    std::unordered_map < std::string, Transforms > m_Panels; //translation, scale, rotation
     Transforms m_MainTransforms;
+    std::string m_Name;
 };

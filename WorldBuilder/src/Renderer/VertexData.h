@@ -21,4 +21,7 @@ struct Transforms{
 	glm::vec3 Translation = glm::vec3(0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f);
 	glm::vec3 Rotation = glm::vec3(0.0f);
+
+	Transforms( ) { };
+	Transforms(glm::vec3& Translation, glm::vec3& Scale, glm::vec3& Rotation) : Translation(Translation), Scale(Scale), Rotation(Rotation) {};
 };

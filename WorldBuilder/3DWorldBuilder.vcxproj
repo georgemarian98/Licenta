@@ -106,6 +106,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\RenderPass.h" />
     <ClInclude Include="src\Renderer\Pass.h" />
     <ClInclude Include="src\Renderer\Scene.h" />
@@ -123,9 +124,10 @@
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\Renderer\VertexData.h" />
     <ClInclude Include="src\UI\ModelPanel.h" />
-    <ClInclude Include="src\UI\Panel.h" />
+    <ClInclude Include="src\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\Scene.cpp" />
     <ClCompile Include="src\OpenGL\Framebuffer.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\UI\ModelPanel.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps\GLFW.vcxproj">

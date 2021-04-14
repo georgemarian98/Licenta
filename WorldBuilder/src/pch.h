@@ -18,7 +18,6 @@
 #include <vector>
 #include <unordered_map>
 
-#include "OpenGL/Errors.h"
 #include "stb_image.h"
 
 #include "imgui.h"
@@ -32,6 +31,19 @@
 #include <glm/glm.hpp> //math stuff
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+//My files
+#include "Renderer/Mesh.h"
+#include "Renderer/VertexData.h"
+
+#include "OpenGL/Errors.h"
+#include "OpenGL/SkyBox.h"
+#include "OpenGL/VertexArray.h"
+#include "OpenGL/Shader.h"
+
+#include "core/Window.h"
+#include "core/Camera.h"
+
 
 #endif // PCH
 

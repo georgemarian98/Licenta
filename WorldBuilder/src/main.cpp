@@ -3,12 +3,13 @@
 #include "core/Application.h"
 #include "OpenGL/Errors.h"
 
+#include "Renderer/VertexData.h"
+
 int main()
 {
     auto app = Application::GetInstance("Licenta", 1280, 720);
     glCheckError( );
 
     app->Run( );
-
     return 0;
 }

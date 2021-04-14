@@ -27,8 +27,6 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_p
         model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
         shader->UploadUniformMat4("model", model);
     }
-    
-    
 
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
         Node->m_Meshes[i]->Draw(shader);
@@ -42,10 +40,10 @@ void Model::loadModel(const std::string_view& Path)
 {
     Assimp::Importer import;
     const aiScene* scene = import.ReadFile(Path.data(), aiProcess_Triangulate |
-                                                 aiProcess_GenSmoothNormals | 
-                                                 aiProcess_FlipUVs | 
-                                                 aiProcess_CalcTangentSpace | 
-                                                 aiProcess_JoinIdenticalVertices);
+                                                        aiProcess_GenSmoothNormals | 
+                                                        aiProcess_FlipUVs | 
+                                                        aiProcess_CalcTangentSpace | 
+                                                        aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
         std::cerr << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
@@ -54,7 +52,7 @@ void Model::loadModel(const std::string_view& Path)
     m_Directory = Path.substr(0, Path.find_last_of('/'));
 
     m_RootMesh = processNode(scene->mRootNode, scene);
-    m_ModelView->SetModelName( scene->mRootNode->mName.C_Str() );
+    m_ModelView->SetModelName(scene->mRootNode->mName.C_Str( ));
 
     PrintTree(m_RootMesh, 0);
 }
