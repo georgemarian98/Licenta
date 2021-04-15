@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <functional>
 
+#include <Windows.h>
+#include <commdlg.h>
+
 #include <string>
 #include <sstream>
 #include <streambuf>

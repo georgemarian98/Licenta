@@ -15,10 +15,9 @@ const Transforms& ModelPanel::GetMatrices(std::string Name, bool& Status)
 void ModelPanel::Draw(std::string& SelectedNode)
 {	
 	static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-	static int index = rand( );
 
-	if(ImGui::TreeNodeEx((void*)(intptr_t)index, base_flags, m_Name.c_str( ))){
-	//if(ImGui::TreeNode(m_Name.c_str( ))){
+	if(ImGui::TreeNodeEx((void*)(intptr_t)m_Id, base_flags, m_Name.c_str( ))){
+
 		if(ImGui::IsItemClicked( ))	
 			SelectedNode = m_Name;
 

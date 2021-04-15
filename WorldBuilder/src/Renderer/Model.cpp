@@ -49,7 +49,8 @@ void Model::loadModel(const std::string_view& Path)
         std::cerr << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
         return;
     }
-    m_Directory = Path.substr(0, Path.find_last_of('/'));
+    m_Directory = Path.substr(0, Path.find_last_of('\\'));
+    //m_Directory = Path.substr(0, Path.find_last_of('/'));
 
     m_RootMesh = processNode(scene->mRootNode, scene);
     m_ModelView->SetModelName(scene->mRootNode->mName.C_Str( ));

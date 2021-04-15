@@ -10,7 +10,11 @@ class ModelPanel{
 public:
     friend class UIManager;
 
-    ModelPanel( ) = default;
+    ModelPanel( ) 
+    {
+        static int id = 0;
+        m_Id = id++;
+    };
 
     void AddChild(std::string Name);
     void SetModelName(std::string Name) { m_Name = Name; };
@@ -26,4 +30,5 @@ private:
     std::unordered_map < std::string, Transforms > m_Panels; //translation, scale, rotation
     Transforms m_MainTransforms;
     std::string m_Name;
+    uint32_t m_Id;
 };

@@ -6,7 +6,7 @@
 #include "Renderer/Renderer.h"
 #include "UI/UIManager.h"
 
-
+#include <functional>
 
 std::shared_ptr<Application> Application::GetInstance(const char* Name, uint32_t Width, uint32_t Height)
 {	
@@ -25,6 +25,13 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	// Setup ImGui
 	Renderer::Initiliaze( );
 	UIManager::Initiliaze(m_Window);
+
+	std::function<void(const std::string&)> importFunction = [&](const std::string& Path)
+	{
+		UIManager::AddPannel(m_Scene->AddModel(Path));
+	};
+
+	UIManager::SetImportFunction(importFunction);
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 	m_Scene = std::make_unique<Scene>();
@@ -47,15 +54,10 @@ void Application::Run( )
 {
 	//stbi_set_flip_vertically_on_load(true);
 	
-	// load models
-	//Model ourModel("D:/Proiecte/hw3d/hw3d/Models/Sponza/sponza.obj");
-	//Model ourModel("D:/Facultate/An 3/Grafica/models/chandelier/Lamp150(OBJ).obj");
-	//Model ourModel("D:/Facultate/An 3/Grafica/models/backpack/backpack.obj");
-	//Model ourModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj");
-	//Model ourModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj");
-	
-	UIManager::AddPannel(m_Scene->AddModel("D:/Proiecte/hw3d/hw3d/Models/nano_textured/nanosuit.obj"));
-	//UIManager::AddPannel(m_Scene->AddModel("D:/Facultate/An 3/Grafica/models/nanosuit/nanosuit.obj"));
+	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\gobber\\GoblinX.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\brick_wall\\brick_wall.obj"));
 	m_Window.SetVsync(false);
 
 	while(m_Window.ShouldClose( ) == false){
@@ -68,7 +70,7 @@ void Application::Run( )
 
 		m_SceneBuffer->Unbind( );
 
-		UIManager::Draw(m_SceneBuffer->GetColorId(), true);
+		UIManager::Draw(m_SceneBuffer->GetColorId());
 		m_Window.Update( );
 	}
 }

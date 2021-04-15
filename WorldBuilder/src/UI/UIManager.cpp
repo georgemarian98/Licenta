@@ -7,8 +7,9 @@ std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 	return g;
 }
 
-std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 std::string UIManager::m_SelectedNode;
+std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
+std::function<void(const std::string&)>  UIManager::m_ImportFunction;
 
 void UIManager::Initiliaze(Window& Window)
 {
@@ -81,7 +82,7 @@ void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
 		if(ImGui::BeginMenu("File")){
 
 			if(ImGui::MenuItem("New Scene")) std::cout << "New Scene\n";
-			if(ImGui::MenuItem("Import Object")) std::cout << "Import Object\n";
+			if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
 			if(ImGui::BeginMenu("Export Scene")){
 				if(ImGui::MenuItem("Object")) std::cout << "obj\n";
 				if(ImGui::MenuItem("Image")) std::cout << "img\n";
@@ -146,6 +147,42 @@ void UIManager::DrawProperties( )
 	ImGui::DragFloat3("Scale", glm::value_ptr(selectedNodeMatricies->Scale), 0.5f);
 }
 
+void UIManager::ImportModel( )
+{
+	static OPENFILENAME ofn;       // common dialog box structure
+	static bool initialized = false;
+
+	if(initialized == false){
+		char szFile[260];       // buffer for file name
+		WCHAR* filter = L"Obj (*.obj)\0*.obj\0";
+
+		// Initialize OPENFILENAME
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = 0;
+		ofn.lpstrFile = (LPWSTR)szFile;
+		// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+		// use the contents of szFile to initialize itself.
+		ofn.lpstrFile[0] = '\0';
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = filter;
+		ofn.nFilterIndex = 1;
+		ofn.lpstrFileTitle = NULL;
+		ofn.nMaxFileTitle = 0;
+		ofn.lpstrInitialDir = NULL;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+		initialized = true;
+	}
+
+	// Display the Open dialog box. 
+	if(GetOpenFileName(&ofn) == TRUE){
+		std::wstring wFile(ofn.lpstrFile);
+		std::string path(wFile.begin( ), wFile.end( ));
+		m_ImportFunction(path);
+	}
+}
+
 Transforms* UIManager::GetNodeMatricies( )
 {
 	bool status;
@@ -156,5 +193,5 @@ Transforms* UIManager::GetNodeMatricies( )
 		}
 	}
 
-	return nullptr;
+	return &Transforms();
 }
