@@ -13,6 +13,14 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	m_CameraRightDirection = glm::normalize(glm::cross(up, m_CameraDirection));
 
+	//float aspect_ratio = (float)Width / (float)Height;
+	//float orthoLeft = -m_OrthographicSize * aspect_ratio * 0.5f;
+	//float orthoRight = m_OrthographicSize * aspect_ratio * 0.5f;
+	//float orthoBottom = -m_OrthographicSize * 0.5f;
+	//float orthoTop = m_OrthographicSize * 0.5f;
+
+	//m_Projection = glm::ortho(orthoLeft, orthoRight,
+	//						  orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 }
 
@@ -24,6 +32,13 @@ glm::mat4 Camera::GetViewMatrix( ) const
 void Camera::setProjection(int Width, int Height)
 {
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
+	//float aspect_ratio = (float)Width / (float)Height;
+	//float orthoLeft = -m_OrthographicSize * aspect_ratio * 0.5f;
+	//float orthoRight = m_OrthographicSize * aspect_ratio * 0.5f;
+	//float orthoBottom = -m_OrthographicSize * 0.5f;
+	//float orthoTop = m_OrthographicSize * 0.5f;
+
+	//m_Projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
 }
 
 void Camera::move(MOVE_DIRECTION Direction, double TimeStep)
