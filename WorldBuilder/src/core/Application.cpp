@@ -26,12 +26,9 @@ Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
 	Renderer::Initiliaze( );
 	UIManager::Initiliaze(m_Window);
 
-	std::function<void(const std::string&)> importFunction = [&](const std::string& Path)
-	{
+	UIManager::SetImportFunction([ & ](const std::string& Path)	{
 		UIManager::AddPannel(m_Scene->AddModel(Path));
-	};
-
-	UIManager::SetImportFunction(importFunction);
+	});
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 	m_Scene = std::make_unique<Scene>();

@@ -12,17 +12,18 @@ public:
 
 	static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
 	static void SetImportFunction(std::function<void(const std::string&)> Function) { m_ImportFunction = std::move(Function); };
+
 private:
 	static void DrawModels( );
 	static void DrawProperties( );
 
 	static void ImportModel( );
-
-	static Transforms* GetNodeMatricies( );
 private:
 	static std::vector<std::shared_ptr<ModelPanel>> m_Panels;
-	static std::string m_SelectedNode;
+	static std::pair<std::string, uint32_t> m_SelectedNode;
 
+	//Functions
+	//TODO: New Scene, Export Scene, etc
 	static std::function<void(const std::string&)> m_ImportFunction;
 };
 

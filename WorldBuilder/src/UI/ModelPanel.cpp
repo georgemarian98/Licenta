@@ -12,19 +12,20 @@ const Transforms& ModelPanel::GetMatrices(std::string Name, bool& Status)
 	return FindMatricies(Name, Status);
 }
 
-void ModelPanel::Draw(std::string& SelectedNode)
+void ModelPanel::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
 {	
 	static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 	if(ImGui::TreeNodeEx((void*)(intptr_t)m_Id, base_flags, m_Name.c_str( ))){
 
 		if(ImGui::IsItemClicked( ))	
-			SelectedNode = m_Name;
+			SelectedEntity = {m_Name, m_Id};
 
-		for(auto& [key, value] : m_Panels){
+		for(auto& [key, _] : m_Panels){
 
-			if(ImGui::Selectable(key.c_str( ), SelectedNode == key))
-				SelectedNode = key;
+			if(ImGui::Selectable(key.c_str( ), SelectedEntity.first == key)){
+				SelectedEntity = {key, m_Id};
+			}
 		}
 		ImGui::TreePop( );
 	}
@@ -40,13 +41,14 @@ Transforms& ModelPanel::FindMatricies(std::string Name, bool& Status)
 	return Transforms( );
 }
 
-Transforms* ModelPanel::GetMatricies(std::string Name, bool& Status)
+Transforms* ModelPanel::GetMatrices(std::string Name)
 {
+	bool status;
 	if(m_Name != Name){
-		return &FindMatricies(Name,Status);
+		return &FindMatricies(Name, status);
 	}
 	else{
-		Status = true;
+		status = true;
 		return &m_MainTransforms;
 	}
 }

@@ -7,7 +7,7 @@ std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 	return g;
 }
 
-std::string UIManager::m_SelectedNode;
+std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
 std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 std::function<void(const std::string&)>  UIManager::m_ImportFunction;
 
@@ -120,7 +120,7 @@ void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
 void UIManager::AddPannel(std::shared_ptr<ModelPanel>& Panel)
 {
 	m_Panels.emplace_back(Panel);
-	m_SelectedNode = Panel->m_Name;
+	m_SelectedNode = {Panel->m_Name, Panel->m_Id};
 }
 
 void UIManager::DrawModels( )
@@ -132,19 +132,20 @@ void UIManager::DrawModels( )
 
 void UIManager::DrawProperties( )
 {
-	static std::string oldSelectedNode = m_SelectedNode;
-	static Transforms* selectedNodeMatricies = UIManager::GetNodeMatricies( );
+	static std::string oldSelectedNode = m_SelectedNode.first;
+	static Transforms* selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);
 
-	if(oldSelectedNode != m_SelectedNode){
-		selectedNodeMatricies = UIManager::GetNodeMatricies( );
-		oldSelectedNode = m_SelectedNode;
+	if(oldSelectedNode != m_SelectedNode.first){
+		selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);;
+		oldSelectedNode = m_SelectedNode.first;
 	}
 	
-	ImGui::Text(m_SelectedNode.c_str() );
+	ImGui::Text(m_SelectedNode.first.c_str() );
 	ImGui::Separator( );
 	ImGui::DragFloat3("Translation", glm::value_ptr(selectedNodeMatricies->Translation), 0.5f);
 	ImGui::DragFloat3("Rotation", glm::value_ptr(selectedNodeMatricies->Rotation), 0.5f);
 	ImGui::DragFloat3("Scale", glm::value_ptr(selectedNodeMatricies->Scale), 0.5f);
+	//To be continue
 }
 
 void UIManager::ImportModel( )
@@ -181,17 +182,4 @@ void UIManager::ImportModel( )
 		std::string path(wFile.begin( ), wFile.end( ));
 		m_ImportFunction(path);
 	}
-}
-
-Transforms* UIManager::GetNodeMatricies( )
-{
-	bool status;
-	for(auto& panel : m_Panels){
-		auto selectedNodeMatricies = panel->GetMatricies(m_SelectedNode, status);
-		if(status == true){
-			return selectedNodeMatricies;
-		}
-	}
-
-	return &Transforms();
 }
