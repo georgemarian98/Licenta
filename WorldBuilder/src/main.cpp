@@ -5,7 +5,7 @@
 
 int main()
 {
-    auto app = Application::GetInstance("Licenta", 1280, 720);
+    auto app = Application::GetInstance("Licenta");
     glCheckError( );
 
     app->Run( );
