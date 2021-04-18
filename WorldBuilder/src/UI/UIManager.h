@@ -1,4 +1,5 @@
 #pragma once
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                #pragma once
 #include <vector>
 #include <functional>
 
@@ -36,3 +37,4 @@ private:
 	static std::function<void(void)> m_ExportImgFunction;
 };
 
+                                                                                                                                                                                                                                                    

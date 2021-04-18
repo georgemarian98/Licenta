@@ -7,9 +7,9 @@ void ModelPanel::AddChild(std::string Name)
 	m_Panels.insert({Name, Transforms(glm::vec3(0.0f, 0.0f, -25.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 }
 
-const Transforms& ModelPanel::GetMatrices(std::string Name, bool& Status)
+const MeshProperties& ModelPanel::GetNodeProperties(std::string Name, bool& Status)
 {
-	return FindMatricies(Name, Status);
+	return FindNodeProperties(Name, Status);
 }
 
 void ModelPanel::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
@@ -31,22 +31,22 @@ void ModelPanel::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
 	}
 }
 
-Transforms& ModelPanel::FindMatricies(std::string Name, bool& Status) 
+MeshProperties& ModelPanel::FindNodeProperties(std::string Name, bool& Status)
 {
 	Status = m_Panels.find(Name) != m_Panels.end( );
 	if(Status == true){
 		return  m_Panels[Name];
 	}
 
-	static Transforms nullTransf;
+	static MeshProperties nullTransf;
 	return nullTransf;
 }
 
-Transforms* ModelPanel::GetMatrices(std::string Name)
+MeshProperties* ModelPanel::GetNodeProperties(std::string Name)
 {
 	bool status;
 	if(m_Name != Name){
-		return &FindMatricies(Name, status);
+		return &FindNodeProperties(Name, status);
 	}
 	else{
 		status = true;

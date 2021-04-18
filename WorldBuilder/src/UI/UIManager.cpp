@@ -141,18 +141,21 @@ void UIManager::DrawProperties( )
 {
 	static std::string oldSelectedNode = m_SelectedNode.first;
 	static uint32_t oldSelectedNodeId = m_SelectedNode.second;
-	static Transforms* selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);
+	static MeshProperties* selectedNodeProperties = m_Panels[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
 
 	if(oldSelectedNode != m_SelectedNode.first || oldSelectedNodeId != m_SelectedNode.second){
-		selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);;
+		selectedNodeProperties = m_Panels[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);;
 		oldSelectedNode = m_SelectedNode.first;
 	}
-	
+	Transforms& selectedNodeTransforms = selectedNodeProperties->TransformMatrices;
+
 	ImGui::Text(m_SelectedNode.first.c_str() );
 	ImGui::Separator( );
-	ImGui::DragFloat3("Translation", glm::value_ptr(selectedNodeMatricies->Translation), 0.5f);
-	ImGui::DragFloat3("Rotation", glm::value_ptr(selectedNodeMatricies->Rotation), 0.5f);
-	ImGui::DragFloat3("Scale", glm::value_ptr(selectedNodeMatricies->Scale), 0.5f);
+	ImGui::DragFloat3("Translation", glm::value_ptr(selectedNodeTransforms.Translation), 0.5f);
+	ImGui::DragFloat3("Rotation", glm::value_ptr(selectedNodeTransforms.Rotation), 0.5f);
+	ImGui::DragFloat3("Scale", glm::value_ptr(selectedNodeTransforms.Scale), 0.5f);
+	ImGui::Separator( );
+	ImGui::ColorEdit3("Tint Color", glm::value_ptr(selectedNodeProperties->TintColor));
 	//To be continue
 }
 

@@ -3,17 +3,18 @@
 
 void Model::Draw(const std::unique_ptr<Shader>& shader)
 {
-    Transforms matricies = m_ModelView->GetMainTransfors( );
-    DrawNodes(m_RootMesh, shader, matricies); 
+    MeshProperties mainProperties = m_ModelView->GetMainNodeProperties( );
+    DrawNodes(m_RootMesh, shader, mainProperties.TransformMatrices);
 }
 
 
 void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& shader, Transforms NodeMatricies)
 {
     bool status;
-    auto& [translation, scale, rotation] = m_ModelView->GetMatrices(Node->m_Name, status);
+    auto& properties = m_ModelView->GetNodeProperties(Node->m_Name, status);
 
     if(status == true){
+        auto& [translation, scale, rotation] = properties.TransformMatrices;
         NodeMatricies.Translation += translation;
         NodeMatricies.Scale *= scale;
         NodeMatricies.Rotation += rotation;
@@ -25,7 +26,9 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_p
         model = glm::rotate(model, NodeMatricies.Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, NodeMatricies.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
         shader->UploadUniformMat4("model", model);
+        shader->UploadUniformVec3("tintColor", properties.TintColor);
     }
 
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
