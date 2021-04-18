@@ -12,13 +12,13 @@
 class Application{
 
 public:
-	static std::shared_ptr<Application> GetInstance(const char* Name = "", uint32_t Width = 1280, uint32_t Height = 720);
+	static std::shared_ptr<Application> GetInstance(const char* Name = "");
 	
 	void Run( );
 private:
 	Application( ) = default;
 	Application(Application& ) = delete;
-	Application(const char* Name, uint32_t Width, uint32_t Height);
+	Application(const char* Name);
 
 	void Mouse(GLFWwindow* Window, double Xpos, double Ypos);
 	void KeyboardInput( );

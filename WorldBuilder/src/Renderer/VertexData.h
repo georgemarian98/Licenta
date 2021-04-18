@@ -25,3 +25,12 @@ struct Transforms{
 	Transforms( ) { };
 	Transforms(glm::vec3& Translation, glm::vec3& Scale, glm::vec3& Rotation) : Translation(Translation), Scale(Scale), Rotation(Rotation) {};
 };
+
+struct MeshProperties{
+	Transforms TransformMatrices;
+	glm::vec3 TintColor;
+	bool CastShadow;
+	float Glosiness;
+	float Metalic;
+	//TODO 
+};

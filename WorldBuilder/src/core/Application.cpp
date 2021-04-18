@@ -8,27 +8,46 @@
 
 #include <functional>
 
-std::shared_ptr<Application> Application::GetInstance(const char* Name, uint32_t Width, uint32_t Height)
+std::shared_ptr<Application> Application::GetInstance(const char* Name)
 {	
 	static std::shared_ptr<Application> m_AppInstance = nullptr;
 
 	if(m_AppInstance == nullptr){
-		m_AppInstance = std::shared_ptr<Application>(new Application(Name, Width, Height));
+		m_AppInstance = std::shared_ptr<Application>(new Application(Name));
 	}
 
 	return m_AppInstance;
 }
 
-Application::Application(const char* Name, uint32_t Width, uint32_t Height) :
-	m_Width(Width), m_Height(Height), m_Window(Name, Width, Height), m_Camera(Width, Height)
+Application::Application(const char* Name) :
+	m_Window(Name), m_Camera(m_Window.GetWindowSize()[0], m_Window.GetWindowSize( )[1])
 {
+	auto windowSize = m_Window.GetWindowSize( );
+	m_Width = windowSize[0];
+	m_Height = windowSize[1];
+
 	// Setup ImGui
 	Renderer::Initiliaze( );
 	UIManager::Initiliaze(m_Window);
 
+	UIManager::SetNewSceneFunction([ & ]()	{
+		m_Scene->ClearScene();
+		UIManager::ClearScene( );
+	});
+	
 	UIManager::SetImportFunction([ & ](const std::string& Path)	{
 		UIManager::AddPannel(m_Scene->AddModel(Path));
 	});
+
+	UIManager::SetExportObjFunction([ & ](){
+		std::cout << "Export Obj\n";
+	});
+
+	UIManager::SetExportImgFunction([ & ]( ){
+		std::cout << "Export Img\n";
+	});
+
+
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 	m_Scene = std::make_unique<Scene>();
@@ -127,6 +146,9 @@ void Application::ResizeWindow(GLFWwindow* window, int width, int height)
 {
 	fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
 
-	m_Camera.setProjection(width, height);
-	m_SceneBuffer->Resize(width, height);
+	if(width != 0 && height != 0){
+		m_Camera.setProjection(width, height);
+		m_SceneBuffer->Resize(width, height);
+	}
+	
 }

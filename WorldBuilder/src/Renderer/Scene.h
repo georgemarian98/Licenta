@@ -10,6 +10,7 @@ public:
 
 	void Draw(const Camera& SceneCamera);
 	void AddPass(std::unique_ptr<Pass>& Pass_p);
+	void ClearScene( ) { m_SceneModels.clear( ); };
 	std::shared_ptr<ModelPanel> AddModel(const std::string_view& Path);
 
 private:

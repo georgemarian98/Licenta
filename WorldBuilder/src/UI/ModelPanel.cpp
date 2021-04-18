@@ -4,7 +4,7 @@
 
 void ModelPanel::AddChild(std::string Name)
 {
-	m_Panels.insert({Name, Transforms(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
+	m_Panels.insert({Name, Transforms(glm::vec3(0.0f, 0.0f, -25.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 }
 
 const Transforms& ModelPanel::GetMatrices(std::string Name, bool& Status)
@@ -22,7 +22,7 @@ void ModelPanel::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
 			SelectedEntity = {m_Name, m_Id};
 
 		for(auto& [key, _] : m_Panels){
-
+			
 			if(ImGui::Selectable(key.c_str( ), SelectedEntity.first == key)){
 				SelectedEntity = {key, m_Id};
 			}
@@ -38,7 +38,8 @@ Transforms& ModelPanel::FindMatricies(std::string Name, bool& Status)
 		return  m_Panels[Name];
 	}
 
-	return Transforms( );
+	static Transforms nullTransf;
+	return nullTransf;
 }
 
 Transforms* ModelPanel::GetMatrices(std::string Name)

@@ -1,15 +1,21 @@
 #include "pch.h"
 #include "UIManager.h"
 
+//#define IMGUI_EXAMPLE
+
 std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 {
-	g << vec.x << ", " << vec.y << ", " << vec.z << "\n";
+	g << vec.x << ", " << vec.y << ", " << vec.z;
 	return g;
 }
 
 std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
 std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
+
 std::function<void(const std::string&)>  UIManager::m_ImportFunction;
+std::function<void(void)>                UIManager::m_NewSceneFunction;
+std::function<void(void)>                UIManager::m_ExportObjFunction;
+std::function<void(void)>                UIManager::m_ExportImgFunction;
 
 void UIManager::Initiliaze(Window& Window)
 {
@@ -19,7 +25,7 @@ void UIManager::Initiliaze(Window& Window)
 	ImGui_ImplOpenGL3_Init("#version 130");
 }
 
-void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
+void UIManager::Draw(const uint32_t SceneId)
 {
 	static bool active = true;
 	ImGuiIO& io = ImGui::GetIO( );
@@ -29,9 +35,10 @@ void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
 	ImGui_ImplGlfw_NewFrame( );
 	ImGui::NewFrame( );
 
-	if(ShowDemo == true){
-		ImGui::ShowDemoWindow( );
-	}
+#ifdef IMGUI_EXAMPLE
+	ImGui::ShowDemoWindow( );
+#endif // IMGUI_EXAMPLE
+
 
 	{//Docking
 
@@ -81,11 +88,11 @@ void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
 	if(ImGui::BeginMenuBar( )){
 		if(ImGui::BeginMenu("File")){
 
-			if(ImGui::MenuItem("New Scene")) std::cout << "New Scene\n";
+			if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 			if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
 			if(ImGui::BeginMenu("Export Scene")){
-				if(ImGui::MenuItem("Object")) std::cout << "obj\n";
-				if(ImGui::MenuItem("Image")) std::cout << "img\n";
+				if(ImGui::MenuItem("Object")) UIManager::m_ExportObjFunction( );
+				if(ImGui::MenuItem("Image")) UIManager::m_ExportImgFunction( );
 				ImGui::EndMenu( );
 			}
 			if(ImGui::MenuItem("Exit")) exit(0);
@@ -97,7 +104,7 @@ void UIManager::Draw(const uint32_t SceneId, bool ShowDemo)
 
 	ImGui::Begin("View");
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail( );
-	ImGui::Image(reinterpret_cast<void*>(SceneId), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
+	ImGui::Image((void*)(intptr_t)(SceneId), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
 	ImGui::End( );
 
 
@@ -133,9 +140,10 @@ void UIManager::DrawModels( )
 void UIManager::DrawProperties( )
 {
 	static std::string oldSelectedNode = m_SelectedNode.first;
+	static uint32_t oldSelectedNodeId = m_SelectedNode.second;
 	static Transforms* selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);
 
-	if(oldSelectedNode != m_SelectedNode.first){
+	if(oldSelectedNode != m_SelectedNode.first || oldSelectedNodeId != m_SelectedNode.second){
 		selectedNodeMatricies = m_Panels[m_SelectedNode.second]->GetMatrices(m_SelectedNode.first);;
 		oldSelectedNode = m_SelectedNode.first;
 	}
@@ -178,8 +186,15 @@ void UIManager::ImportModel( )
 
 	// Display the Open dialog box. 
 	if(GetOpenFileName(&ofn) == TRUE){
-		std::wstring wFile(ofn.lpstrFile);
-		std::string path(wFile.begin( ), wFile.end( ));
-		m_ImportFunction(path);
+		
+		char* filPathCString = new char[260];
+		size_t convertedChars = 0;
+
+		// Put a copy of the converted string into nstring
+		wcstombs_s(&convertedChars, filPathCString, 260, ofn.lpstrFile, _TRUNCATE);
+
+		m_ImportFunction(filPathCString);
+
+		delete[] filPathCString;
 	}
 }

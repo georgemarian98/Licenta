@@ -8,10 +8,16 @@
 class UIManager{
 public:
 	static void Initiliaze(Window& );
-	static void Draw(const uint32_t SceneId, bool ShowDemo = false);
+	static void Draw(const uint32_t SceneId);
 
 	static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
+
 	static void SetImportFunction(std::function<void(const std::string&)> Function) { m_ImportFunction = std::move(Function); };
+	static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
+	static void SetExportObjFunction(std::function<void(void)> Function) { m_ExportObjFunction = std::move(Function); };
+	static void SetExportImgFunction(std::function<void(void)> Function) { m_ExportImgFunction = std::move(Function); };
+
+	static void ClearScene( ) { m_Panels.clear( ); };
 
 private:
 	static void DrawModels( );
@@ -25,5 +31,8 @@ private:
 	//Functions
 	//TODO: New Scene, Export Scene, etc
 	static std::function<void(const std::string&)> m_ImportFunction;
+	static std::function<void(void)> m_NewSceneFunction;
+	static std::function<void(void)> m_ExportObjFunction;
+	static std::function<void(void)> m_ExportImgFunction;
 };
 
