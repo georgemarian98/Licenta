@@ -31,7 +31,7 @@ private:
     MeshProperties* GetNodeProperties(std::string Name);
 
 private:
-    std::unordered_map < std::string, MeshProperties > m_Panels; //translation, scale, rotation
+    std::unordered_map < std::string, MeshProperties > m_Panels;
     MeshProperties m_MainTransforms;
     std::string m_Name;
     uint32_t m_Id;

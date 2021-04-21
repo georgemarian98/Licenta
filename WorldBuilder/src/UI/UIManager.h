@@ -8,15 +8,27 @@
 
 class UIManager{
 public:
-	static void Initiliaze(Window& );
+	/// <summary>
+	/// Initialize ImGui context
+	/// </summary>
+	/// <param name="Window">Reference to the application GLFW window</param>
+	static void Initiliaze(Window& Window);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="SceneId">Index for the texture ID or framebuffer ID</param>
 	static void Draw(const uint32_t SceneId);
 
+	/// <summary>
+	/// Add the model panel to the internal structure
+	/// </summary>
+	/// <param name="Panel"></param>
 	static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
 
 	static void SetImportFunction(std::function<void(const std::string&)> Function) { m_ImportFunction = std::move(Function); };
 	static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
-	static void SetExportObjFunction(std::function<void(void)> Function) { m_ExportObjFunction = std::move(Function); };
-	static void SetExportImgFunction(std::function<void(void)> Function) { m_ExportImgFunction = std::move(Function); };
+	static void SetExportSceneFunction(std::function<void(void)> Function) { m_ExportSceneFunction = std::move(Function); };
 
 	static void ClearScene( ) { m_Panels.clear( ); };
 
@@ -30,11 +42,9 @@ private:
 	static std::pair<std::string, uint32_t> m_SelectedNode;
 
 	//Functions
-	//TODO: New Scene, Export Scene, etc
 	static std::function<void(const std::string&)> m_ImportFunction;
 	static std::function<void(void)> m_NewSceneFunction;
-	static std::function<void(void)> m_ExportObjFunction;
-	static std::function<void(void)> m_ExportImgFunction;
+	static std::function<void(void)> m_ExportSceneFunction;
 };
 
                                                                                                                                                                                                                                                     

@@ -39,15 +39,9 @@ Application::Application(const char* Name) :
 		UIManager::AddPannel(m_Scene->AddModel(Path));
 	});
 
-	UIManager::SetExportObjFunction([ & ](){
-		std::cout << "Export Obj\n";
+	UIManager::SetExportSceneFunction([ & ](){
+		std::cout << "Export Scene\n";
 	});
-
-	UIManager::SetExportImgFunction([ & ]( ){
-		std::cout << "Export Img\n";
-	});
-
-
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 	m_Scene = std::make_unique<Scene>();

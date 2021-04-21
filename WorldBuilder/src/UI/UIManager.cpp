@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "UIManager.h"
 
-//#define IMGUI_EXAMPLE
-
 std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 {
 	g << vec.x << ", " << vec.y << ", " << vec.z;
@@ -14,8 +12,7 @@ std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 
 std::function<void(const std::string&)>  UIManager::m_ImportFunction;
 std::function<void(void)>                UIManager::m_NewSceneFunction;
-std::function<void(void)>                UIManager::m_ExportObjFunction;
-std::function<void(void)>                UIManager::m_ExportImgFunction;
+std::function<void(void)>                UIManager::m_ExportSceneFunction;
 
 void UIManager::Initiliaze(Window& Window)
 {
@@ -90,11 +87,7 @@ void UIManager::Draw(const uint32_t SceneId)
 
 			if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 			if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
-			if(ImGui::BeginMenu("Export Scene")){
-				if(ImGui::MenuItem("Object")) UIManager::m_ExportObjFunction( );
-				if(ImGui::MenuItem("Image")) UIManager::m_ExportImgFunction( );
-				ImGui::EndMenu( );
-			}
+			if(ImGui::MenuItem("Export Scene")) UIManager::m_ExportSceneFunction( );
 			if(ImGui::MenuItem("Exit")) exit(0);
 			ImGui::EndMenu( );
 		}
