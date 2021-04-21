@@ -6,8 +6,6 @@
 #include "Renderer/Renderer.h"
 #include "UI/UIManager.h"
 
-#include <functional>
-
 std::shared_ptr<Application> Application::GetInstance(const char* Name)
 {	
 	static std::shared_ptr<Application> m_AppInstance = nullptr;
@@ -35,7 +33,7 @@ Application::Application(const char* Name) :
 		UIManager::ClearScene( );
 	});
 	
-	UIManager::SetImportFunction([ & ](const std::string& Path)	{
+	UIManager::SetImportFunction([ & ](const char* Path)	{
 		UIManager::AddPannel(m_Scene->AddModel(Path));
 	});
 

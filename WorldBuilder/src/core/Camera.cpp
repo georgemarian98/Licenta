@@ -13,7 +13,6 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 	m_CameraRightDirection = glm::normalize(glm::cross(up, m_CameraDirection));
 
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
-
 }
 
 glm::mat4 Camera::GetViewMatrix( ) const 

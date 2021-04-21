@@ -29,7 +29,6 @@ struct Transforms{
 struct MeshProperties{
 	Transforms TransformMatrices;
 	glm::vec3 TintColor = glm::vec3(1.0f);
-	//bool CastShadow;
 	float Glossiness = 0.0f;
 	float Metalic = 0.0f;
 	//TODO 

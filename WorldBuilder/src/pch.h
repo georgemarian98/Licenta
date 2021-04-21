@@ -47,7 +47,6 @@
 #include "core/Window.h"
 #include "core/Camera.h"
 
-
 #endif // PCH
 
 

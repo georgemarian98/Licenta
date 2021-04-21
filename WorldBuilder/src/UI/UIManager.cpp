@@ -12,7 +12,7 @@ std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
 std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 
-std::function<void(const std::string&)>  UIManager::m_ImportFunction;
+std::function<void(const char*)>  UIManager::m_ImportFunction;
 std::function<void(void)>                UIManager::m_NewSceneFunction;
 std::function<void(void)>                UIManager::m_ExportObjFunction;
 std::function<void(void)>                UIManager::m_ExportImgFunction;
@@ -173,8 +173,6 @@ void UIManager::ImportModel( )
 		ofn.lStructSize = sizeof(ofn);
 		ofn.hwndOwner = 0;
 		ofn.lpstrFile = (LPWSTR)szFile;
-		// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-		// use the contents of szFile to initialize itself.
 		ofn.lpstrFile[0] = '\0';
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
