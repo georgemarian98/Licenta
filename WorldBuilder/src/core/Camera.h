@@ -39,9 +39,6 @@ private:
 
 	glm::vec3 m_Up;
 	glm::mat4 m_Projection;
-
-	float m_OrthographicSize = 100.0f;
-	float m_OrthographicNear = -100.0f, m_OrthographicFar = 100.0f;
 };
 
 #endif /* Camera_hpp */

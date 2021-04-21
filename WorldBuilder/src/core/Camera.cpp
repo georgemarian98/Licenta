@@ -5,8 +5,6 @@
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 10000.0f
 
-//#define ORTHO
-
 Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm::vec3& CameraTarget) :
 	m_CameraPosition(CameraPosition), m_CameraTarget(CameraTarget), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
 {
@@ -14,18 +12,7 @@ Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm:
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	m_CameraRightDirection = glm::normalize(glm::cross(up, m_CameraDirection));
 
-#ifdef ORTHO
-	float aspect_ratio = (float)Width / (float)Height;
-	float orthoLeft = -m_OrthographicSize * aspect_ratio * 0.5f;
-	float orthoRight = m_OrthographicSize * aspect_ratio * 0.5f;
-	float orthoBottom = -m_OrthographicSize * 0.5f;
-	float orthoTop = m_OrthographicSize * 0.5f;
-
-	m_Projection = glm::ortho(orthoLeft, orthoRight,
-							  orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
-#else
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
-#endif // ORTHO
 
 }
 
@@ -36,18 +23,7 @@ glm::mat4 Camera::GetViewMatrix( ) const
 
 void Camera::setProjection(int Width, int Height)
 {
-#ifdef ORTHO
-	float aspect_ratio = (float)Width / (float)Height;
-	float orthoLeft = -m_OrthographicSize * aspect_ratio * 0.5f;
-	float orthoRight = m_OrthographicSize * aspect_ratio * 0.5f;
-	float orthoBottom = -m_OrthographicSize * 0.5f;
-	float orthoTop = m_OrthographicSize * 0.5f;
-
-	m_Projection = glm::ortho(orthoLeft, orthoRight,
-							  orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
-#else
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
-#endif // ORTHO
 }
 
 void Camera::move(MOVE_DIRECTION Direction, double TimeStep)

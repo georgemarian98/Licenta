@@ -33,7 +33,6 @@ private:
 private:
     std::unordered_map < std::string, MeshProperties > m_Panels; //translation, scale, rotation
     MeshProperties m_MainTransforms;
-    //Transforms m_MainTransforms;
     std::string m_Name;
     uint32_t m_Id;
 };

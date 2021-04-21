@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "Model.h"
 
-void Model::Draw(const std::unique_ptr<Shader>& shader)
+void Model::Draw(const std::unique_ptr<Shader>& ModelShader)
 {
     MeshProperties mainProperties = m_ModelView->GetMainNodeProperties( );
-    DrawNodes(m_RootMesh, shader, mainProperties.TransformMatrices);
+    DrawNodes(m_RootMesh, ModelShader, mainProperties.TransformMatrices);
 }
 
 
-void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& shader, Transforms NodeMatricies)
+void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, Transforms NodeMatricies)
 {
     bool status;
     auto& properties = m_ModelView->GetNodeProperties(Node->m_Name, status);
@@ -27,15 +27,15 @@ void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_p
         model = glm::rotate(model, NodeMatricies.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        shader->UploadUniformMat4("model", model);
-        shader->UploadUniformVec3("tintColor", properties.TintColor);
+        ModelShader->UploadUniformMat4("model", model);
+        ModelShader->UploadUniformVec3("tintColor", properties.TintColor);
     }
 
     for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
-        Node->m_Meshes[i]->Draw(shader);
+        Node->m_Meshes[i]->Draw(ModelShader);
 
     for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
-        DrawNodes(Node->m_ChildrenNodes[i], shader, NodeMatricies);
+        DrawNodes(Node->m_ChildrenNodes[i], ModelShader, NodeMatricies);
     }
 }
 
@@ -81,7 +81,7 @@ std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
     return newNode;
 }
 
-std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* scene)
+std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* Scene)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -129,7 +129,7 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* sc
         vertices.push_back(vertex);
     }
 
-    indices.reserve(3u * ImportedMesh->mNumFaces);
+    indices.reserve(3ul * ImportedMesh->mNumFaces);
     for(uint32_t i = 0; i < ImportedMesh->mNumFaces; i++){
         aiFace face = ImportedMesh->mFaces[i];
 
@@ -138,7 +138,7 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* sc
             indices.push_back(face.mIndices[j]);
     }
 
-    aiMaterial* material = scene->mMaterials[ImportedMesh->mMaterialIndex];
+    aiMaterial* material = Scene->mMaterials[ImportedMesh->mMaterialIndex];
 
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
@@ -214,13 +214,12 @@ uint32_t  Model::TextureFromFile(const char* Path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
     }
-    else{
+    else
         std::cout << "Texture failed to load at path: " << filename << std::endl;
-        stbi_image_free(data);
-    }
+    
+
+    stbi_image_free(data);
 
     return textureID;
 }

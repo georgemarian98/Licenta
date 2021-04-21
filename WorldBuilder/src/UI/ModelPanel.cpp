@@ -48,8 +48,7 @@ MeshProperties* ModelPanel::GetNodeProperties(std::string Name)
 	if(m_Name != Name){
 		return &FindNodeProperties(Name, status);
 	}
-	else{
-		status = true;
+	else
 		return &m_MainTransforms;
-	}
+	
 }

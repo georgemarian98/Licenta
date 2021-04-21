@@ -71,9 +71,6 @@ void Application::Run( )
 	//stbi_set_flip_vertically_on_load(true);
 	
 	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
-	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
-	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\gobber\\GoblinX.obj"));
-	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\brick_wall\\brick_wall.obj"));
 	m_Window.SetVsync(false);
 
 	while(m_Window.ShouldClose( ) == false){
