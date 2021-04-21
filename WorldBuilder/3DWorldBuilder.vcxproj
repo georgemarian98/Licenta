@@ -85,7 +85,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\yaml\include</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
