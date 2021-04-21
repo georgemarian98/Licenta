@@ -35,11 +35,12 @@ Application::Application(const char* Name) :
 		UIManager::ClearScene( );
 	});
 	
-	UIManager::SetImportFunction([ & ](const std::string& Path)	{
+	UIManager::SetImportFunction([ & ](const char* Path)	{
 		UIManager::AddPannel(m_Scene->AddModel(Path));
 	});
 
-	UIManager::SetExportSceneFunction([ & ](){
+	UIManager::SetExportSceneFunction([ & ](const char* Path){
+		std::cout << Path << std::endl;
 		std::cout << "Export Scene\n";
 	});
 

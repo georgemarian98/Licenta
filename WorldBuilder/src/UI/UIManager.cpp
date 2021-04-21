@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "UIManager.h"
 
+#include <ShlObj.h>
+
 std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 {
 	g << vec.x << ", " << vec.y << ", " << vec.z;
@@ -10,9 +12,9 @@ std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
 std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
 std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 
-std::function<void(const std::string&)>  UIManager::m_ImportFunction;
-std::function<void(void)>                UIManager::m_NewSceneFunction;
-std::function<void(void)>                UIManager::m_ExportSceneFunction;
+std::function<void(void)>         UIManager::m_NewSceneFunction;
+std::function<void(const char*)>  UIManager::m_ImportFunction;
+std::function<void(const char*)>  UIManager::m_ExportSceneFunction;
 
 void UIManager::Initiliaze(Window& Window)
 {
@@ -87,7 +89,7 @@ void UIManager::Draw(const uint32_t SceneId)
 
 			if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 			if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
-			if(ImGui::MenuItem("Export Scene")) UIManager::m_ExportSceneFunction( );
+			if(ImGui::MenuItem("Export Scene")) UIManager::ExportScene( );
 			if(ImGui::MenuItem("Exit")) exit(0);
 			ImGui::EndMenu( );
 		}
@@ -166,8 +168,6 @@ void UIManager::ImportModel( )
 		ofn.lStructSize = sizeof(ofn);
 		ofn.hwndOwner = 0;
 		ofn.lpstrFile = (LPWSTR)szFile;
-		// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-		// use the contents of szFile to initialize itself.
 		ofn.lpstrFile[0] = '\0';
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -183,14 +183,43 @@ void UIManager::ImportModel( )
 	// Display the Open dialog box. 
 	if(GetOpenFileName(&ofn) == TRUE){
 		
-		char* filPathCString = new char[260];
+		char* filePathCString = new char[260];
 		size_t convertedChars = 0;
 
 		// Put a copy of the converted string into nstring
-		wcstombs_s(&convertedChars, filPathCString, 260, ofn.lpstrFile, _TRUNCATE);
+		wcstombs_s(&convertedChars, filePathCString, 260, ofn.lpstrFile, _TRUNCATE);
 
-		m_ImportFunction(filPathCString);
-
-		delete[] filPathCString;
+		m_ImportFunction(filePathCString);
+		delete[ ] filePathCString;
 	}
+}
+
+void UIManager::ExportScene( )
+{
+	TCHAR path[MAX_PATH] = {0};
+	BROWSEINFO bi;
+	ZeroMemory(&bi, sizeof(bi));
+	bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_EDITBOX | BIF_USENEWUI;
+
+	LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
+
+	if(pidl != 0){
+		//get the name of the folder and put it in path
+		SHGetPathFromIDList(pidl, path);
+
+		//free memory used
+		IMalloc* imalloc = 0;
+		if(SUCCEEDED(SHGetMalloc(&imalloc))){
+			imalloc->Free(pidl);
+			imalloc->Release( );
+		}
+	}
+
+	char filePathCString[256];
+	size_t convertedChars = 0;
+
+	// Put a copy of the converted string into nstring
+	wcstombs_s(&convertedChars, filePathCString, 256, path, _TRUNCATE);
+
+	UIManager::m_ExportSceneFunction(filePathCString);
 }

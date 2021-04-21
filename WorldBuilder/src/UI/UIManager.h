@@ -26,9 +26,9 @@ public:
 	/// <param name="Panel"></param>
 	static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
 
-	static void SetImportFunction(std::function<void(const std::string&)> Function) { m_ImportFunction = std::move(Function); };
 	static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
-	static void SetExportSceneFunction(std::function<void(void)> Function) { m_ExportSceneFunction = std::move(Function); };
+	static void SetImportFunction(std::function<void(const char*)> Function) { m_ImportFunction = std::move(Function); };
+	static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
 
 	static void ClearScene( ) { m_Panels.clear( ); };
 
@@ -37,14 +37,15 @@ private:
 	static void DrawProperties( );
 
 	static void ImportModel( );
+	static void ExportScene( );
 private:
 	static std::vector<std::shared_ptr<ModelPanel>> m_Panels;
 	static std::pair<std::string, uint32_t> m_SelectedNode;
 
 	//Functions
-	static std::function<void(const std::string&)> m_ImportFunction;
 	static std::function<void(void)> m_NewSceneFunction;
-	static std::function<void(void)> m_ExportSceneFunction;
+	static std::function<void(const char*)> m_ImportFunction;
+	static std::function<void(const char*)> m_ExportSceneFunction;
 };
 
                                                                                                                                                                                                                                                     
