@@ -5,7 +5,6 @@ class Framebuffer{
 public:
 	Framebuffer( ) = default;
 	Framebuffer(uint32_t Width, uint32_t Height);
-	Framebuffer(Framebuffer&& Other);
 	~Framebuffer( );
 
 	void Bind( );

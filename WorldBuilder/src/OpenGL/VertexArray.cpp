@@ -36,7 +36,7 @@ VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<
 	glBindVertexArray(0);
 }
 
-VertexArray::VertexArray(VertexArray&& Other) : m_VAO(Other.m_VAO), m_VBO(Other.m_VBO), m_EBO(Other.m_EBO)
+VertexArray::VertexArray(VertexArray&& Other) noexcept : m_VAO(Other.m_VAO), m_VBO(Other.m_VBO), m_EBO(Other.m_EBO)
 {
 	Other.m_VAO = 0;
 	Other.m_VBO = 0;

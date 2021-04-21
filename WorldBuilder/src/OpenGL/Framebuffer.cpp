@@ -10,15 +10,6 @@ Framebuffer::Framebuffer(uint32_t Width, uint32_t Height) : m_Width(Width), m_He
 	Create( );
 }
 
-Framebuffer::Framebuffer(Framebuffer&& Other) 
-	: m_RendererID(Other.m_RendererID), m_ColorAttachment(Other.m_ColorAttachment), m_DepthAttachment(Other.m_DepthAttachment),
-	  m_Width(Other.m_Width), m_Height(Other.m_Height)
-{
-	Other.m_RendererID = 0;
-	Other.m_ColorAttachment = 0;
-	Other.m_DepthAttachment = 0;
-}
-
 Framebuffer::~Framebuffer( )
 {
 	glDeleteFramebuffers(1, &m_RendererID);

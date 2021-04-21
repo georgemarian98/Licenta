@@ -10,7 +10,7 @@ class VertexArray{
 public:
 	VertexArray( ) = default;
 	VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices);
-	VertexArray(VertexArray&& Other);
+	VertexArray(VertexArray&& Other) noexcept;
 	~VertexArray( );
 
 	void Bind( );

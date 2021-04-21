@@ -129,7 +129,7 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* Sc
         vertices.push_back(vertex);
     }
 
-    indices.reserve(3ul * ImportedMesh->mNumFaces);
+    indices.reserve(3ull * ImportedMesh->mNumFaces);
     for(uint32_t i = 0; i < ImportedMesh->mNumFaces; i++){
         aiFace face = ImportedMesh->mFaces[i];
 
@@ -216,7 +216,7 @@ uint32_t  Model::TextureFromFile(const char* Path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
     else
-        std::cout << "Texture failed to load at path: " << filename << std::endl;
+        std::cerr << "Texture failed to load at path: " << filename << std::endl;
     
 
     stbi_image_free(data);

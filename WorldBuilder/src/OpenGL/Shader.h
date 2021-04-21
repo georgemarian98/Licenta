@@ -1,5 +1,4 @@
-#ifndef Shader_h
-#define Shader_h
+#pragma once
 
 class Shader{
 public:
@@ -8,7 +7,7 @@ public:
 	Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName);
 	~Shader( );
 
-	void Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName = "");
+	void Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName = nullptr);
 	void Destroy( );
 	
 	void Bind( );
@@ -38,4 +37,3 @@ private:
 	std::unordered_map<std::string, GLint> m_Uniforms;
 	std::string m_Name;
 };
-#endif /* Shader_hpp */

@@ -1,17 +1,10 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices, const std::vector<Texture>& Textures) :
-    m_Vertices(Vertices), m_Indices(Indices), m_Textures(Textures)
+Mesh::Mesh(std::vector<Vertex>& Vertices, std::vector<uint32_t>& Indices, std::vector<Texture>& Textures) :
+    m_Vertices(std::move(Vertices)), m_Indices(std::move(Indices)), m_Textures(std::move(Textures))
 {
     m_Vertexbuffer = std::make_unique<VertexArray>(m_Vertices, m_Indices);
-}
-
-Mesh::Mesh(Mesh&& Mesh) noexcept:
-    m_Vertices(std::move(Mesh.m_Vertices)), m_Indices(std::move(Mesh.m_Indices)), m_Textures(std::move(Mesh.m_Textures)),
-    m_Vertexbuffer(std::move(Mesh.m_Vertexbuffer))
-{
-
 }
 
 void Mesh::Draw(const std::unique_ptr<Shader>& shader)
