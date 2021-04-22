@@ -5,6 +5,7 @@
 
 #include "Renderer/Renderer.h"
 #include "UI/UIManager.h"
+#include "utility/Exporter.h"
 
 #include <functional>
 
@@ -41,7 +42,8 @@ Application::Application(const char* Name) :
 
 	UIManager::SetExportSceneFunction([ & ](const char* Path){
 		std::cout << Path << std::endl;
-		std::cout << "Export Scene\n";
+		Exporter exp(m_Scene);
+		exp.writeToFile(Path);
 	});
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);

@@ -21,10 +21,10 @@ public:
     {
         m_ModelView = std::make_shared<ModelPanel>( );
         loadModel(Path);
-
     }
     void Draw(const std::unique_ptr<Shader>& ModelShader);
     std::shared_ptr<ModelPanel> GetModelView( ) { return m_ModelView; };
+    std::string GetModelName( ) { return m_Directory + m_ModelView->GetModelName( ); };
 
 private:
     void PrintTree(std::unique_ptr<MeshNode>& Node, int level);

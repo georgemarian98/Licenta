@@ -26,6 +26,7 @@ public:
 
     void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
 
+    std::string GetModelName( ) { return m_Name; };
 private:
     MeshProperties& FindNodeProperties(std::string Name, bool& Status);
     MeshProperties* GetNodeProperties(std::string Name);
