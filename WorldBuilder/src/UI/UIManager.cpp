@@ -3,12 +3,6 @@
 
 #include <ShlObj.h>
 
-std::ostream& operator<<(std::ostream& g, glm::vec3 vec)
-{
-	g << vec.x << ", " << vec.y << ", " << vec.z;
-	return g;
-}
-
 std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
 std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 

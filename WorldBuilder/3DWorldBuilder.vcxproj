@@ -107,7 +107,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\utility\Exporter.h" />
+    <ClInclude Include="src\utility\Serializer.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\RenderPass.h" />
     <ClInclude Include="src\Renderer\Pass.h" />
@@ -129,7 +129,7 @@
     <ClInclude Include="src\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\utility\Exporter.cpp" />
+    <ClCompile Include="src\utility\Serializer.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\Scene.cpp" />

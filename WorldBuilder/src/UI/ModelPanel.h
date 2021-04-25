@@ -8,10 +8,12 @@
 #include "Renderer/VertexData.h"
 
 class UIManager;
+class Serializer;
 
 class ModelPanel{
 public:
     friend class UIManager;
+    friend class Serializer;
 
     ModelPanel( ) 
     {
@@ -19,17 +21,21 @@ public:
         m_Id = id++;
     };
 
-    void AddChild(std::string Name);
-    void SetModelName(std::string Name) { m_Name = Name; };
-    const MeshProperties& GetNodeProperties(std::string Name, bool& Status);
+    void AddChild(const std::string& Name);
+    void SetModelName(std::string& Name) { m_Name = Name; };
+    void SetModelProperties(const std::string Name, const MeshProperties& Properties);
+    void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
+
+    const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
     const MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
 
     void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
 
     std::string GetModelName( ) { return m_Name; };
+
 private:
-    MeshProperties& FindNodeProperties(std::string Name, bool& Status);
-    MeshProperties* GetNodeProperties(std::string Name);
+    MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
+    MeshProperties* GetNodeProperties(const std::string& Name);
 
 private:
     std::unordered_map < std::string, MeshProperties > m_Panels;

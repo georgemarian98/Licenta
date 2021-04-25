@@ -55,7 +55,7 @@ void Model::loadModel(const std::string_view& Path)
     m_Directory = Path.substr(0, Path.find_last_of('\\'));
 
     m_RootMesh = processNode(scene->mRootNode, scene);
-    m_ModelView->SetModelName(scene->mRootNode->mName.C_Str( ));
+    m_ModelView->SetModelName(std::string{scene->mRootNode->mName.C_Str( )});
 
     PrintTree(m_RootMesh, 0);
 }

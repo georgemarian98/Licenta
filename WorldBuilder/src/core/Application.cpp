@@ -5,7 +5,7 @@
 
 #include "Renderer/Renderer.h"
 #include "UI/UIManager.h"
-#include "utility/Exporter.h"
+#include "utility/Serializer.h"
 
 #include <functional>
 
@@ -41,9 +41,8 @@ Application::Application(const char* Name) :
 	});
 
 	UIManager::SetExportSceneFunction([ & ](const char* Path){
-		std::cout << Path << std::endl;
-		Exporter exp(m_Scene);
-		exp.writeToFile(Path);
+		Serializer exp(m_Scene);
+		exp.ExportScene(Path);
 	});
 
 	m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
@@ -68,7 +67,13 @@ void Application::Run( )
 	//stbi_set_flip_vertically_on_load(true);
 	
 	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
+	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
+	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
 	m_Window.SetVsync(false);
+
+	//Serializer exp(m_Scene);
+	//exp.ExportScene("C:\\Users\\George\\Desktop");
+	//m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop");
 
 	while(m_Window.ShouldClose( ) == false){
 		KeyboardInput( );

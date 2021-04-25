@@ -6,8 +6,11 @@
 #include "core/Window.h"
 #include "UI/ModelPanel.h"
 
+class Serializer;
+
 class UIManager{
 public:
+	friend Serializer;
 	/// <summary>
 	/// Initialize ImGui context
 	/// </summary>

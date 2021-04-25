@@ -2,12 +2,12 @@
 #include "Model.h"
 
 #include "Renderer/RenderPass.h"
-class Exporter;
+class Serializer;
 
 class Scene{
 
 public:
-	friend Exporter;
+	friend Serializer;
 	Scene( ) = default;
 
 	void Draw(const Camera& SceneCamera);
