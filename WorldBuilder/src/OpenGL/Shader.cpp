@@ -12,7 +12,7 @@ std::string Shader::readShaderFile(const char* FileName)
 		shaderFile.close( );
 	}
 	catch(const std::exception&){
-		fprintf(stderr, "Shader Error: Failed to load shader '%s'\n", m_Name.c_str( ));
+		fprintf(stderr, "Shader Error: Failed to load shader '%s'\n", FileName);
 		return "ERROR";
 	}
 
@@ -79,22 +79,14 @@ void Shader::Create(const char* VertexShaderFileName, const char* FragmentShader
 }
 
 Shader::Shader(const char* VertexShaderFileName, const  char* FragmentShaderFileName)
-	: m_Name(VertexShaderFileName)
+	: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName)
 {
-	m_Name += "  ";
-	m_Name += FragmentShaderFileName;
-
 	Create(VertexShaderFileName, FragmentShaderFileName);
 }
 
 Shader::Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName)
-	: m_Name(VertexShaderFileName)
+	: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName), m_GeometryName(GeometryShaderFileName)
 {
-	m_Name += "  ";
-	m_Name += FragmentShaderFileName;
-	m_Name += "  ";
-	m_Name += GeometryShaderFileName;
-
 	Create(VertexShaderFileName, FragmentShaderFileName, GeometryShaderFileName);
 }
 
@@ -188,7 +180,9 @@ void Shader::ShaderLog(GLuint ShaderId, bool Compile)
 
 	if(!success){
 		glGetShaderInfoLog(ShaderId, 512, NULL, infoLog);
-		std::cout << m_Name << std::endl;
+		std::cout << "Vertex Shader: " << m_VertexName << std::endl;
+		std::cout << "Fragment Shader: " << m_FragmentName << std::endl;
+		std::cout << "Geometry Shader: " << m_GeometryName << std::endl;
 		std::cout << "Shader compilation error\n" << infoLog << std::endl;
 	}
 }

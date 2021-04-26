@@ -23,7 +23,6 @@ public:
 
     void AddChild(const std::string& Name);
     void SetModelName(std::string& Name) { m_Name = Name; };
-    void SetModelProperties(const std::string Name, const MeshProperties& Properties);
     void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
     const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
@@ -34,6 +33,8 @@ public:
     std::string GetModelName( ) { return m_Name; };
 
 private:
+    void SetModelProperties(const std::string Name, const MeshProperties& Properties);
+
     MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
     MeshProperties* GetNodeProperties(const std::string& Name);
 

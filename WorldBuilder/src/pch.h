@@ -47,7 +47,7 @@
 #include "core/Window.h"
 #include "core/Camera.h"
 
-
+std::ostream& operator<<(std::ostream& g, glm::vec3 vec);
 #endif // PCH
 
 

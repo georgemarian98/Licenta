@@ -190,14 +190,14 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* Material, aiTexture
 uint32_t  Model::TextureFromFile(const char* Path)
 {
     std::string filename = std::string(Path);
-    filename = m_Directory + '/' + filename;
+    filename = m_Directory + '\\' + filename;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
     uint8_t* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
-    if(data){
+    if(data != nullptr){
         GLenum format = 0;
         if(nrComponents == 1)
             format = GL_RED;

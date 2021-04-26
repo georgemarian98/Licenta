@@ -7,6 +7,10 @@ public:
 	Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName);
 	~Shader( );
 
+	std::string GetVertexShaderName( ) { return m_VertexName; };
+	std::string GetFragmentShaderName( ) { return m_FragmentName; };
+	std::string GetGeometryShaderName( ) { return m_GeometryName; };
+
 	void Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName = nullptr);
 	void Destroy( );
 	
@@ -35,5 +39,7 @@ private:
 	GLuint m_ShaderProgram = 0;
 
 	std::unordered_map<std::string, GLint> m_Uniforms;
-	std::string m_Name;
+	std::string m_VertexName;
+	std::string m_FragmentName;
+	std::string m_GeometryName;
 };

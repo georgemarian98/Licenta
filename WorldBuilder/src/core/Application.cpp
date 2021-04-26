@@ -66,14 +66,14 @@ void Application::Run( )
 {
 	//stbi_set_flip_vertically_on_load(true);
 	
-	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
-	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
-	UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
+	//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\gobber\\GoblinX.obj"));
 	m_Window.SetVsync(false);
 
-	//Serializer exp(m_Scene);
+	Serializer exp;
 	//exp.ExportScene("C:\\Users\\George\\Desktop");
-	//m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop");
+	m_Scene = exp.ImportScene( "C:\\Users\\George\\Desktop");
 
 	while(m_Window.ShouldClose( ) == false){
 		KeyboardInput( );
