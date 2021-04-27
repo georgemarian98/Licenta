@@ -1,13 +1,16 @@
 #pragma once
-class Renderer{
 
-public:
-	static void Initiliaze(glm::vec4 ClearColor = glm::vec4(0.3f));
-	static void Clear( );
+namespace SceneEditor{
 
-	/// <summary>
-	/// TODO Batch Rendering
-	/// </summary>
-	static void Submit( );
-};
+	class Renderer{
+	public:
+		static void Initiliaze(glm::vec4 ClearColor = glm::vec4(0.3f));
+		static void Clear( );
+
+		/// <summary>
+		/// TODO Batch Rendering
+		/// </summary>
+		static void Submit( );
+	};
+}
 

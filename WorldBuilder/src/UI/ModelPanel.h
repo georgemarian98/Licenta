@@ -7,38 +7,41 @@
 
 #include "Renderer/VertexData.h"
 
-class UIManager;
-class Serializer;
+namespace SceneEditor{
+    class UIManager;
+    class Serializer;
 
-class ModelPanel{
-public:
-    friend class UIManager;
-    friend class Serializer;
+    class ModelPanel{
+    public:
+        friend class UIManager;
+        friend class Serializer;
 
-    ModelPanel( ) 
-    {
-        static int id = 0;
-        m_Id = id++;
+        ModelPanel( ) 
+        {
+            static int id = 0;
+            m_Id = id++;
+        };
+
+        void AddChild(const std::string& Name);
+        void SetModelName(std::string& Name) { m_Name = Name; };
+        void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
+
+        const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
+        const MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
+
+        void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
+
+        std::string GetModelName( ) { return m_Name; };
+
+    private:
+        MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
+        MeshProperties* GetNodeProperties(const std::string& Name);
+
+    private:
+        uint32_t m_Id;
+        std::string m_Name;
+        MeshProperties m_MainTransforms;
+        std::unordered_map < std::string, MeshProperties > m_Panels;
     };
 
-    void AddChild(const std::string& Name);
-    void SetModelName(std::string& Name) { m_Name = Name; };
-    void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
-
-    const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
-    const MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
-
-    void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
-
-    std::string GetModelName( ) { return m_Name; };
-
-private:
-    MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
-    MeshProperties* GetNodeProperties(const std::string& Name);
-
-private:
-    uint32_t m_Id;
-    std::string m_Name;
-    MeshProperties m_MainTransforms;
-    std::unordered_map < std::string, MeshProperties > m_Panels;
-};
+}

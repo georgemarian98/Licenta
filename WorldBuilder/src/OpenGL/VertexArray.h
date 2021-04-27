@@ -5,19 +5,22 @@
 #include "glad/glad.h"
 #include "Renderer/VertexData.h"
 
-class VertexArray{
+namespace SceneEditor{
+	class VertexArray{
 
-public:
-	VertexArray( ) = default;
-	VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices);
-	VertexArray(VertexArray&& Other) noexcept;
-	~VertexArray( );
+	public:
+		VertexArray( ) = default;
+		VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices);
+		VertexArray(VertexArray&& Other) noexcept;
+		~VertexArray( );
 
-	void Bind( );
-	void Unbind( );
+		void Bind( );
+		void Unbind( );
 
-private:
-	GLuint m_VAO = 0;
-	GLuint m_VBO = 0;
-	GLuint m_EBO = 0;
-};
+	private:
+		GLuint m_VAO = 0;
+		GLuint m_VBO = 0;
+		GLuint m_EBO = 0;
+	};
+
+}

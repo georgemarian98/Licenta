@@ -5,7 +5,7 @@
 
 int main()
 {
-    auto app = Application::GetInstance("Licenta");
+    auto app = SceneEditor::Application::GetInstance("Licenta");
     glCheckError( );
 
     app->Run( );

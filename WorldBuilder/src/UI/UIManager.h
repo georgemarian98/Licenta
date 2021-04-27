@@ -6,51 +6,54 @@
 #include "core/Window.h"
 #include "UI/ModelPanel.h"
 
-class Serializer;
+namespace SceneEditor{
 
-class UIManager{
-public:
-	friend Serializer;
-	/// <summary>
-	/// Initialize ImGui context
-	/// </summary>
-	/// <param name="Window">Reference to the application GLFW window</param>
-	static void Initiliaze(Window& Window);
+	class Serializer;
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="SceneId">Index for the texture ID or framebuffer ID</param>
-	static void Draw(const uint32_t SceneId);
+	class UIManager{
+	public:
+		friend Serializer;
+		/// <summary>
+		/// Initialize ImGui context
+		/// </summary>
+		/// <param name="Window">Reference to the application GLFW window</param>
+		static void Initiliaze(Window& Window);
 
-	/// <summary>
-	/// Add the model panel to the internal structure
-	/// </summary>
-	/// <param name="Panel"></param>
-	static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="SceneId">Index for the texture ID or framebuffer ID</param>
+		static void Draw(const uint32_t SceneId);
 
-	static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
-	static void SetImportFunction(std::function<void(const char*)> Function) { m_ImportFunction = std::move(Function); };
-	static void SetImportSceneFunction(std::function<void(const char*)> Function) { m_ImportSceneFunction = std::move(Function); };
-	static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
+		/// <summary>
+		/// Add the model panel to the internal structure
+		/// </summary>
+		/// <param name="Panel"></param>
+		static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
 
-	static void ClearScene( ) { m_Panels.clear( ); };
+		static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
+		static void SetImportFunction(std::function<void(const char*)> Function) { m_ImportFunction = std::move(Function); };
+		static void SetImportSceneFunction(std::function<void(const char*)> Function) { m_ImportSceneFunction = std::move(Function); };
+		static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
 
-private:
-	static void DrawModels( );
-	static void DrawProperties( );
+		static void ClearScene( ) { m_Panels.clear( ); };
 
-	static void ImportModel( );
-	static void FolderDialog(std::function<void(const char*)>& Function);
-private:
-	static std::vector<std::shared_ptr<ModelPanel>> m_Panels;
-	static std::pair<std::string, uint32_t> m_SelectedNode;
+	private:
+		static void DrawModels( );
+		static void DrawProperties( );
 
-	//Functions
-	static std::function<void(void)> m_NewSceneFunction;
-	static std::function<void(const char*)> m_ImportFunction;
-	static std::function<void(const char*)> m_ImportSceneFunction;
-	static std::function<void(const char*)> m_ExportSceneFunction;
-};
+		static void ImportModel( );
+		static void FolderDialog(std::function<void(const char*)>& Function);
+	private:
+		static std::vector<std::shared_ptr<ModelPanel>> m_Panels;
+		static std::pair<std::string, uint32_t> m_SelectedNode;
+
+		//Functions
+		static std::function<void(void)> m_NewSceneFunction;
+		static std::function<void(const char*)> m_ImportFunction;
+		static std::function<void(const char*)> m_ImportSceneFunction;
+		static std::function<void(const char*)> m_ExportSceneFunction;
+	};
+}
 
                                                                                                                                                                                                                                                     

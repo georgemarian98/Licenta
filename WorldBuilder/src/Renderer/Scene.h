@@ -2,21 +2,25 @@
 #include "Model.h"
 
 #include "Renderer/RenderPass.h"
-class Serializer;
 
-class Scene{
+namespace SceneEditor{
 
-public:
-	friend Serializer;
-	Scene( ) = default;
+	class Serializer;
 
-	void Draw(const Camera& SceneCamera);
-	void AddPass(std::unique_ptr<Pass>& Pass_p);
-	void ClearScene( ) { m_SceneModels.clear( ); };
-	std::shared_ptr<ModelPanel> AddModel(const std::string_view& Path);
+	class Scene{
 
-private:
-	std::vector<std::shared_ptr<Model>> m_SceneModels;
-	std::vector<std::unique_ptr<Pass>> m_Passes;
-};
+	public:
+		friend Serializer;
+		Scene( ) = default;
+
+		void Draw(const Camera& SceneCamera);
+		void AddPass(std::unique_ptr<Pass>& Pass_p);
+		void ClearScene( ) { m_SceneModels.clear( ); };
+		std::shared_ptr<ModelPanel> AddModel(const std::string_view& Path);
+
+	private:
+		std::vector<std::shared_ptr<Model>> m_SceneModels;
+		std::vector<std::unique_ptr<Pass>> m_Passes;
+	};
+}
 
