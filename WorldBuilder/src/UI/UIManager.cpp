@@ -8,6 +8,7 @@ std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
 
 std::function<void(void)>         UIManager::m_NewSceneFunction;
 std::function<void(const char*)>  UIManager::m_ImportFunction;
+std::function<void(const char*)>  UIManager::m_ImportSceneFunction;
 std::function<void(const char*)>  UIManager::m_ExportSceneFunction;
 
 void UIManager::Initiliaze(Window& Window)
@@ -82,8 +83,12 @@ void UIManager::Draw(const uint32_t SceneId)
 		if(ImGui::BeginMenu("File")){
 
 			if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
-			if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
-			if(ImGui::MenuItem("Export Scene")) UIManager::ExportScene( );
+			if(ImGui::BeginMenu("Import")){
+				if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
+				//if(ImGui::MenuItem("Import Scene")) UIManager::FolderDialog(UIManager::m_ImportSceneFunction);
+				ImGui::EndMenu( );
+			}
+			if(ImGui::MenuItem("Export Scene")) UIManager::FolderDialog(UIManager::m_ExportSceneFunction);
 			if(ImGui::MenuItem("Exit")) exit(0);
 			ImGui::EndMenu( );
 		}
@@ -188,7 +193,7 @@ void UIManager::ImportModel( )
 	}
 }
 
-void UIManager::ExportScene( )
+void UIManager::FolderDialog(std::function<void(const char*)>& Function)
 {
 	TCHAR path[MAX_PATH] = {0};
 	BROWSEINFO bi;
@@ -215,5 +220,5 @@ void UIManager::ExportScene( )
 	// Put a copy of the converted string into nstring
 	wcstombs_s(&convertedChars, filePathCString, 256, path, _TRUNCATE);
 
-	UIManager::m_ExportSceneFunction(filePathCString);
+	Function(filePathCString);
 }

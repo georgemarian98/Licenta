@@ -84,18 +84,6 @@ Serializer::Serializer(const std::unique_ptr<Scene>& CurrentScene)
 	}
 	m_YAMLEmitter << YAML::EndSeq; //Models paths
 
-	//m_YAMLEmitter << YAML::Key << "Passes" << YAML::Value << YAML::BeginSeq; // Passes
-	//{
-	//	m_YAMLEmitter << YAML::BeginMap;
-	//	for(auto& pass : CurrentScene->m_Passes){
-	//		m_YAMLEmitter << YAML::Key << pass->m_Name << YAML::Value << YAML::BeginSeq;
-
-	//		m_YAMLEmitter << YAML::EndSeq;
-	//	}
-	//	m_YAMLEmitter << YAML::EndMap; 
-	//}
-	//m_YAMLEmitter << YAML::EndSeq; //Passes
-
 	m_YAMLEmitter << YAML::Key << "Models Properties" << YAML::Value << YAML::BeginSeq; // Models Properties sequence
 	{
 		for(auto& panel : UIManager::m_Panels){
@@ -168,9 +156,6 @@ std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
 		UIManager::AddPannel(importedScene->AddModel(modelPath));
 	}
 
-	std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl");
-	importedScene->AddPass(renderPass);
-
 	YAML::Node modelsProperties = rootData["Models Properties"];
 	if(!modelsProperties)
 		std::cout << "YAML corrupt models properties\n";
@@ -179,13 +164,13 @@ std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
 	for(auto& modelProperties : modelsProperties){
 		std::string modelName = modelProperties["Name"].as<std::string>( );
 
-		MeshProperties prop;
-		prop.TransformMatrices.Translation = modelProperties["Translation"].as<glm::vec3>( );
-		prop.TransformMatrices.Scale = modelProperties["Scale"].as<glm::vec3>( );
-		prop.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
-		prop.TintColor = modelProperties["Color"].as<glm::vec3>( );
+		MeshProperties mainProp;
+		mainProp.TransformMatrices.Translation = modelProperties["Translation"].as<glm::vec3>( );
+		mainProp.TransformMatrices.Scale = modelProperties["Scale"].as<glm::vec3>( );
+		mainProp.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
+		mainProp.TintColor = modelProperties["Color"].as<glm::vec3>( );
 
-		UIManager::m_Panels[i]->m_MainTransforms = prop;
+		UIManager::m_Panels[i]->m_MainTransforms = mainProp;
 
 		YAML::Node meshes = modelProperties["Meshes"];
 		if(meshes){
@@ -202,6 +187,9 @@ std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
 		}
 		i++;
 	}
+
+	std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl");
+	importedScene->AddPass(renderPass);
 
 	return importedScene;
 }

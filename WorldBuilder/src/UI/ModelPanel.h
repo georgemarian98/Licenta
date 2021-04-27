@@ -33,14 +33,12 @@ public:
     std::string GetModelName( ) { return m_Name; };
 
 private:
-    void SetModelProperties(const std::string Name, const MeshProperties& Properties);
-
     MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
     MeshProperties* GetNodeProperties(const std::string& Name);
 
 private:
-    std::unordered_map < std::string, MeshProperties > m_Panels;
-    MeshProperties m_MainTransforms;
-    std::string m_Name;
     uint32_t m_Id;
+    std::string m_Name;
+    MeshProperties m_MainTransforms;
+    std::unordered_map < std::string, MeshProperties > m_Panels;
 };

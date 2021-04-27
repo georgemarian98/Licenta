@@ -7,8 +7,6 @@
 #include "UI/UIManager.h"
 #include "utility/Serializer.h"
 
-#include <functional>
-
 std::shared_ptr<Application> Application::GetInstance(const char* Name)
 {	
 	static std::shared_ptr<Application> m_AppInstance = nullptr;
@@ -51,11 +49,6 @@ Application::Application(const char* Name) :
 	std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl");
 	m_Scene->AddPass(renderPass);
 
-	//glfwSetCursorPosCallback(m_Window, [ ](GLFWwindow* window, double xpos, double ypos){
-	//	auto app = Application::GetInstance( );
-	//	app->Mouse(window, xpos, ypos);
-	//});
-
 	glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 		auto app = Application::GetInstance( );
 		app->ResizeWindow(window, width, height);
@@ -72,7 +65,6 @@ void Application::Run( )
 	m_Window.SetVsync(false);
 
 	Serializer exp;
-	//exp.ExportScene("C:\\Users\\George\\Desktop");
 	m_Scene = exp.ImportScene( "C:\\Users\\George\\Desktop");
 
 	while(m_Window.ShouldClose( ) == false){

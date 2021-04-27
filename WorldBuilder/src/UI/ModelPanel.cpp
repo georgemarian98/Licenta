@@ -7,14 +7,6 @@ void ModelPanel::AddChild(const std::string& Name)
 	m_Panels.insert({Name, Transforms(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 }
 
-
-void ModelPanel::SetModelProperties(const std::string Name, const MeshProperties& Properties)
-{
-	if(m_Panels.find(Name) != m_Panels.end( )){
-		m_Panels[Name] = Properties;
-	}
-}
-
 const MeshProperties& ModelPanel::GetNodeProperties(std::string& Name, bool& Status)
 {
 	return FindNodeProperties(Name, Status);

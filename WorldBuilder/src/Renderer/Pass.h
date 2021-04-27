@@ -9,8 +9,6 @@ class Serializer;
 
 class Pass{
 public:
-	friend Serializer;
-
 	Pass( ) = default;
 	Pass(const char* Name,const char* ShaderVertexPath, const char* ShaderFragmentPath) : m_Name(Name)
 	{
