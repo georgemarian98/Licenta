@@ -3,9 +3,10 @@
 
 namespace SceneEditor{
 
-	#define CAMERA_SPEED 10.0f
-	#define NEAR_PLANE 0.1f
-	#define FAR_PLANE 10000.0f
+#define CAMERA_SPEED 10.0f
+#define NEAR_PLANE 0.1f
+#define FAR_PLANE 10000.0f
+#define FOV 75.0f
 
 	Camera::Camera( int Width, int Height,const glm::vec3& CameraPosition,const glm::vec3& CameraTarget) :
 		m_CameraPosition(CameraPosition), m_CameraTarget(CameraTarget), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
@@ -14,7 +15,7 @@ namespace SceneEditor{
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		m_CameraRightDirection = glm::normalize(glm::cross(up, m_CameraDirection));
 
-		m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
+		m_Projection = glm::perspective(glm::radians(FOV), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 
 	}
 
@@ -25,7 +26,7 @@ namespace SceneEditor{
 
 	void Camera::setProjection(int Width, int Height)
 	{
-		m_Projection = glm::perspective(glm::radians(45.0f), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
+		m_Projection = glm::perspective(glm::radians(FOV), (float)Width / (float)Height, NEAR_PLANE, FAR_PLANE);
 	}
 
 	void Camera::move(MOVE_DIRECTION Direction, double TimeStep)
