@@ -20,13 +20,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -44,17 +44,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\bin\obj\</IntDir>
     <TargetName>WorldBuilder</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\bin\obj\</IntDir>
     <TargetName>WorldBuilder</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -62,7 +62,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\yaml\include;$(SolutionDir)Engine\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\yaml\include</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -77,7 +77,8 @@
       <AdditionalDependencies>assimp-vc140-mt.lib;yaml-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>COPY $(ProjectDir)deps\assimp\lib\assimp-vc140-mt.dll $(SolutionDir)bin\$(Platform)\$(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -86,7 +87,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\yaml\include;$(SolutionDir)Engine\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;deps\glad\include;deps\glfw\include;deps\glm;deps\imgui;deps\imgui\examples;deps\assimp\include;deps\stb;deps\yaml\include</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -104,7 +105,8 @@
       <AdditionalDependencies>assimp-vc140-mt.lib;yaml-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>COPY $(ProjectDir)deps\assimp\lib\assimp-vc140-mt.dll $(SolutionDir)bin\$(Platform)\$(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -115,7 +117,6 @@
     <ClInclude Include="src\Renderer\Scene.h" />
     <ClInclude Include="src\OpenGL\Framebuffer.h" />
     <ClInclude Include="src\Renderer\Model.h" />
-    <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\Renderer\Mesh.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\OpenGL\Errors.h" />
@@ -136,7 +137,6 @@
     <ClCompile Include="src\Renderer\Scene.cpp" />
     <ClCompile Include="src\OpenGL\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\Model.cpp" />
-    <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\Renderer\Mesh.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -150,29 +150,8 @@
     <ClCompile Include="deps\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\UI\ModelPanel.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.vcxproj">
-      <Project>{3115e21e-731c-4739-b856-1b74f1221884}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\GLFW.vcxproj">
-      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\GLM.vcxproj">
-      <Project>{05EB870B-71F4-877C-FA6F-9E7C6678937C}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\GLAD.vcxproj">
-      <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\ImGui.vcxproj">
-      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\yaml-cpp.vcxproj">
-      <Project>{88f1a057-74be-fb62-9dd7-e90a890331f1}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

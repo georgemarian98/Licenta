@@ -10,7 +10,7 @@
 namespace SceneEditor{
 
 	std::shared_ptr<Application> Application::GetInstance(const char* Name)
-	{	
+	{
 		static std::shared_ptr<Application> m_AppInstance = nullptr;
 
 		if(m_AppInstance == nullptr){
@@ -21,7 +21,7 @@ namespace SceneEditor{
 	}
 
 	Application::Application(const char* Name) :
-		m_Window(Name), m_Camera(m_Window.GetWindowSize()[0], m_Window.GetWindowSize( )[1])
+		m_Window(Name), m_Camera(m_Window.GetWindowSize( )[0], m_Window.GetWindowSize( )[1])
 	{
 		auto windowSize = m_Window.GetWindowSize( );
 		m_Width = windowSize[0];
@@ -31,13 +31,14 @@ namespace SceneEditor{
 		Renderer::Initiliaze( );
 		UIManager::Initiliaze(m_Window);
 
-		UIManager::SetNewSceneFunction([ & ]()	{
-			m_Scene->ClearScene();
+		UIManager::SetNewSceneFunction([ & ]( ){
+			m_Scene->ClearScene( );
 			UIManager::ClearScene( );
 		});
-	
-		UIManager::SetImportFunction([ & ](const char* Path)	{
-			UIManager::AddPannel(m_Scene->AddModel(Path));
+
+		UIManager::SetImportFunction([ & ](const char* Path){
+			auto temp = m_Scene->AddModel(Path);
+			UIManager::AddPannel( temp );
 		});
 
 		UIManager::SetExportSceneFunction([ & ](const char* Path){
@@ -46,7 +47,7 @@ namespace SceneEditor{
 		});
 
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
-		m_Scene = std::make_unique<Scene>();
+		m_Scene = std::make_unique<Scene>( );
 
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\WorldBuilder\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
@@ -60,14 +61,14 @@ namespace SceneEditor{
 	void Application::Run( )
 	{
 		//stbi_set_flip_vertically_on_load(true);
-	
+
 		//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj"));
 		//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
 		//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\gobber\\GoblinX.obj"));
 		m_Window.SetVsync(false);
 
 		Serializer exp;
-		m_Scene = exp.ImportScene( "C:\\Users\\George\\Desktop");
+		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop");
 
 		while(m_Window.ShouldClose( ) == false){
 			KeyboardInput( );
@@ -79,7 +80,7 @@ namespace SceneEditor{
 
 			m_SceneBuffer->Unbind( );
 
-			UIManager::Draw(m_SceneBuffer->GetColorId());
+			UIManager::Draw(m_SceneBuffer->GetColorId( ));
 			m_Window.Update( );
 		}
 	}
@@ -143,6 +144,6 @@ namespace SceneEditor{
 			m_Camera.setProjection(width, height);
 			m_SceneBuffer->Resize(width, height);
 		}
-	
+
 	}
 }
