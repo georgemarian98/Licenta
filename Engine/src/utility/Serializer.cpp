@@ -2,6 +2,8 @@
 #include "Serializer.h"
 #include "UI/UIManager.h"
 
+#define VERTEX_SHADER "..\\Engine\\shaders\\vertex.glsl"
+#define PIXEL_SHADER "..\\Engine\\shaders\\fragment.glsl"
 namespace YAML{
 
 	template<>
@@ -130,6 +132,9 @@ namespace SceneEditor{
 		filePath += "\\Scene.yaml";
 
 		//copy shaders in this folder
+		MoveFiles(VERTEX_SHADER, Path);
+		MoveFiles(PIXEL_SHADER, Path);
+
 
 		std::ofstream outputFile(filePath);
 
@@ -190,9 +195,30 @@ namespace SceneEditor{
 			i++;
 		}
 
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
+		std::string_view vertexFile = FolderPath + "\\shaders\\vertex.glsl";
+		std::string_view pixelFile = FolderPath + "\\shaders\\fragment.glsl";
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.data(), pixelFile.data());
 		importedScene->AddPass(renderPass);
 
 		return importedScene;
+	}
+	void Serializer::MoveFiles(const std::string& InputFile, const std::string& OutputPath)
+	{
+		std::string out = OutputPath;
+		out += "\\shaders";
+
+		//Create shaders folder
+		std::wstring wout(out.begin(), out.end());
+		BOOL ret = CreateDirectory(wout.c_str(), NULL);
+
+		std::size_t found = InputFile.find_last_of("/\\");
+		out += "\\" + InputFile.substr(found + 1);
+
+		std::ifstream is(InputFile, std::ios::in | std::ios::binary);
+		std::ofstream os(out, std::ios::out | std::ios::binary);
+
+		os << is.rdbuf( );
+		is.close( );
+		os.close( );
 	}
 }

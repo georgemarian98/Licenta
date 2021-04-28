@@ -68,7 +68,7 @@ namespace SceneEditor{
 		m_Window.SetVsync(false);
 
 		Serializer exp;
-		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop");
+		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		while(m_Window.ShouldClose( ) == false){
 			KeyboardInput( );
