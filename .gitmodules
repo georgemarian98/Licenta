@@ -1,12 +1,12 @@
-[submodule "WorldBuilder/deps/glfw"]
-	path = WorldBuilder/deps/glfw
+[submodule "Engine/deps/glfw"]
+	path = Engine/deps/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "WorldBuilder/deps/imgui"]
-	path = WorldBuilder/deps/imgui
+[submodule "Engine/deps/imgui"]
+	path = Engine/deps/imgui
 	url = https://github.com/ocornut/imgui.git
-[submodule "WorldBuilder/deps/glm"]
-	path = WorldBuilder/deps/glm
+[submodule "Engine/deps/glm"]
+	path = Engine/deps/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "WorldBuilder/deps/yaml"]
-	path = WorldBuilder/deps/yaml
+[submodule "Engine/deps/yaml"]
+	path = Engine/deps/yaml
 	url = https://github.com/jbeder/yaml-cpp.git
