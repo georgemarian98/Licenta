@@ -31,7 +31,7 @@ namespace SceneEditor{
 
     private:
         void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
-        void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, Transforms NodeMatricies);
+        void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies);
 
         void loadModel(const std::string_view& Path);
         std::unique_ptr<MeshNode> processNode(aiNode* Node, const aiScene* Scene);

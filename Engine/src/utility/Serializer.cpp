@@ -195,8 +195,8 @@ namespace SceneEditor{
 			i++;
 		}
 
-		std::string_view vertexFile = FolderPath + "\\shaders\\vertex.glsl";
-		std::string_view pixelFile = FolderPath + "\\shaders\\fragment.glsl";
+		std::string vertexFile = FolderPath + "\\shaders\\vertex.glsl";
+		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.data(), pixelFile.data());
 		importedScene->AddPass(renderPass);
 

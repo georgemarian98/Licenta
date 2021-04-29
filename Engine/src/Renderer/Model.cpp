@@ -6,31 +6,33 @@ namespace SceneEditor{
     void Model::Draw(const std::unique_ptr<Shader>& ModelShader)
     {
         MeshProperties mainProperties = m_ModelView->GetMainNodeProperties( );
-        DrawNodes(m_RootMesh, ModelShader, mainProperties.TransformMatrices);
+        DrawNodes(m_RootMesh, ModelShader, mainProperties);
     }
 
 
-    void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, Transforms NodeMatricies)
+    void Model::DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies)
     {
         bool status;
         auto& properties = m_ModelView->GetNodeProperties(Node->m_Name, status);
 
         if(status == true){
             auto& [translation, scale, rotation] = properties.TransformMatrices;
-            NodeMatricies.Translation += translation;
-            NodeMatricies.Scale *= scale;
-            NodeMatricies.Rotation += rotation;
+            auto& [Translation, Scale, Rotation] = NodeMatricies.TransformMatrices;
 
+            Translation += translation;
+            Scale *= scale;
+            Rotation += rotation;
+            NodeMatricies.TintColor *= properties.TintColor;
 
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, NodeMatricies.Translation);
-            model = glm::scale(model, NodeMatricies.Scale);
-            model = glm::rotate(model, NodeMatricies.Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, NodeMatricies.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::rotate(model, NodeMatricies.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::translate(model, Translation);
+            model = glm::scale(model, Scale);
+            model = glm::rotate(model, Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
             ModelShader->UploadUniformMat4("model", model);
-            ModelShader->UploadUniformVec3("tintColor", properties.TintColor);
+            ModelShader->UploadUniformVec3("tintColor", NodeMatricies.TintColor);
         }
 
         for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
