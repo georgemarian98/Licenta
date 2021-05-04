@@ -15,7 +15,7 @@ namespace SceneEditor{
 	class Camera{
 	public:
 		Camera( ) = default;
-		Camera(int  Width, int Height,const glm::vec3& CameraPosition = glm::vec3(0.0f, 5.0f, 5.0f),const glm::vec3& CameraTarget = glm::vec3(0.0f, 0.0f, -10.0f));
+		Camera(int  Width, int Height);
 
 		void setProjection(int Width, int Height);
 

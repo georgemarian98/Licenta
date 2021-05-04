@@ -130,6 +130,7 @@ namespace SceneEditor{
 	void Serializer::ExportScene(const std::string& Path)
 	{
 		std::string filePath = Path + "\\Scene.yaml";
+		//COPY $(SolutionDir)Engine\deps\assimp\lib\assimp-vc140-mt.dll $(SolutionDir)bin\$(Configuration)
 
 		//copy shaders in this folder
 		std::string folderDirectory = Path + "\\shaders";
