@@ -1,12 +1,11 @@
 #pragma once
-#ifndef _3DWBPCH
-#define _3DWBPCH
 
 #include <iostream>
 #include <memory>
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <filesystem>
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -48,7 +47,6 @@
 #include "core/Camera.h"
 
 std::ostream& operator<<(std::ostream& g, glm::vec3 vec);
-#endif // PCH
 
 
 

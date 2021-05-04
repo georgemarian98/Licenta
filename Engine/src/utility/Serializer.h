@@ -13,8 +13,6 @@ namespace SceneEditor{
 		std::unique_ptr<Scene> ImportScene(const std::string& FolderPath);
 
 	private:
-		void MoveFiles(const std::string& InputFile, const std::string& OutputPath);
-	private:
 		YAML::Emitter m_YAMLEmitter;
 	};
 }

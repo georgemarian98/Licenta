@@ -2,8 +2,9 @@
 #include "Serializer.h"
 #include "UI/UIManager.h"
 
-#define VERTEX_SHADER "..\\Engine\\shaders\\vertex.glsl"
-#define PIXEL_SHADER "..\\Engine\\shaders\\fragment.glsl"
+#define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
+#define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
+
 namespace YAML{
 
 	template<>
@@ -128,12 +129,25 @@ namespace SceneEditor{
 
 	void Serializer::ExportScene(const std::string& Path)
 	{
-		std::string filePath{Path};
-		filePath += "\\Scene.yaml";
+		std::string filePath = Path + "\\Scene.yaml";
 
 		//copy shaders in this folder
-		MoveFiles(VERTEX_SHADER, Path);
-		MoveFiles(PIXEL_SHADER, Path);
+		std::string folderDirectory = Path + "\\shaders";
+		if(!std::filesystem::exists(folderDirectory))
+			std::filesystem::create_directories(folderDirectory);
+
+		std::string vertexShaderPath = folderDirectory + "\\vertex.glsl";
+		std::string fragmentShaderPath = folderDirectory + "\\fragment.glsl";
+		bool ret = std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::skip_existing);
+
+		if(ret == false){
+			std::cerr << "Failed to copy vertex shader\n";
+		}
+		ret = std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::skip_existing);
+
+		if(ret == false){
+			std::cerr << "Failed to copy pixel shader\n";
+		}
 
 
 		std::ofstream outputFile(filePath);
@@ -201,24 +215,5 @@ namespace SceneEditor{
 		importedScene->AddPass(renderPass);
 
 		return importedScene;
-	}
-	void Serializer::MoveFiles(const std::string& InputFile, const std::string& OutputPath)
-	{
-		std::string out = OutputPath;
-		out += "\\shaders";
-
-		//Create shaders folder
-		std::wstring wout(out.begin(), out.end());
-		BOOL ret = CreateDirectory(wout.c_str(), NULL);
-
-		std::size_t found = InputFile.find_last_of("/\\");
-		out += "\\" + InputFile.substr(found + 1);
-
-		std::ifstream is(InputFile, std::ios::in | std::ios::binary);
-		std::ofstream os(out, std::ios::out | std::ios::binary);
-
-		os << is.rdbuf( );
-		is.close( );
-		os.close( );
 	}
 }
