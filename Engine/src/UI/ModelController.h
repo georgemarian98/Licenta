@@ -11,12 +11,12 @@ namespace SceneEditor{
     class UIManager;
     class Serializer;
 
-    class ModelPanel{
+    class ModelController{
     public:
         friend class UIManager;
         friend class Serializer;
 
-        ModelPanel( ) 
+        ModelController( ) 
         {
             static int id = 0;
             m_Id = id++;

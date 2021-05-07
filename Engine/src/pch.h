@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <filesystem>
+#include <assert.h>
 
 #include <Windows.h>
 #include <commdlg.h>

@@ -3,10 +3,13 @@
 
 #include <ShlObj.h>
 
-namespace SceneEditor{
+#define IMGUI_EXAMPLE
 
+namespace SceneEditor{
+	bool UIManager::m_ShowPopUp = false;
+	std::string UIManager::m_PopUpText;
 	std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
-	std::vector<std::shared_ptr<ModelPanel>> UIManager::m_Panels;
+	std::vector<std::shared_ptr<ModelController>> UIManager::m_Panels;
 
 	std::function<void(void)>         UIManager::m_NewSceneFunction;
 	std::function<void(const char*)>  UIManager::m_ImportFunction;
@@ -112,7 +115,24 @@ namespace SceneEditor{
 		ImGui::Begin("Properties");
 		UIManager::DrawProperties( );
 		ImGui::End( );
+		
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+		ImGui::Begin("Stats", (bool*)0, window_flags);
+		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
+		ImGui::End( );
 
+		if(m_ShowPopUp == true)
+			ImGui::OpenPopup("Modal window");
+
+		if(ImGui::BeginPopupModal("Modal window", &m_ShowPopUp, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)){
+			ImGui::Text(m_PopUpText.c_str());
+			if(ImGui::Button("Close")){
+				ImGui::CloseCurrentPopup( );
+				m_ShowPopUp = false;
+			}
+
+			ImGui::EndPopup( );
+		}
 
 		ImGui::End( );// end dock
 
@@ -120,7 +140,7 @@ namespace SceneEditor{
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData( ));
 	}
 
-	void UIManager::AddPannel(std::shared_ptr<ModelPanel>& Panel)
+	void UIManager::AddPannel(std::shared_ptr<ModelController>& Panel)
 	{
 		m_Panels.emplace_back(Panel);
 		m_SelectedNode = {Panel->m_Name, Panel->m_Id};

@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "core/Window.h"
-#include "UI/ModelPanel.h"
+#include "UI/ModelController.h"
 
 namespace SceneEditor{
 
@@ -16,20 +16,20 @@ namespace SceneEditor{
 		/// <summary>
 		/// Initialize ImGui context
 		/// </summary>
-		/// <param name="Window">Reference to the application GLFW window</param>
+		/// <param name="Window">: reference to the application GLFW window</param>
 		static void Initiliaze(Window& Window);
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SceneId">Index for the texture ID or framebuffer ID</param>
+		/// <param name="SceneId">: index for the texture ID or framebuffer ID</param>
 		static void Draw(const uint32_t SceneId);
 
 		/// <summary>
 		/// Add the model panel to the internal structure
 		/// </summary>
 		/// <param name="Panel"></param>
-		static void AddPannel(std::shared_ptr<ModelPanel>& Panel);
+		static void AddPannel(std::shared_ptr<ModelController>& Panel);
 
 		static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
 		static void SetImportFunction(std::function<void(const char*)> Function) { m_ImportFunction = std::move(Function); };
@@ -38,15 +38,21 @@ namespace SceneEditor{
 
 		static void ClearScene( ) { m_Panels.clear( ); };
 
+		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
+
 	private:
 		static void DrawModels( );
 		static void DrawProperties( );
 
 		static void ImportModel( );
 		static void FolderDialog(std::function<void(const char*)>& Function);
+
 	private:
-		static std::vector<std::shared_ptr<ModelPanel>> m_Panels;
+		static bool m_ShowPopUp;
+		static std::string m_PopUpText;
+
 		static std::pair<std::string, uint32_t> m_SelectedNode;
+		static std::vector<std::shared_ptr<ModelController>> m_Panels;
 
 		//Functions
 		static std::function<void(void)> m_NewSceneFunction;

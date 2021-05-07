@@ -5,12 +5,14 @@ namespace SceneEditor{
 
 	void Scene::Draw(const Camera& SceneCamera)
 	{
+		Renderer::Clear( );
+
 		for(auto& pass : m_Passes){
 			pass->Execute(m_SceneModels, SceneCamera);
 		}
 	}
 
-	std::shared_ptr<ModelPanel> Scene::AddModel(const std::string_view& Path)
+	std::shared_ptr<ModelController> Scene::AddModel(const std::string_view& Path)
 	{
 		auto&& model = std::make_shared<Model>(Path.data());
 		m_SceneModels.emplace_back(model);

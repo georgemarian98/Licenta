@@ -28,7 +28,6 @@ namespace SceneEditor{
 		m_Height = windowSize[1];
 
 		// Setup ImGui
-		Renderer::Initiliaze( );
 		UIManager::Initiliaze(m_Window);
 
 		UIManager::SetNewSceneFunction([ & ]( ){
@@ -60,11 +59,8 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		//stbi_set_flip_vertically_on_load(true);
 		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
 		//UIManager::AddPannel(temp);
-		//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\muro\\muro.obj"));
-		//UIManager::AddPannel(m_Scene->AddModel("D:\\3D Models\\gobber\\GoblinX.obj"));
 
 		Serializer exp;
 		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
@@ -74,7 +70,6 @@ namespace SceneEditor{
 			KeyboardInput( );
 
 			m_SceneBuffer->Bind( );
-			Renderer::Clear( );
 
 			m_Scene->Draw(m_Camera);
 

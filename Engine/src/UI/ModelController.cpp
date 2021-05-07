@@ -1,20 +1,20 @@
 #include "pch.h"
 
-#include "ModelPanel.h"
+#include "ModelController.h"
 
 namespace SceneEditor{
 
-	void ModelPanel::AddChild(const std::string& Name)
+	void ModelController::AddChild(const std::string& Name)
 	{
 		m_Panels.insert({Name, Transforms(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 	}
 
-	const MeshProperties& ModelPanel::GetNodeProperties(std::string& Name, bool& Status)
+	const MeshProperties& ModelController::GetNodeProperties(std::string& Name, bool& Status)
 	{
 		return FindNodeProperties(Name, Status);
 	}
 
-	void ModelPanel::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
+	void ModelController::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
 	{	
 		static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
@@ -33,7 +33,7 @@ namespace SceneEditor{
 		}
 	}
 
-	MeshProperties& ModelPanel::FindNodeProperties(const std::string& Name, bool& Status)
+	MeshProperties& ModelController::FindNodeProperties(const std::string& Name, bool& Status)
 	{
 		Status = m_Panels.find(Name) != m_Panels.end( );
 		if(Status == true){
@@ -44,7 +44,7 @@ namespace SceneEditor{
 		return nullTransf;
 	}
 
-	MeshProperties* ModelPanel::GetNodeProperties(const std::string& Name)
+	MeshProperties* ModelController::GetNodeProperties(const std::string& Name)
 	{
 		bool status;
 		if(m_Name != Name){

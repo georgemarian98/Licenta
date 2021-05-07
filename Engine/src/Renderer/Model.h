@@ -8,7 +8,7 @@
 
 #include "Mesh.h"
 
-#include <UI/ModelPanel.h>
+#include <UI/ModelController.h>
 
 /// <summary>
 /// Code inspired from: https://learnopengl.com/Model-Loading/Assimp
@@ -22,11 +22,11 @@ namespace SceneEditor{
     public:
         Model(const char* Path)
         {
-            m_ModelView = std::make_shared<ModelPanel>( );
+            m_ModelView = std::make_shared<ModelController>( );
             loadModel(Path);
         }
         void Draw(const std::unique_ptr<Shader>& ModelShader);
-        std::shared_ptr<ModelPanel> GetModelView( ) { return m_ModelView; };
+        std::shared_ptr<ModelController> GetModelView( ) { return m_ModelView; };
         std::string GetModelName( ) { return m_Directory + "\\" + m_ModelView->GetModelName( ); };
 
     private:
@@ -43,7 +43,7 @@ namespace SceneEditor{
         std::unique_ptr<MeshNode> m_RootMesh;
         std::string m_Directory;
 
-        std::shared_ptr<ModelPanel> m_ModelView;
+        std::shared_ptr<ModelController> m_ModelView;
     };
 
     class MeshNode{

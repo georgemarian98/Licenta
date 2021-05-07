@@ -46,14 +46,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\bin\obj\</IntDir>
-    <TargetName>WorldBuilder</TargetName>
+    <TargetName>Engine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\bin\obj\</IntDir>
-    <TargetName>WorldBuilder</TargetName>
+    <TargetName>Engine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -80,6 +80,12 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>GLAD.lib;GLFW.lib;assimp-vc140-mt.lib;ImGui.lib;yaml-cpp.lib;</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -108,6 +114,12 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>GLAD.lib;GLFW.lib;assimp-vc140-mt.lib;ImGui.lib;yaml-cpp.lib;</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\utility\Serializer.h" />
@@ -127,7 +139,7 @@
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\Renderer\VertexData.h" />
-    <ClInclude Include="src\UI\ModelPanel.h" />
+    <ClInclude Include="src\UI\ModelController.h" />
     <ClInclude Include="src\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -150,8 +162,25 @@
     <ClCompile Include="deps\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
-    <ClCompile Include="src\UI\ModelPanel.cpp" />
+    <ClCompile Include="src\UI\ModelController.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="deps\GLAD.vcxproj">
+      <Project>{5d4a857c-4981-860d-f26d-6c10de83020f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="deps\GLFW.vcxproj">
+      <Project>{154b857c-0182-860d-aa6e-6c109684020f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="deps\GLM.vcxproj">
+      <Project>{05eb870b-71f4-877c-fa6f-9e7c6678937c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="deps\ImGui.vcxproj">
+      <Project>{c0ff640d-2c14-8dbe-f595-301e616989ef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="deps\yaml-cpp.vcxproj">
+      <Project>{88f1a057-74be-fb62-9dd7-e90a890331f1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

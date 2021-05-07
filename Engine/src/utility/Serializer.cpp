@@ -4,6 +4,7 @@
 
 #define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
 #define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
+#define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
 
 namespace YAML{
 
@@ -130,26 +131,25 @@ namespace SceneEditor{
 	void Serializer::ExportScene(const std::string& Path)
 	{
 		std::string filePath = Path + "\\Scene.yaml";
-		//COPY $(SolutionDir)Engine\deps\assimp\lib\assimp-vc140-mt.dll $(SolutionDir)bin\$(Configuration)
 
-		//copy shaders in this folder
+		//Shaders
 		std::string folderDirectory = Path + "\\shaders";
-		if(!std::filesystem::exists(folderDirectory))
+		if(std::filesystem::exists(folderDirectory) == false)
 			std::filesystem::create_directories(folderDirectory);
 
 		std::string vertexShaderPath = folderDirectory + "\\vertex.glsl";
 		std::string fragmentShaderPath = folderDirectory + "\\fragment.glsl";
-		bool ret = std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::skip_existing);
 
-		if(ret == false){
-			std::cerr << "Failed to copy vertex shader\n";
-		}
-		ret = std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::skip_existing);
+		assert(std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::overwrite_existing));
+		assert(std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::overwrite_existing));
 
-		if(ret == false){
-			std::cerr << "Failed to copy pixel shader\n";
-		}
-
+		std::string libDirectory = Path + "\\lib";
+		if(std::filesystem::exists(libDirectory) == false)
+			std::filesystem::create_directories(libDirectory);
+		
+		//Lib
+		std::string libPath = libDirectory + "\\Engine.lib";
+		assert(std::filesystem::copy_file(LIB_PATH, libPath, std::filesystem::copy_options::overwrite_existing));
 
 		std::ofstream outputFile(filePath);
 
@@ -157,6 +157,9 @@ namespace SceneEditor{
 			outputFile << m_YAMLEmitter.c_str( );
 			outputFile.close( );
 		}
+
+		std::string message = "Scene exported successfully to " + Path;
+		UIManager::ShowPopUp(message);
 	}
 
 	std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)

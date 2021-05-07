@@ -7,7 +7,7 @@
 #include "OpenGL/Framebuffer.h"
 
 #include "Renderer/Scene.h"
-#include "UI/ModelPanel.h"
+#include "UI/ModelController.h"
 
 namespace SceneEditor{
 
