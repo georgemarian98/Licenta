@@ -3,9 +3,11 @@
 
 #include <ShlObj.h>
 
-#define IMGUI_EXAMPLE
+//#define IMGUI_EXAMPLE
 
 namespace SceneEditor{
+
+	uint32_t UIManager::m_NumVertices = 0;
 	bool UIManager::m_ShowPopUp = false;
 	std::string UIManager::m_PopUpText;
 	std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
@@ -118,7 +120,7 @@ namespace SceneEditor{
 		
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 		ImGui::Begin("Stats", (bool*)0, window_flags);
-		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
+		UIManager::DrawStats( );
 		ImGui::End( );
 
 		if(m_ShowPopUp == true)
@@ -155,6 +157,10 @@ namespace SceneEditor{
 
 	void UIManager::DrawProperties( )
 	{
+		if(m_Panels.size() == 0){
+			return;
+		}
+
 		static std::string oldSelectedNode = m_SelectedNode.first;
 		static uint32_t oldSelectedNodeId = m_SelectedNode.second;
 		static MeshProperties* selectedNodeProperties = m_Panels[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
@@ -173,6 +179,12 @@ namespace SceneEditor{
 		ImGui::Separator( );
 		ImGui::ColorEdit3("Tint Color", glm::value_ptr(selectedNodeProperties->TintColor));
 		//To be continue
+	}
+
+	void UIManager::DrawStats( )
+	{
+		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
+		ImGui::Text("Vertices: %d", m_NumVertices);
 	}
 
 	void UIManager::ImportModel( )

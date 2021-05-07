@@ -19,6 +19,10 @@ namespace SceneEditor{
 		void ClearScene( ) { m_SceneModels.clear( ); };
 		std::shared_ptr<ModelController> AddModel(const std::string_view& Path);
 
+		std::shared_ptr<ModelController> GetController(int Index)
+		{
+			return m_SceneModels[Index]->GetModelController( );
+		}
 	private:
 		std::vector<std::shared_ptr<Model>> m_SceneModels;
 		std::vector<std::unique_ptr<Pass>> m_Passes;

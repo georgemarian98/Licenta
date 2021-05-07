@@ -39,15 +39,19 @@ namespace SceneEditor{
 		static void ClearScene( ) { m_Panels.clear( ); };
 
 		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
+		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices; };
 
 	private:
 		static void DrawModels( );
 		static void DrawProperties( );
+		static void DrawStats( );
 
 		static void ImportModel( );
 		static void FolderDialog(std::function<void(const char*)>& Function);
 
 	private:
+		static uint32_t m_NumVertices;
+
 		static bool m_ShowPopUp;
 		static std::string m_PopUpText;
 

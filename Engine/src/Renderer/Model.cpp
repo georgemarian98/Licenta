@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Model.h"
 
+#include <UI/UIManager.h>
+
 namespace SceneEditor{
 
     void Model::Draw(const std::unique_ptr<Shader>& ModelShader)
@@ -92,7 +94,8 @@ namespace SceneEditor{
         std::vector<Texture> textures;
 
         vertices.reserve(ImportedMesh->mNumVertices);
-    
+        UIManager::UpdateNumberVertices(ImportedMesh->mNumVertices);
+
         for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
             Vertex vertex;
             glm::vec3 vector;

@@ -17,7 +17,7 @@ namespace SceneEditor{
 		auto&& model = std::make_shared<Model>(Path.data());
 		m_SceneModels.emplace_back(model);
 
-		return m_SceneModels.back()->GetModelView();
+		return m_SceneModels.back()->GetModelController();
 	}
 
 	void Scene::AddPass(std::unique_ptr<Pass>& Pass_p)
