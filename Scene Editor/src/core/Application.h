@@ -1,13 +1,10 @@
 #pragma once
-#include <memory>
 
 #include "Window.h"
 #include "Camera.h"
-#include "OpenGL/Shader.h"
 #include "OpenGL/Framebuffer.h"
-
 #include "Renderer/Scene.h"
-#include "UI/ModelController.h"
+#include "ApplicationCamera.h"
 
 namespace SceneEditor{
 
@@ -29,7 +26,7 @@ namespace SceneEditor{
 	private:
 		uint32_t m_Width = 0, m_Height = 0;
 		Window m_Window;
-		Camera m_Camera;
+		ApplicationCamera m_Camera;
 
 		std::unique_ptr<Framebuffer> m_SceneBuffer;
 		std::unique_ptr<Scene> m_Scene;

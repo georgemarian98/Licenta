@@ -59,8 +59,8 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
-		//UIManager::AddPannel(temp);
+		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
+		UIManager::AddPannel(temp);
 
 		//Serializer exp;
 		//m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
@@ -115,19 +115,19 @@ namespace SceneEditor{
 
 		//Camera
 		if(glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS){
-			m_Camera.move(MOVE_DIRECTION::MOVE_FORWARD, TS);
+			m_Camera.Move(MOVE_DIRECTION::MOVE_FORWARD, TS);
 		}
 
 		if(glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS){
-			m_Camera.move(MOVE_DIRECTION::MOVE_BACKWARD, TS);
+			m_Camera.Move(MOVE_DIRECTION::MOVE_BACKWARD, TS);
 		}
 
 		if(glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS){
-			m_Camera.move(MOVE_DIRECTION::MOVE_RIGHT, TS);
+			m_Camera.Move(MOVE_DIRECTION::MOVE_RIGHT, TS);
 		}
 
 		if(glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS){
-			m_Camera.move(MOVE_DIRECTION::MOVE_LEFT, TS);
+			m_Camera.Move(MOVE_DIRECTION::MOVE_LEFT, TS);
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace SceneEditor{
 		fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
 
 		if(width != 0 && height != 0){
-			m_Camera.setProjection(width, height);
+			m_Camera.SetProjection(width, height);
 			m_SceneBuffer->Resize(width, height);
 		}
 

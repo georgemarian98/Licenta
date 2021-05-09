@@ -1,36 +1,21 @@
-#ifndef Camera_h
-#define Camera_h
+#pragma once
 
 #include "glm/gtx/transform.hpp"
 
 namespace SceneEditor{
-
-	enum class MOVE_DIRECTION{ 
-		MOVE_FORWARD, 
-		MOVE_BACKWARD, 
-		MOVE_RIGHT, 
-		MOVE_LEFT 
-	};
 
 	class Camera{
 	public:
 		Camera( ) = default;
 		Camera(int  Width, int Height);
 
-		void setProjection(int Width, int Height);
-
-		void move(MOVE_DIRECTION Direction, double TimeStep);
-
-		//yaw - rotate around y axis
-		//pitch - rotate around x axis
-		void rotate(double Pitch, double Yaw);
+		void SetProjection(int Width, int Height);
 
 		glm::mat4 GetViewMatrix( )   const ;
 		glm::mat4 GetPojection( )    const { return m_Projection; };
-		glm::vec3 GetCameraTarget( ) const { return m_CameraTarget; };
 		glm::vec3 GetPosition( )     const { return m_CameraPosition; };
 
-	private:
+	protected:
 		double m_Yaw = -90.0f;
 		double m_Pitch = 0;
 

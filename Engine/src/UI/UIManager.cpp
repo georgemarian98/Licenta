@@ -193,14 +193,14 @@ namespace SceneEditor{
 		static bool initialized = false;
 
 		if(initialized == false){
-			char szFile[260];       // buffer for file name
+			WCHAR szFile[260];       // buffer for file name
 			WCHAR* filter = L"Obj (*.obj)\0*.obj\0";
 
 			// Initialize OPENFILENAME
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(ofn);
 			ofn.hwndOwner = 0;
-			ofn.lpstrFile = (LPWSTR)szFile;
+			ofn.lpstrFile = szFile;
 			ofn.lpstrFile[0] = '\0';
 			ofn.nMaxFile = sizeof(szFile);
 			ofn.lpstrFilter = filter;
