@@ -164,11 +164,17 @@ namespace SceneEditor{
 
 	std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
 	{
-		std::string filePath{FolderPath};
-		filePath += "\\Scene.yaml";
+		std::string filePath = FolderPath + "\\Scene.yaml";
 
 		std::unique_ptr<Scene> importedScene = std::make_unique<Scene>( );
-		YAML::Node rootData = YAML::LoadFile(filePath);
+
+		YAML::Node rootData;
+		try	{
+			rootData = YAML::LoadFile(filePath);
+		}
+		catch(const std::exception& e){
+			std::cerr << e.what( );
+		}		
 
 		YAML::Node models = rootData["Models"];
 		if(!models)
