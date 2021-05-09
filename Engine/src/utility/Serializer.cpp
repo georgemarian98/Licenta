@@ -2,9 +2,12 @@
 #include "Serializer.h"
 #include "UI/UIManager.h"
 
-#define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
-#define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
-#define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
+#include <regex>
+
+#define VERTEX_SHADER "..\\Engine\\shaders\\vertex.glsl"
+#define PIXEL_SHADER "..\\Engine\\shaders\\fragment.glsl"
+#define LIB_PATH "..\\bin\\Release\\Engine.lib"
+#define SRC_PATH "..\\Engine\\src"
 
 namespace YAML{
 
@@ -92,31 +95,8 @@ namespace SceneEditor{
 
 		m_YAMLEmitter << YAML::Key << "Models Properties" << YAML::Value << YAML::BeginSeq; // Models Properties sequence
 		{
-			for(auto& panel : UIManager::m_Panels){
-				m_YAMLEmitter << YAML::BeginMap; // Model properties
-				m_YAMLEmitter << YAML::Key << "Name" << YAML::Value << panel->m_Name; 
-				auto& mainProperties = panel->m_MainTransforms;
-
-				m_YAMLEmitter << YAML::Key << "Translation" << YAML::Value << mainProperties.TransformMatrices.Translation;
-				m_YAMLEmitter << YAML::Key << "Scale"       << YAML::Value << mainProperties.TransformMatrices.Scale;
-				m_YAMLEmitter << YAML::Key << "Rotation"    << YAML::Value << mainProperties.TransformMatrices.Rotation;
-				m_YAMLEmitter << YAML::Key << "Color"       << YAML::Value << mainProperties.TintColor;
-
-				m_YAMLEmitter << YAML::Key << "Meshes" << YAML::Value << YAML::BeginSeq; // Meshes sequence
-				for(auto& mesh : panel->m_Panels){
-					m_YAMLEmitter << YAML::BeginMap; // Mesh Properties
-					auto& meshProperties = mesh.second;
-
-					m_YAMLEmitter << YAML::Key << "Mesh Name"   << YAML::Value << mesh.first;
-					m_YAMLEmitter << YAML::Key << "Translation" << YAML::Value << meshProperties.TransformMatrices.Translation;
-					m_YAMLEmitter << YAML::Key << "Scale"       << YAML::Value << meshProperties.TransformMatrices.Scale;
-					m_YAMLEmitter << YAML::Key << "Rotation"    << YAML::Value << meshProperties.TransformMatrices.Rotation;
-					m_YAMLEmitter << YAML::Key << "Color"       << YAML::Value << meshProperties.TintColor;
-					m_YAMLEmitter << YAML::EndMap; // Mesh Properties
-				}
-				m_YAMLEmitter << YAML::EndSeq;  // Meshes sequence
-
-				m_YAMLEmitter << YAML::EndMap; // Model properties
+			for(auto& controller : UIManager::m_Panels){
+				SerializeModel(controller);
 			}
 		}
 		m_YAMLEmitter << YAML::EndSeq; //Models Properties sequence
@@ -126,33 +106,36 @@ namespace SceneEditor{
 		if(m_YAMLEmitter.good() == false)
 			std::cout << "Emitter error: " << m_YAMLEmitter.GetLastError( ) << "\n";
 
+		m_DependencyDirectories["..\\Engine\\deps\\assimp\\include\\assimp"] = "assimp";
+		m_DependencyDirectories["..\\Engine\\deps\\glad\\include\\glad"] = "glad";
+		m_DependencyDirectories["..\\Engine\\deps\\glad\\include\\KHR"] = "KHR";
+		m_DependencyDirectories["..\\Engine\\deps\\glfw\\include\\GLFW"] = "glfw";
+		m_DependencyDirectories["..\\Engine\\deps\\glm\\glm"] = "glm";
+		m_DependencyDirectories["..\\Engine\\deps\\yaml\\include\\yaml-cpp"] = "yaml-cpp";
 	}
 
 	void Serializer::ExportScene(const std::string& Path)
 	{
 		std::string filePath = Path + "\\Scene.yaml";
 
+		std::cout << std::filesystem::current_path( ) << std::endl;
+
 		//Shaders
-		std::string folderDirectory = Path + "\\shaders";
-		if(std::filesystem::exists(folderDirectory) == false)
-			std::filesystem::create_directories(folderDirectory);
+		CopyShaders(Path);
 
-		std::string vertexShaderPath = folderDirectory + "\\vertex.glsl";
-		std::string fragmentShaderPath = folderDirectory + "\\fragment.glsl";
-
-		assert(std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::overwrite_existing));
-		assert(std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::overwrite_existing));
-
+		//Lib
 		std::string libDirectory = Path + "\\lib";
 		if(std::filesystem::exists(libDirectory) == false)
-			std::filesystem::create_directories(libDirectory);
+			assert(std::filesystem::create_directories(libDirectory));
 		
-		//Lib
 		std::string libPath = libDirectory + "\\Engine.lib";
 		assert(std::filesystem::copy_file(LIB_PATH, libPath, std::filesystem::copy_options::overwrite_existing));
 
-		std::ofstream outputFile(filePath);
+		//Dependency Directories
+		CopyHeaders(Path);
 
+		//Scene file
+		std::ofstream outputFile(filePath);
 		if(outputFile.is_open() == true){
 			outputFile << m_YAMLEmitter.c_str( );
 			outputFile.close( );
@@ -225,5 +208,79 @@ namespace SceneEditor{
 		importedScene->AddPass(renderPass);
 
 		return importedScene;
+	}
+	
+	void Serializer::SerializeModel(std::shared_ptr<ModelController> Controller)
+	{
+		m_YAMLEmitter << YAML::BeginMap; // Model properties
+		m_YAMLEmitter << YAML::Key << "Name" << YAML::Value << Controller->m_Name;
+		auto& mainProperties = Controller->m_MainTransforms;
+
+		m_YAMLEmitter << YAML::Key << "Translation" << YAML::Value << mainProperties.TransformMatrices.Translation;
+		m_YAMLEmitter << YAML::Key << "Scale" << YAML::Value << mainProperties.TransformMatrices.Scale;
+		m_YAMLEmitter << YAML::Key << "Rotation" << YAML::Value << mainProperties.TransformMatrices.Rotation;
+		m_YAMLEmitter << YAML::Key << "Color" << YAML::Value << mainProperties.TintColor;
+
+		m_YAMLEmitter << YAML::Key << "Meshes" << YAML::Value << YAML::BeginSeq; // Meshes sequence
+		for(auto& mesh : Controller->m_Panels){
+			m_YAMLEmitter << YAML::BeginMap; // Mesh Properties
+			auto& meshProperties = mesh.second;
+
+			m_YAMLEmitter << YAML::Key << "Mesh Name" << YAML::Value << mesh.first;
+			m_YAMLEmitter << YAML::Key << "Translation" << YAML::Value << meshProperties.TransformMatrices.Translation;
+			m_YAMLEmitter << YAML::Key << "Scale" << YAML::Value << meshProperties.TransformMatrices.Scale;
+			m_YAMLEmitter << YAML::Key << "Rotation" << YAML::Value << meshProperties.TransformMatrices.Rotation;
+			m_YAMLEmitter << YAML::Key << "Color" << YAML::Value << meshProperties.TintColor;
+			m_YAMLEmitter << YAML::EndMap; // Mesh Properties
+		}
+		m_YAMLEmitter << YAML::EndSeq;  // Meshes sequence
+
+		m_YAMLEmitter << YAML::EndMap; // Model properties
+	}
+
+	void Serializer::CopyShaders(const std::string& Path)
+	{
+		std::string folderDirectory = Path + "\\shaders";
+		if(std::filesystem::exists(folderDirectory) == false)
+			assert(std::filesystem::create_directories(folderDirectory));
+
+		std::string vertexShaderPath = folderDirectory + "\\vertex.glsl";
+		std::string fragmentShaderPath = folderDirectory + "\\fragment.glsl";
+
+		assert(std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::overwrite_existing));
+		assert(std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::overwrite_existing));
+	}
+	void Serializer::CopyHeaders(const std::string& Path)
+	{
+		std::string depsPath = Path + "\\include\\";
+		std::filesystem::create_directories(depsPath);
+
+		const std::regex headerRegex("[^\\s]+(\\.(h|hpp))$");
+
+		for(const auto& entry : std::filesystem::recursive_directory_iterator(SRC_PATH)){
+			std::string path = entry.path( ).u8string( );
+
+			if(path.find("pch") == std::string::npos && std::regex_match(path, headerRegex) == true){
+				std::string parentDirectory = depsPath + entry.path( ).parent_path( ).filename( ).u8string( );
+				std::string destPath = parentDirectory + "\\" + entry.path( ).filename( ).u8string( );
+
+				if(std::filesystem::exists(parentDirectory) == false)
+					assert(std::filesystem::create_directories(parentDirectory));
+
+				std::error_code code;
+				std::filesystem::copy(path, destPath, std::filesystem::copy_options::overwrite_existing, code);
+
+				assert(code != std::error_condition( ));
+			}
+		}
+
+		for(auto& directory : m_DependencyDirectories){
+
+			std::error_code code;
+			std::string destPath = depsPath + directory.second;
+			std::filesystem::copy(directory.first, destPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive, code);
+
+			assert(code != std::error_condition( ));
+		}
 	}
 }
