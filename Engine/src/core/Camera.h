@@ -28,5 +28,3 @@ namespace SceneEditor{
 		glm::mat4 m_Projection;
 	};
 }
-
-#endif /* Camera_hpp */
