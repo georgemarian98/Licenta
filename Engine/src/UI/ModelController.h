@@ -41,7 +41,7 @@ namespace SceneEditor{
         uint32_t m_Id;
         std::string m_Name;
         MeshProperties m_MainTransforms;
-        std::unordered_map < std::string, MeshProperties > m_Panels;
+        std::unordered_map < std::string, MeshProperties > m_MeshControllers;
     };
 
 }

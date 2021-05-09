@@ -36,10 +36,11 @@ namespace SceneEditor{
 		static void SetImportSceneFunction(std::function<void(const char*)> Function) { m_ImportSceneFunction = std::move(Function); };
 		static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
 
-		static void ClearScene( ) { m_Panels.clear( ); };
+		static void ClearScene( ) { m_Controllers.clear( ); };
 
 		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
 		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices; };
+		static void ResetVertices() { m_NumVertices = 0; };
 
 	private:
 		static void DrawModels( );
@@ -56,10 +57,10 @@ namespace SceneEditor{
 		static std::string m_PopUpText;
 
 		static std::pair<std::string, uint32_t> m_SelectedNode;
-		static std::vector<std::shared_ptr<ModelController>> m_Panels;
+		static std::vector<std::shared_ptr<ModelController>> m_Controllers;
 
 		//Functions
-		static std::function<void(void)> m_NewSceneFunction;
+		static std::function<void(void)>        m_NewSceneFunction;
 		static std::function<void(const char*)> m_ImportFunction;
 		static std::function<void(const char*)> m_ImportSceneFunction;
 		static std::function<void(const char*)> m_ExportSceneFunction;

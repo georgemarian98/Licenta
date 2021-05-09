@@ -8,7 +8,7 @@ namespace SceneEditor{
 #define FOV 75.0f
 
 	Camera::Camera( int Width, int Height) :
-		m_CameraPosition(glm::vec3(0.0f, 5.0f, 15.0f)), m_CameraTarget(glm::vec3(0.0f, 0.0f, -10.0f)), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
+		m_CameraPosition(glm::vec3(0.0f, 8.0f, 15.0f)), m_CameraTarget(glm::vec3(0.0f, 0.0f, -10.0f)), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))
 	{
 		m_CameraDirection = glm::normalize(m_CameraPosition - m_CameraTarget);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);

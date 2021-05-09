@@ -6,7 +6,7 @@ namespace SceneEditor{
 
 	void ModelController::AddChild(const std::string& Name)
 	{
-		m_Panels.insert({Name, Transforms(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
+		m_MeshControllers.insert({Name, Transforms(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
 	}
 
 	const MeshProperties& ModelController::GetNodeProperties(std::string& Name, bool& Status)
@@ -23,7 +23,7 @@ namespace SceneEditor{
 			if(ImGui::IsItemClicked( ))	
 				SelectedEntity = {m_Name, m_Id};
 
-			for(auto& [key, _] : m_Panels){
+			for(auto& [key, _] : m_MeshControllers){
 			
 				if(ImGui::Selectable(key.c_str( ), SelectedEntity.first == key)){
 					SelectedEntity = {key, m_Id};
@@ -35,9 +35,9 @@ namespace SceneEditor{
 
 	MeshProperties& ModelController::FindNodeProperties(const std::string& Name, bool& Status)
 	{
-		Status = m_Panels.find(Name) != m_Panels.end( );
+		Status = m_MeshControllers.find(Name) != m_MeshControllers.end( );
 		if(Status == true){
-			return  m_Panels[Name];
+			return  m_MeshControllers[Name];
 		}
 
 		static MeshProperties nullTransf;

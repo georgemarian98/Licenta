@@ -4,10 +4,10 @@
 
 #include <regex>
 
-#define VERTEX_SHADER "..\\Engine\\shaders\\vertex.glsl"
-#define PIXEL_SHADER "..\\Engine\\shaders\\fragment.glsl"
-#define LIB_PATH "..\\bin\\Release\\Engine.lib"
-#define SRC_PATH "..\\Engine\\src"
+#define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
+#define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
+#define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
+#define SRC_PATH "D:\\Proiecte\\Licenta\\Engine\\src"
 
 namespace YAML{
 
@@ -95,7 +95,7 @@ namespace SceneEditor{
 
 		m_YAMLEmitter << YAML::Key << "Models Properties" << YAML::Value << YAML::BeginSeq; // Models Properties sequence
 		{
-			for(auto& controller : UIManager::m_Panels){
+			for(auto& controller : UIManager::m_Controllers){
 				SerializeModel(controller);
 			}
 		}
@@ -106,12 +106,12 @@ namespace SceneEditor{
 		if(m_YAMLEmitter.good() == false)
 			std::cout << "Emitter error: " << m_YAMLEmitter.GetLastError( ) << "\n";
 
-		m_DependencyDirectories["..\\Engine\\deps\\assimp\\include\\assimp"] = "assimp";
-		m_DependencyDirectories["..\\Engine\\deps\\glad\\include\\glad"] = "glad";
-		m_DependencyDirectories["..\\Engine\\deps\\glad\\include\\KHR"] = "KHR";
-		m_DependencyDirectories["..\\Engine\\deps\\glfw\\include\\GLFW"] = "glfw";
-		m_DependencyDirectories["..\\Engine\\deps\\glm\\glm"] = "glm";
-		m_DependencyDirectories["..\\Engine\\deps\\yaml\\include\\yaml-cpp"] = "yaml-cpp";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\assimp\\include\\assimp"] = "assimp";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\glad"] = "glad";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\KHR"] = "KHR";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glfw\\include\\GLFW"] = "glfw";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glm\\glm"] = "glm";
+		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\yaml\\include\\yaml-cpp"] = "yaml-cpp";
 	}
 
 	void Serializer::ExportScene(const std::string& Path)
@@ -184,7 +184,7 @@ namespace SceneEditor{
 			mainProp.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
 			mainProp.TintColor = modelProperties["Color"].as<glm::vec3>( );
 
-			UIManager::m_Panels[i]->m_MainTransforms = mainProp;
+			UIManager::m_Controllers[i]->m_MainTransforms = mainProp;
 
 			YAML::Node meshes = modelProperties["Meshes"];
 			if(meshes){
@@ -196,7 +196,7 @@ namespace SceneEditor{
 					meshProp.TransformMatrices.Rotation = meshProperties["Rotation"].as<glm::vec3>( );
 					meshProp.TintColor = meshProperties["Color"].as<glm::vec3>( );
 
-					UIManager::m_Panels[i]->m_Panels[meshName] = meshProp;
+					UIManager::m_Controllers[i]->m_MeshControllers[meshName] = meshProp;
 				}
 			}
 			i++;
@@ -222,7 +222,7 @@ namespace SceneEditor{
 		m_YAMLEmitter << YAML::Key << "Color" << YAML::Value << mainProperties.TintColor;
 
 		m_YAMLEmitter << YAML::Key << "Meshes" << YAML::Value << YAML::BeginSeq; // Meshes sequence
-		for(auto& mesh : Controller->m_Panels){
+		for(auto& mesh : Controller->m_MeshControllers){
 			m_YAMLEmitter << YAML::BeginMap; // Mesh Properties
 			auto& meshProperties = mesh.second;
 

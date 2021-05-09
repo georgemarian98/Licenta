@@ -11,7 +11,7 @@ namespace SceneEditor{
 	bool UIManager::m_ShowPopUp = false;
 	std::string UIManager::m_PopUpText;
 	std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
-	std::vector<std::shared_ptr<ModelController>> UIManager::m_Panels;
+	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
 
 	std::function<void(void)>         UIManager::m_NewSceneFunction;
 	std::function<void(const char*)>  UIManager::m_ImportFunction;
@@ -92,7 +92,6 @@ namespace SceneEditor{
 				if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 				if(ImGui::BeginMenu("Import")){
 					if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
-					//if(ImGui::MenuItem("Import Scene")) UIManager::FolderDialog(UIManager::m_ImportSceneFunction);
 					ImGui::EndMenu( );
 				}
 				if(ImGui::MenuItem("Export Scene")) UIManager::FolderDialog(UIManager::m_ExportSceneFunction);
@@ -144,29 +143,29 @@ namespace SceneEditor{
 
 	void UIManager::AddPannel(std::shared_ptr<ModelController>& Panel)
 	{
-		m_Panels.emplace_back(Panel);
+		m_Controllers.emplace_back(Panel);
 		m_SelectedNode = {Panel->m_Name, Panel->m_Id};
 	}
 
 	void UIManager::DrawModels( )
 	{
-		for(auto& panel : m_Panels){
+		for(auto& panel : m_Controllers){
 			panel->Draw(m_SelectedNode);
 		}
 	}
 
 	void UIManager::DrawProperties( )
 	{
-		if(m_Panels.size() == 0){
+		if(m_Controllers.size() == 0){
 			return;
 		}
 
 		static std::string oldSelectedNode = m_SelectedNode.first;
 		static uint32_t oldSelectedNodeId = m_SelectedNode.second;
-		static MeshProperties* selectedNodeProperties = m_Panels[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
+		static MeshProperties* selectedNodeProperties = m_Controllers[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
 
 		if(oldSelectedNode != m_SelectedNode.first || oldSelectedNodeId != m_SelectedNode.second){
-			selectedNodeProperties = m_Panels[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);;
+			selectedNodeProperties = m_Controllers[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);;
 			oldSelectedNode = m_SelectedNode.first;
 		}
 		Transforms& selectedNodeTransforms = selectedNodeProperties->TransformMatrices;
