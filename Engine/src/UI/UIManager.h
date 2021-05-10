@@ -36,11 +36,10 @@ namespace SceneEditor{
 		static void SetImportSceneFunction(std::function<void(const char*)> Function) { m_ImportSceneFunction = std::move(Function); };
 		static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
 
-		static void ClearScene( ) { m_Controllers.clear( ); };
+		static void ClearScene( ) { m_Controllers.clear( ); m_NumVertices = 0;  m_Clear = true; };
 
 		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
-		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices; };
-		static void ResetVertices() { m_NumVertices = 0; };
+		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices;};
 
 	private:
 		static void DrawModels( );
@@ -52,6 +51,7 @@ namespace SceneEditor{
 
 	private:
 		static uint32_t m_NumVertices;
+		static bool m_Clear;
 
 		static bool m_ShowPopUp;
 		static std::string m_PopUpText;

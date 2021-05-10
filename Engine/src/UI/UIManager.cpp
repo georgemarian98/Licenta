@@ -8,6 +8,8 @@
 namespace SceneEditor{
 
 	uint32_t UIManager::m_NumVertices = 0;
+	bool UIManager::m_Clear = false;
+
 	bool UIManager::m_ShowPopUp = false;
 	std::string UIManager::m_PopUpText;
 	std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
@@ -164,9 +166,12 @@ namespace SceneEditor{
 		static uint32_t oldSelectedNodeId = m_SelectedNode.second;
 		static MeshProperties* selectedNodeProperties = m_Controllers[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
 
-		if(oldSelectedNode != m_SelectedNode.first || oldSelectedNodeId != m_SelectedNode.second){
-			selectedNodeProperties = m_Controllers[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);;
+		if(oldSelectedNode != m_SelectedNode.first || oldSelectedNodeId != m_SelectedNode.second || m_Clear == true){
+
+			selectedNodeProperties = m_Controllers[m_SelectedNode.second]->GetNodeProperties(m_SelectedNode.first);
 			oldSelectedNode = m_SelectedNode.first;
+
+			m_Clear = false;
 		}
 		Transforms& selectedNodeTransforms = selectedNodeProperties->TransformMatrices;
 

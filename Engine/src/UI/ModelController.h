@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "Renderer/VertexData.h"
+#include "Renderer/Renderer.h"
 
 namespace SceneEditor{
     class UIManager;
@@ -18,8 +19,7 @@ namespace SceneEditor{
 
         ModelController( ) 
         {
-            static int id = 0;
-            m_Id = id++;
+            m_Id = Renderer::GenerateID( );
         };
 
         void AddChild(const std::string& Name);
@@ -27,7 +27,7 @@ namespace SceneEditor{
         void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
         const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
-        const MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
+        MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
 
         void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
 

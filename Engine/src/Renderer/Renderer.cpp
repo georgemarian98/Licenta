@@ -3,6 +3,8 @@
 
 namespace SceneEditor{
 
+	uint32_t Renderer::m_Ids = 0;
+
 	void Renderer::Initiliaze(glm::vec4 ClearColor)
 	{
 		glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
