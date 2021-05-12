@@ -7,7 +7,7 @@ namespace SceneEditor{
 
     void Model::Draw(const std::unique_ptr<Shader>& ModelShader)
     {
-        MeshProperties mainProperties = m_ModelView->GetMainNodeProperties( );
+        MeshProperties mainProperties = m_ModelView->GetModelProperties( );
         DrawNodes(m_RootMesh, ModelShader, mainProperties);
     }
 

@@ -27,7 +27,7 @@ namespace SceneEditor{
         void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
         const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
-        MeshProperties& GetMainNodeProperties( ) { return m_MainTransforms; };
+        MeshProperties& GetModelProperties( ) { return m_MainTransforms; };
 
         void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
 

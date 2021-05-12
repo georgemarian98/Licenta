@@ -198,7 +198,7 @@ namespace SceneEditor{
 
 		if(initialized == false){
 			WCHAR szFile[260];       // buffer for file name
-			WCHAR* filter = L"Obj (*.obj)\0*.obj\0";
+			WCHAR* filter = L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0";
 
 			// Initialize OPENFILENAME
 			ZeroMemory(&ofn, sizeof(ofn));
@@ -225,7 +225,7 @@ namespace SceneEditor{
 
 			// Put a copy of the converted string into nstring
 			wcstombs_s(&convertedChars, filePathCString, 260, ofn.lpstrFile, _TRUNCATE);
-
+			
 			m_ImportFunction(filePathCString);
 			delete[ ] filePathCString;
 		}

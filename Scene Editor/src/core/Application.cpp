@@ -60,14 +60,14 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
-		UIManager::AddPannel(temp);
+		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
+		//UIManager::AddPannel(temp);
 
-		//Serializer exp;
-		//m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
+		Serializer exp;
+		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		m_Window.SetVsync(false);
-		while(m_Window.ShouldClose( ) == false){
+		while(m_Window.IsRunning( ) == false){
 			KeyboardInput( );
 
 			m_SceneBuffer->Bind( );
