@@ -141,8 +141,7 @@
     <ClInclude Include="src\core\Camera.h" />
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\Renderer\VertexData.h" />
-    <ClInclude Include="src\UI\ModelController.h" />
-    <ClInclude Include="src\UI\UIManager.h" />
+    <ClInclude Include="src\Controllers\ModelController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utility\Serializer.cpp" />
@@ -164,8 +163,7 @@
     <ClCompile Include="deps\stb\stb_image.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
-    <ClCompile Include="src\UI\ModelController.cpp" />
-    <ClCompile Include="src\UI\UIManager.cpp" />
+    <ClCompile Include="src\Controllers\ModelController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="deps\GLAD.vcxproj">

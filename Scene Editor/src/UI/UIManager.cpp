@@ -197,8 +197,8 @@ namespace SceneEditor{
 		static bool initialized = false;
 
 		if(initialized == false){
-			WCHAR szFile[260];       // buffer for file name
-			WCHAR* filter = L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0";
+			WCHAR szFile[260]{};       // buffer for file name
+			const WCHAR* filter = L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0";
 
 			// Initialize OPENFILENAME
 			ZeroMemory(&ofn, sizeof(ofn));

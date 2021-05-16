@@ -23,6 +23,10 @@ namespace SceneEditor{
 		{
 			return m_SceneModels[Index]->GetModelController( );
 		}
+
+	private:
+		std::vector<std::shared_ptr<Model>>& GetModels( ) { return m_SceneModels; };
+
 	private:
 		std::vector<std::shared_ptr<Model>> m_SceneModels;
 		std::vector<std::unique_ptr<Pass>> m_Passes;

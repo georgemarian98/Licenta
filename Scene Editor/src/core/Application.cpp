@@ -4,7 +4,7 @@
 #include "Renderer/Model.h"
 
 #include "Renderer/Renderer.h"
-#include "UI/UIManager.h"
+#include "../UI/UIManager.h"
 #include "utility/Serializer.h"
 
 namespace SceneEditor{
@@ -44,6 +44,9 @@ namespace SceneEditor{
 		UIManager::SetExportSceneFunction([ & ](const char* Path){
 			Serializer exp(m_Scene);
 			exp.ExportScene(Path);
+
+			std::string message = "Scene exported successfully to " + std::string{Path};
+			UIManager::ShowPopUp(message);
 		});
 
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);

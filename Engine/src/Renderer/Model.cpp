@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "Model.h"
 
-#include <UI/UIManager.h>
+//#include "Controllers/UIManager.h"
+
+#include <assimp/Importer.hpp>
+
+#include <assimp/postprocess.h>
 
 namespace SceneEditor{
 
@@ -45,7 +49,7 @@ namespace SceneEditor{
         }
     }
 
-    void Model::loadModel(const std::string_view& Path)
+    void Model::LoadModel(const std::string_view& Path)
     {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(Path.data(), aiProcess_Triangulate |
@@ -60,41 +64,41 @@ namespace SceneEditor{
         }
         m_Directory = Path.substr(0, Path.find_last_of('\\'));
 
-        m_RootMesh = processNode(scene->mRootNode, scene);
+        m_RootMesh = ProcessNode(scene->mRootNode, scene);
         m_ModelView->SetModelName(std::string{scene->mRootNode->mName.C_Str( )});
 
         PrintTree(m_RootMesh, 0);
     }
 
-    std::unique_ptr<MeshNode> Model::processNode(aiNode* Node, const aiScene* Scene)
+    std::unique_ptr<MeshNode> Model::ProcessNode(aiNode* Node, const aiScene* Scene)
     {
         std::unique_ptr<MeshNode> newNode = std::make_unique<MeshNode>();
         newNode->m_Name = Node->mName.C_Str( );
 
         for(uint32_t i = 0; i < Node->mNumMeshes; i++){
             aiMesh* mesh = Scene->mMeshes[Node->mMeshes[i]];
-            auto& tempMesh = processMesh(mesh, Scene);
+            auto& tempMesh = ProcessMesh(mesh, Scene);
 
             m_ModelView->AddChild(mesh->mName.C_Str());
             newNode->m_Meshes.push_back(std::move(tempMesh));
         }
 
         for(uint32_t i = 0; i < Node->mNumChildren; i++){
-            std::unique_ptr<MeshNode> childNode = processNode(Node->mChildren[i], Scene);
+            std::unique_ptr<MeshNode> childNode = ProcessNode(Node->mChildren[i], Scene);
             newNode->AddChild(childNode);
         }
 
         return newNode;
     }
 
-    std::unique_ptr<Mesh> Model::processMesh(aiMesh* ImportedMesh, const aiScene* Scene)
+    std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* ImportedMesh, const aiScene* Scene)
     {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         std::vector<Texture> textures;
 
         vertices.reserve(ImportedMesh->mNumVertices);
-        UIManager::UpdateNumberVertices(ImportedMesh->mNumVertices);
+        //UIManager::UpdateNumberVertices(ImportedMesh->mNumVertices);
 
         for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
             Vertex vertex;
@@ -147,22 +151,22 @@ namespace SceneEditor{
 
         aiMaterial* material = Scene->mMaterials[ImportedMesh->mMaterialIndex];
 
-        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
 
-        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end( ), specularMaps.begin( ), specularMaps.end( ));
 
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
         textures.insert(textures.end( ), normalMaps.begin( ), normalMaps.end( ));
 
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
         return std::make_unique<Mesh>(vertices, indices, textures);
     }
 
-    std::vector<Texture> Model::loadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName)
+    std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName)
     {
         static std::vector<Texture> loadedTextures;
 

@@ -2,13 +2,11 @@
 #include <string>
 #include <vector>
 
-#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 #include "Mesh.h"
 
-#include <UI/ModelController.h>
+#include <Controllers/ModelController.h>
 
 /// <summary>
 /// Code inspired from: https://learnopengl.com/Model-Loading/Assimp
@@ -23,7 +21,7 @@ namespace SceneEditor{
         Model(const char* Path)
         {
             m_ModelView = std::make_shared<ModelController>( );
-            loadModel(Path);
+            LoadModel(Path);
         }
         void Draw(const std::unique_ptr<Shader>& ModelShader);
         std::shared_ptr<ModelController> GetModelController( ) { return m_ModelView; };
@@ -33,10 +31,10 @@ namespace SceneEditor{
         void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
         void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies);
 
-        void loadModel(const std::string_view& Path);
-        std::unique_ptr<MeshNode> processNode(aiNode* Node, const aiScene* Scene);
-        std::unique_ptr<Mesh> processMesh(aiMesh* Mesh, const aiScene* Scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName);
+        void LoadModel(const std::string_view& Path);
+        std::unique_ptr<MeshNode> ProcessNode(aiNode* Node, const aiScene* Scene);
+        std::unique_ptr<Mesh> ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
+        std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName);
 
         uint32_t TextureFromFile(const char* Path);
     private:

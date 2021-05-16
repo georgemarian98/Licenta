@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Serializer.h"
-#include "UI/UIManager.h"
+//#include "Controllers/UIManager.h"
 
 #include <regex>
 
@@ -95,8 +95,8 @@ namespace SceneEditor{
 
 		m_YAMLEmitter << YAML::Key << "Models Properties" << YAML::Value << YAML::BeginSeq; // Models Properties sequence
 		{
-			for(auto& controller : UIManager::m_Controllers){
-				SerializeModel(controller);
+			for(auto& controller : CurrentScene->GetModels()){
+				SerializeModel(controller->GetModelController());
 			}
 		}
 		m_YAMLEmitter << YAML::EndSeq; //Models Properties sequence
@@ -140,9 +140,6 @@ namespace SceneEditor{
 			outputFile << m_YAMLEmitter.c_str( );
 			outputFile.close( );
 		}
-
-		std::string message = "Scene exported successfully to " + Path;
-		UIManager::ShowPopUp(message);
 	}
 
 	std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
@@ -167,7 +164,8 @@ namespace SceneEditor{
 
 		for(auto& model : models){
 			std::string modelPath = model["Path"].as<std::string>( );
-			UIManager::AddPannel(importedScene->AddModel(modelPath));
+			importedScene->AddModel(modelPath);
+			//UIManager::AddPannel(importedScene->AddModel(modelPath)); in scene editor atunci cand import o scena
 		}
 
 		YAML::Node modelsProperties = rootData["Models Properties"];
@@ -184,7 +182,8 @@ namespace SceneEditor{
 			mainProp.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
 			mainProp.TintColor = modelProperties["Color"].as<glm::vec3>( );
 
-			UIManager::m_Controllers[i]->m_MainTransforms = mainProp;
+			auto modelController = importedScene->GetController(i);
+			modelController->m_MainTransforms = mainProp;
 
 			YAML::Node meshes = modelProperties["Meshes"];
 			if(meshes){
@@ -196,7 +195,7 @@ namespace SceneEditor{
 					meshProp.TransformMatrices.Rotation = meshProperties["Rotation"].as<glm::vec3>( );
 					meshProp.TintColor = meshProperties["Color"].as<glm::vec3>( );
 
-					UIManager::m_Controllers[i]->m_MeshControllers[meshName] = meshProp;
+					modelController->m_MeshControllers[meshName] = meshProp;
 				}
 			}
 			i++;

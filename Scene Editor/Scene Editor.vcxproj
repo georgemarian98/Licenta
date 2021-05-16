@@ -175,6 +175,7 @@ COPY $(SolutionDir)Engine\deps\assimp\lib\assimp-vc140-mt.lib $(SolutionDir)bin\
     <ClCompile Include="src\core\ApplicationCamera.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -217,6 +218,7 @@ COPY $(SolutionDir)Engine\deps\assimp\lib\assimp-vc140-mt.lib $(SolutionDir)bin\
   <ItemGroup>
     <ClInclude Include="src\core\ApplicationCamera.h" />
     <ClInclude Include="src\core\Application.h" />
+    <ClInclude Include="src\UI\UIManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

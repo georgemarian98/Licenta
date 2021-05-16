@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "core/Window.h"
-#include "UI/ModelController.h"
+#include "Controllers/ModelController.h"
 
 namespace SceneEditor{
 
