@@ -37,11 +37,36 @@ namespace SceneEditor{
 		});
 
 		UIManager::SetImportFunction([ & ](const char* Path){
-			auto temp = m_Scene->AddModel(Path);
-			UIManager::AddPannel( temp );
+			if(strncmp(Path, "", 1) == 0){
+				return;
+			}
+
+			auto controller = m_Scene->AddModel(Path);
+			UIManager::AddPannel(controller);
+		});
+
+		UIManager::SetImportSceneFunction([ & ](const char* Path){
+
+			if(strncmp(Path, "", 1) == 0){
+				return;
+			}
+
+			Serializer srl;
+			auto&& models = srl.ImportModels(Path);
+
+			for(auto& model : models){
+				auto controller = m_Scene->AddModel(model);
+				UIManager::AddPannel(controller);
+			}
+
 		});
 
 		UIManager::SetExportSceneFunction([ & ](const char* Path){
+
+			if(strncmp(Path,"",1) == 0){
+				return;
+			}
+
 			Serializer exp(m_Scene);
 			exp.ExportScene(Path);
 
@@ -65,9 +90,6 @@ namespace SceneEditor{
 	{
 		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
 		//UIManager::AddPannel(temp);
-
-		Serializer exp;
-		m_Scene = exp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		m_Window.SetVsync(false);
 		while(m_Window.IsRunning( ) == false){

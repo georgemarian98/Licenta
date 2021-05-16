@@ -20,6 +20,12 @@ namespace SceneEditor{
 		return m_SceneModels.back()->GetModelController();
 	}
 
+	std::shared_ptr<ModelController> Scene::AddModel(const std::shared_ptr<Model>& Model)
+	{
+		m_SceneModels.emplace_back(std::move(Model));
+		return m_SceneModels.back( )->GetModelController( );
+	}
+
 	void Scene::AddPass(std::unique_ptr<Pass>& Pass_p)
 	{
 		m_Passes.emplace_back(std::move(Pass_p));

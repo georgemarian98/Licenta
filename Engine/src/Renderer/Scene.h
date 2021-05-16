@@ -18,6 +18,7 @@ namespace SceneEditor{
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
 		void ClearScene( ) { m_SceneModels.clear( ); };
 		std::shared_ptr<ModelController> AddModel(const std::string_view& Path);
+		std::shared_ptr<ModelController> AddModel(const std::shared_ptr<Model>& Model);
 
 		std::shared_ptr<ModelController> GetController(int Index)
 		{

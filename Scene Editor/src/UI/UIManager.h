@@ -31,8 +31,8 @@ namespace SceneEditor{
 		/// <param name="Panel"></param>
 		static void AddPannel(std::shared_ptr<ModelController>& Panel);
 
-		static void SetNewSceneFunction(std::function<void(void)> Function) { m_NewSceneFunction = std::move(Function); };
-		static void SetImportFunction(std::function<void(const char*)> Function) { m_ImportFunction = std::move(Function); };
+		static void SetNewSceneFunction(std::function<void(void)> Function)           { m_NewSceneFunction = std::move(Function); };
+		static void SetImportFunction(std::function<void(const char*)> Function)      { m_ImportFunction = std::move(Function); };
 		static void SetImportSceneFunction(std::function<void(const char*)> Function) { m_ImportSceneFunction = std::move(Function); };
 		static void SetExportSceneFunction(std::function<void(const char*)> Function) { m_ExportSceneFunction = std::move(Function); };
 
@@ -47,6 +47,7 @@ namespace SceneEditor{
 		static void DrawStats( );
 
 		static void ImportModel( );
+		static void ImportScene( );
 		static void FolderDialog(std::function<void(const char*)>& Function);
 
 	private:

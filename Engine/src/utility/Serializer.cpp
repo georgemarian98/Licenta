@@ -156,22 +156,49 @@ namespace SceneEditor{
 			std::cerr << e.what( );
 		}		
 
-		YAML::Node models = rootData["Models"];
-		if(!models)
-			std::cout << "YAML corupt\n";
-
 		std::cout << "-------------IMPORT----------\n";
+
+		auto&& models = ImportModels(FolderPath, &rootData);
+		importedScene->m_SceneModels = std::move(models);
+
+		std::string vertexFile = FolderPath + "\\shaders\\vertex.glsl";
+		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.data(), pixelFile.data());
+		importedScene->AddPass(renderPass);
+
+		return importedScene;
+	}
+
+	std::vector<std::shared_ptr<Model>> Serializer::ImportModels(const std::string& ScenePath, YAML::Node* Root)
+	{
+		std::vector<std::shared_ptr<Model>> importedModels;
+		YAML::Node root;
+
+		if(Root == nullptr){
+			try{
+				root = YAML::LoadFile(ScenePath);
+			}
+			catch(const std::exception& e){
+				std::cerr << e.what( );
+			}
+		}
+		else{
+			root = *Root;
+		}
+
+		YAML::Node models = root["Models"];
+		assert(models);
 
 		for(auto& model : models){
 			std::string modelPath = model["Path"].as<std::string>( );
-			importedScene->AddModel(modelPath);
-			//UIManager::AddPannel(importedScene->AddModel(modelPath)); in scene editor atunci cand import o scena
+
+			auto&& model = std::make_shared<Model>(modelPath.c_str());
+			importedModels.emplace_back(model);
 		}
 
-		YAML::Node modelsProperties = rootData["Models Properties"];
-		if(!modelsProperties)
-			std::cout << "YAML corrupt models properties\n";
-	
+		YAML::Node modelsProperties = root["Models Properties"];
+		assert(modelsProperties);
+
 		int i = 0;
 		for(auto& modelProperties : modelsProperties){
 			std::string modelName = modelProperties["Name"].as<std::string>( );
@@ -182,7 +209,7 @@ namespace SceneEditor{
 			mainProp.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
 			mainProp.TintColor = modelProperties["Color"].as<glm::vec3>( );
 
-			auto modelController = importedScene->GetController(i);
+			auto modelController = importedModels[i]->GetModelController( );;
 			modelController->m_MainTransforms = mainProp;
 
 			YAML::Node meshes = modelProperties["Meshes"];
@@ -201,12 +228,7 @@ namespace SceneEditor{
 			i++;
 		}
 
-		std::string vertexFile = FolderPath + "\\shaders\\vertex.glsl";
-		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.data(), pixelFile.data());
-		importedScene->AddPass(renderPass);
-
-		return importedScene;
+		return importedModels;
 	}
 	
 	void Serializer::SerializeModel(std::shared_ptr<ModelController> Controller)

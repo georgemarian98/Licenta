@@ -94,6 +94,7 @@ namespace SceneEditor{
 				if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 				if(ImGui::BeginMenu("Import")){
 					if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
+					if(ImGui::MenuItem("Import Scene")) UIManager::ImportScene( );
 					ImGui::EndMenu( );
 				}
 				if(ImGui::MenuItem("Export Scene")) UIManager::FolderDialog(UIManager::m_ExportSceneFunction);
@@ -197,7 +198,7 @@ namespace SceneEditor{
 		static bool initialized = false;
 
 		if(initialized == false){
-			WCHAR szFile[260]{};       // buffer for file name
+			WCHAR szFile[260] = L"\0";       // buffer for file name
 			const WCHAR* filter = L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0";
 
 			// Initialize OPENFILENAME
@@ -227,6 +228,46 @@ namespace SceneEditor{
 			wcstombs_s(&convertedChars, filePathCString, 260, ofn.lpstrFile, _TRUNCATE);
 			
 			m_ImportFunction(filePathCString);
+			delete[ ] filePathCString;
+		}
+	}
+
+	void UIManager::ImportScene( )
+	{
+		static OPENFILENAME ofn;       // common dialog box structure
+		static bool initialized = false;
+
+		if(initialized == false){
+			WCHAR szFile[260] = L"\0";       // buffer for file name
+			const WCHAR* filter = L"Scene (*.yaml)\0*.yaml\0All (*.*)\0*.*\0";
+
+			// Initialize OPENFILENAME
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = 0;
+			ofn.lpstrFile = szFile;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = filter;
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+			initialized = true;
+		}
+
+		// Display the Open dialog box. 
+		if(GetOpenFileName(&ofn) == TRUE){
+
+			char* filePathCString = new char[260];
+			size_t convertedChars = 0;
+
+			// Put a copy of the converted string into nstring
+			wcstombs_s(&convertedChars, filePathCString, 260, ofn.lpstrFile, _TRUNCATE);
+
+			m_ImportSceneFunction(filePathCString);
 			delete[ ] filePathCString;
 		}
 	}

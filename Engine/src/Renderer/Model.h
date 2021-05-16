@@ -23,6 +23,7 @@ namespace SceneEditor{
             m_ModelView = std::make_shared<ModelController>( );
             LoadModel(Path);
         }
+
         void Draw(const std::unique_ptr<Shader>& ModelShader);
         std::shared_ptr<ModelController> GetModelController( ) { return m_ModelView; };
         std::string GetModelName( ) { return m_Directory + "\\" + m_ModelView->GetModelName( ); };
