@@ -28,6 +28,8 @@ namespace SceneEditor{
         std::shared_ptr<ModelController> GetModelController( ) { return m_ModelView; };
         std::string GetModelName( ) { return m_Directory + "\\" + m_ModelView->GetModelName( ); };
 
+        uint32_t GetNoVertices( ) { return m_NoVertex; };
+
     private:
         void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
         void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies);
@@ -39,6 +41,8 @@ namespace SceneEditor{
 
         uint32_t TextureFromFile(const char* Path);
     private:
+        uint32_t m_NoVertex = 0;
+
         std::unique_ptr<MeshNode> m_RootMesh;
         std::string m_Directory;
 

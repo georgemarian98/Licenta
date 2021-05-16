@@ -12,15 +12,16 @@ namespace SceneEditor{
 		}
 	}
 
-	std::shared_ptr<ModelController> Scene::AddModel(const std::string_view& Path)
+	std::shared_ptr<ModelController> Scene::AddModel(const std::string_view& Path, uint32_t& NoVertices)
 	{
 		auto&& model = std::make_shared<Model>(Path.data());
 		m_SceneModels.emplace_back(model);
+		NoVertices = model->GetNoVertices( );
 
 		return m_SceneModels.back()->GetModelController();
 	}
 
-	std::shared_ptr<ModelController> Scene::AddModel(const std::shared_ptr<Model>& Model)
+	std::shared_ptr<ModelController> Scene::AddModel(std::shared_ptr<Model>& Model)
 	{
 		m_SceneModels.emplace_back(std::move(Model));
 		return m_SceneModels.back( )->GetModelController( );

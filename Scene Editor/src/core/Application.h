@@ -11,15 +11,17 @@ namespace SceneEditor{
 	class Application{
 
 	public:
+		Application(Application&) = delete;
+		Application& operator=(Application& Other) = delete;
+
 		static std::shared_ptr<Application> GetInstance(const char* Name = "");
 
 		void Run( );
+
 	private:
 		Application( ) = default;
-		Application(Application&) = delete;
 		Application(const char* Name);
 
-		void Mouse(GLFWwindow* Window, double Xpos, double Ypos);
 		void KeyboardInput( );
 		void ResizeWindow(GLFWwindow* window, int width, int height);
 

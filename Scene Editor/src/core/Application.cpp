@@ -41,8 +41,11 @@ namespace SceneEditor{
 				return;
 			}
 
-			auto controller = m_Scene->AddModel(Path);
+			uint32_t noVertices;
+			auto controller = m_Scene->AddModel(Path, noVertices);
+
 			UIManager::AddPannel(controller);
+			UIManager::UpdateNumberVertices(noVertices);
 		});
 
 		UIManager::SetImportSceneFunction([ & ](const char* Path){
@@ -52,13 +55,15 @@ namespace SceneEditor{
 			}
 
 			Serializer srl;
-			auto&& models = srl.ImportModels(Path);
+			auto models = srl.ImportModels(Path);
 
 			for(auto& model : models){
+				UIManager::UpdateNumberVertices(model->GetNoVertices( ));
+
 				auto controller = m_Scene->AddModel(model);
+
 				UIManager::AddPannel(controller);
 			}
-
 		});
 
 		UIManager::SetExportSceneFunction([ & ](const char* Path){
@@ -104,28 +109,6 @@ namespace SceneEditor{
 			UIManager::Draw(m_SceneBuffer->GetColorId( ));
 			m_Window.Update( );
 		}
-	}
-
-	void Application::Mouse(GLFWwindow* Window, double Xpos, double Ypos)
-	{
-		static bool firstMouse = true;
-		static double lastX = m_Width / 2.0;
-		static double lastY = m_Height / 2.0;
-		constexpr float sensitivity = 0.05f;
-
-		if(firstMouse){
-			lastX = Xpos;
-			lastY = Ypos;
-			firstMouse = false;
-		}
-
-		double xoffset = Xpos - lastX;
-		double yoffset = lastY - Ypos;
-		lastX = Xpos;
-		lastY = Ypos;
-
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
 	}
 
 	void Application::KeyboardInput( )

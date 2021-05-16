@@ -17,13 +17,10 @@ namespace SceneEditor{
 		void Draw(const Camera& SceneCamera);
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
 		void ClearScene( ) { m_SceneModels.clear( ); };
-		std::shared_ptr<ModelController> AddModel(const std::string_view& Path);
-		std::shared_ptr<ModelController> AddModel(const std::shared_ptr<Model>& Model);
+		std::shared_ptr<ModelController> AddModel(const std::string_view& Path, uint32_t& NoVertices);
+		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
 
-		std::shared_ptr<ModelController> GetController(int Index)
-		{
-			return m_SceneModels[Index]->GetModelController( );
-		}
+		std::shared_ptr<ModelController> GetController(int Index) { return m_SceneModels[Index]->GetModelController( ); };
 
 	private:
 		std::vector<std::shared_ptr<Model>>& GetModels( ) { return m_SceneModels; };

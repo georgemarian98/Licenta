@@ -1,10 +1,7 @@
 #include "pch.h"
 #include "Model.h"
 
-//#include "Controllers/UIManager.h"
-
 #include <assimp/Importer.hpp>
-
 #include <assimp/postprocess.h>
 
 namespace SceneEditor{
@@ -98,7 +95,7 @@ namespace SceneEditor{
         std::vector<Texture> textures;
 
         vertices.reserve(ImportedMesh->mNumVertices);
-        //UIManager::UpdateNumberVertices(ImportedMesh->mNumVertices);
+        m_NoVertex += ImportedMesh->mNumVertices;
 
         for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
             Vertex vertex;
