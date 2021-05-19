@@ -17,6 +17,7 @@ namespace SceneEditor{
 		void Draw(const Camera& SceneCamera);
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
 		void ClearScene( ) { m_SceneModels.clear( ); };
+
 		std::shared_ptr<ModelController> AddModel(const std::string_view& Path, uint32_t& NoVertices);
 		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
 

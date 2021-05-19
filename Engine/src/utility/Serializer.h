@@ -1,6 +1,5 @@
 #pragma once
 #include "Renderer/Scene.h"
-#include "Renderer/Model.h"
 #include <yaml-cpp/yaml.h>
 
 namespace SceneEditor{

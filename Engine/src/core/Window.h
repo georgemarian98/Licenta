@@ -1,7 +1,4 @@
 #pragma once
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
 
 namespace SceneEditor{
 
@@ -26,9 +23,9 @@ namespace SceneEditor{
 		void CreateApplicationWindow();
 
 	private:
-		std::string m_Name;
 		bool m_VsyncEnabled = false;
 		uint32_t m_Width = 0, m_Height = 0;
+		std::string m_Name;
 		GLFWwindow* m_Window = nullptr;
 	};
 }

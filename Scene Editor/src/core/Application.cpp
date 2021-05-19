@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "Application.h"
-#include "Renderer/Model.h"
 
 #include "Renderer/Renderer.h"
 #include "../UI/UIManager.h"
@@ -36,8 +35,9 @@ namespace SceneEditor{
 			Renderer::Reset( );
 		});
 
-		UIManager::SetImportFunction([ & ](const char* Path){
-			if(strncmp(Path, "", 1) == 0){
+		UIManager::SetImportFunction([ & ](const std::string& Path){
+
+			if(Path.empty( ) == true){
 				return;
 			}
 
@@ -48,9 +48,9 @@ namespace SceneEditor{
 			UIManager::UpdateNumberVertices(noVertices);
 		});
 
-		UIManager::SetImportSceneFunction([ & ](const char* Path){
+		UIManager::SetImportSceneFunction([ & ](const std::string& Path){
 
-			if(strncmp(Path, "", 1) == 0){
+			if(Path.empty( ) == true){
 				return;
 			}
 
@@ -66,9 +66,9 @@ namespace SceneEditor{
 			}
 		});
 
-		UIManager::SetExportSceneFunction([ & ](const char* Path){
+		UIManager::SetExportSceneFunction([ & ](const std::string& Path){
 
-			if(strncmp(Path,"",1) == 0){
+			if(Path.empty() == true){
 				return;
 			}
 

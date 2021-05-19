@@ -6,7 +6,7 @@ namespace SceneEditor{
 
 	void ModelController::AddChild(const std::string& Name)
 	{
-		m_MeshControllers.insert({Name, Transforms(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f))});
+		m_MeshControllers.insert({Name, Transforms()});
 	}
 
 	const MeshProperties& ModelController::GetNodeProperties(std::string& Name, bool& Status)

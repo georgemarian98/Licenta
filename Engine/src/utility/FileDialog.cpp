@@ -20,12 +20,19 @@ namespace SceneEditor{
 		m_Dialog.nMaxFileTitle = 0;
 		m_Dialog.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 	}
+
 	bool FileDialog::Open( )
 	{
 		return GetOpenFileName(&m_Dialog);
 	}
-	std::wstring FileDialog::GetFile( )
+
+	std::string FileDialog::GetFilePath( )
 	{
-		return m_Filename;
+		char filePathCString[MAX_PATH];
+		size_t convertedChars = 0;
+
+		wcstombs_s(&convertedChars, filePathCString, MAX_PATH, m_Filename.c_str() , _TRUNCATE);
+
+		return std::string{filePathCString};
 	}
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 
 #include <core/Camera.h>
 #include <OpenGL/Shader.h>

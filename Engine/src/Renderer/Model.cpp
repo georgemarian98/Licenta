@@ -163,7 +163,7 @@ namespace SceneEditor{
         return std::make_unique<Mesh>(vertices, indices, textures);
     }
 
-    std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName)
+    std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string& TypeName)
     {
         static std::vector<Texture> loadedTextures;
 
@@ -184,23 +184,22 @@ namespace SceneEditor{
             }
 
             if(skip == false){ 
-                uint32_t id = TextureFromFile(str.C_Str( ));
-                std::string type = TypeName.data();
+                uint32_t id = LoadTextureFromFile(str.C_Str( ));
                 std::string path = str.C_Str( );
 
-                Texture& texture = textures.emplace_back(id, type, path); 
+                Texture& texture = textures.emplace_back(id, TypeName, path);
                 loadedTextures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             }
         }
         return textures;
     }
 
-    uint32_t  Model::TextureFromFile(const char* Path)
+    uint32_t  Model::LoadTextureFromFile(const char* Path)
     {
         std::string filename = std::string(Path);
         filename = m_Directory + '\\' + filename;
 
-        unsigned int textureID;
+        uint32_t textureID;
         glGenTextures(1, &textureID);
 
         int width, height, nrComponents;

@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/Shader.h"

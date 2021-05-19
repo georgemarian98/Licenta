@@ -1,7 +1,6 @@
 #pragma once
 #include "glad/glad.h"
 
-#include <string>
 #include <iostream>
 
 inline GLenum glCheckError_(const char* File, int Line)
@@ -18,7 +17,7 @@ inline GLenum glCheckError_(const char* File, int Line)
 			case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
 			case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
 		}
-		std::cout << error << " | " << File << " (" << Line << ")" << std::endl;
+		std::cerr << error << " | " << File << " (" << Line << ")" << std::endl;
 	}
 	return errorCode;
 }

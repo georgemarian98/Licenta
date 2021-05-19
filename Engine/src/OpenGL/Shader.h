@@ -10,7 +10,7 @@ namespace SceneEditor{
 		Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName);
 		~Shader( );
 
-		std::string GetVertexShaderName( ) { return m_VertexName; };
+		std::string GetVertexShaderName( )   { return m_VertexName; };
 		std::string GetFragmentShaderName( ) { return m_FragmentName; };
 		std::string GetGeometryShaderName( ) { return m_GeometryName; };
 

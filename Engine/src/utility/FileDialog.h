@@ -10,7 +10,7 @@ namespace SceneEditor{
 
 		bool Open( );
 
-		std::wstring GetFile( );
+		std::string GetFilePath( );
 
 	private:
 		std::wstring m_Filename;

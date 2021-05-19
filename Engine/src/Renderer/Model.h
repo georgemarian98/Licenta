@@ -1,11 +1,8 @@
 #pragma once
-#include <string>
-#include <vector>
 
 #include <assimp/scene.h>
 
 #include "Mesh.h"
-
 #include <Controllers/ModelController.h>
 
 /// <summary>
@@ -37,15 +34,13 @@ namespace SceneEditor{
         void LoadModel(const std::string_view& Path);
         std::unique_ptr<MeshNode> ProcessNode(aiNode* Node, const aiScene* Scene);
         std::unique_ptr<Mesh> ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
-        std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string_view& TypeName);
+        std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string& TypeName);
+        uint32_t LoadTextureFromFile(const char* Path);
 
-        uint32_t TextureFromFile(const char* Path);
     private:
         uint32_t m_NoVertex = 0;
-
-        std::unique_ptr<MeshNode> m_RootMesh;
         std::string m_Directory;
-
+        std::unique_ptr<MeshNode> m_RootMesh;
         std::shared_ptr<ModelController> m_ModelView;
     };
 

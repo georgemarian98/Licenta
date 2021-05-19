@@ -1,7 +1,5 @@
 #pragma once
 
-#include "glm/glm.hpp"
-
 #include <unordered_map>
 #include <utility>
 
@@ -11,29 +9,32 @@
 namespace SceneEditor{
     class UIManager;
     class Serializer;
+    class Model;
 
     class ModelController{
     public:
         friend class UIManager;
         friend class Serializer;
+        friend class Model;
 
         ModelController( ) 
         {
             m_Id = Renderer::GenerateID( );
         };
 
-        void AddChild(const std::string& Name);
         void SetModelName(std::string& Name) { m_Name = Name; };
         void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
         const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
         MeshProperties& GetModelProperties( ) { return m_MainTransforms; };
 
-        void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
-
         std::string GetModelName( ) { return m_Name; };
 
+        void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
+
     private:
+        void AddChild(const std::string& Name);
+
         MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);
         MeshProperties* GetNodeProperties(const std::string& Name);
 

@@ -4,6 +4,7 @@
 #include <ShlObj.h>
 
 #include "utility/FileDialog.h"
+#include "utility/FolderDialog.h"
 
 //#define IMGUI_EXAMPLE
 
@@ -18,9 +19,9 @@ namespace SceneEditor{
 	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
 
 	std::function<void(void)>         UIManager::m_NewSceneFunction;
-	std::function<void(const char*)>  UIManager::m_ImportFunction;
-	std::function<void(const char*)>  UIManager::m_ImportSceneFunction;
-	std::function<void(const char*)>  UIManager::m_ExportSceneFunction;
+	std::function<void(const std::string&)>  UIManager::m_ImportModelFunction;
+	std::function<void(const std::string&)>  UIManager::m_ImportSceneFunction;
+	std::function<void(const std::string&)>  UIManager::m_ExportSceneFunction;
 
 	void UIManager::Initiliaze(Window& Window)
 	{
@@ -99,7 +100,7 @@ namespace SceneEditor{
 					if(ImGui::MenuItem("Import Scene")) UIManager::ImportScene( );
 					ImGui::EndMenu( );
 				}
-				if(ImGui::MenuItem("Export Scene")) UIManager::FolderDialog(UIManager::m_ExportSceneFunction);
+				if(ImGui::MenuItem("Export Scene")) UIManager::ExportScene();
 				if(ImGui::MenuItem("Exit")) exit(0);
 				ImGui::EndMenu( );
 			}
@@ -199,10 +200,9 @@ namespace SceneEditor{
 		static FileDialog modelDialog(L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0");
 
 		if(modelDialog.Open( ) == true){
-			auto wstr = modelDialog.GetFile( );
-			std::string fileName(wstr.begin( ), wstr.end( ));
+			std::string fileName = modelDialog.GetFilePath( );
 
-			m_ImportFunction(fileName.c_str());
+			m_ImportModelFunction(fileName.c_str());
 		}
 		
 	}
@@ -212,40 +212,20 @@ namespace SceneEditor{
 		static FileDialog modelDialog(L"Scene (*.yaml)\0*.yaml\0All (*.*)\0*.*\0");
 
 		if(modelDialog.Open() == true){
-			auto wstr = modelDialog.GetFile( );
-			std::string fileName(wstr.begin( ), wstr.end( ));
+			std::string fileName = modelDialog.GetFilePath( );
 
 			m_ImportSceneFunction(fileName.c_str());
 		}
 	}
 
-	void UIManager::FolderDialog(std::function<void(const char*)>& Function)
+	void UIManager::ExportScene()
 	{
-		TCHAR path[MAX_PATH] = {0};
-		BROWSEINFO bi;
-		ZeroMemory(&bi, sizeof(bi));
-		bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_EDITBOX | BIF_USENEWUI;
+		static FolderDialog dialog;
 
-		LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
+		dialog.Open( );
 
-		if(pidl != 0){
-			//get the name of the folder and put it in path
-			SHGetPathFromIDList(pidl, path);
+		std::string folderPath = dialog.GetFolderPath( );
 
-			//free memory used
-			IMalloc* imalloc = 0;
-			if(SUCCEEDED(SHGetMalloc(&imalloc))){
-				imalloc->Free(pidl);
-				imalloc->Release( );
-			}
-		}
-
-		char filePathCString[256];
-		size_t convertedChars = 0;
-
-		// Put a copy of the converted string into nstring
-		wcstombs_s(&convertedChars, filePathCString, 256, path, _TRUNCATE);
-
-		Function(filePathCString);
+		UIManager::m_ExportSceneFunction(folderPath.c_str());
 	}
 }
