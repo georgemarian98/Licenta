@@ -93,7 +93,8 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj");
+		//uint32_t aux;
+		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
 		//UIManager::AddPannel(temp);
 
 		m_Window.SetVsync(false);

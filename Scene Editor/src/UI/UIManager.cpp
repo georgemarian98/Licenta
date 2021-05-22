@@ -15,7 +15,7 @@ namespace SceneEditor{
 
 	bool UIManager::m_ShowPopUp = false;
 	std::string UIManager::m_PopUpText;
-	std::pair<std::string, uint32_t> UIManager::m_SelectedNode;
+	Component UIManager::m_SelectedNode;
 	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
 
 	std::function<void(void)>         UIManager::m_NewSceneFunction;
@@ -191,6 +191,13 @@ namespace SceneEditor{
 
 	void UIManager::DrawStats( )
 	{
+		// get version info
+		static const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
+		static const GLubyte* version = glGetString(GL_VERSION); // version as a string
+
+		ImGui::Text("Renderer: %s", renderer);
+		ImGui::Text("Version: %s", version);
+		ImGui::Separator( );
 		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
 		ImGui::Text("Vertices: %d", m_NumVertices);
 	}

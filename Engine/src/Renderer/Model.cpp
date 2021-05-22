@@ -38,12 +38,11 @@ namespace SceneEditor{
             ModelShader->UploadUniformVec3("tintColor", NodeMatricies.TintColor);
         }
 
-        for(uint32_t i = 0; i < Node->m_Meshes.size( ); i++)
-            Node->m_Meshes[i]->Draw(ModelShader);
+        for(auto& mesh : Node->m_Meshes)
+            mesh->Draw(ModelShader);
 
-        for(uint32_t i = 0; i < Node->m_ChildrenNodes.size( ); i++){
-            DrawNodes(Node->m_ChildrenNodes[i], ModelShader, NodeMatricies);
-        }
+        for(auto& child : Node->m_ChildrenNodes)
+            DrawNodes(child, ModelShader, NodeMatricies);
     }
 
     void Model::LoadModel(const std::string_view& Path)

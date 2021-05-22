@@ -12,7 +12,7 @@ namespace SceneEditor{
 
 		m_Dialog.lStructSize = sizeof(m_Dialog);
 		m_Dialog.hwndOwner = 0;
-		m_Dialog.lpstrFile = &m_Filename[0];
+		m_Dialog.lpstrFile = m_Filename.data();
 		m_Dialog.nMaxFile = MAX_PATH;
 		m_Dialog.lpstrFilter = Filter;
 		m_Dialog.nFilterIndex = 1;

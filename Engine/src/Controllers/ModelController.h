@@ -11,6 +11,8 @@ namespace SceneEditor{
     class Serializer;
     class Model;
 
+    using Component = std::pair<std::string, uint32_t>;
+
     class ModelController{
     public:
         friend class UIManager;
@@ -30,7 +32,7 @@ namespace SceneEditor{
 
         std::string GetModelName( ) { return m_Name; };
 
-        void Draw(std::pair<std::string, uint32_t>& SelectedEntity);
+        void Draw(Component& SelectedEntity);
 
     private:
         void AddChild(const std::string& Name);

@@ -14,7 +14,7 @@ namespace SceneEditor{
 		return FindNodeProperties(Name, Status);
 	}
 
-	void ModelController::Draw(std::pair<std::string, uint32_t>& SelectedEntity)
+	void ModelController::Draw(Component& SelectedEntity)
 	{	
 		static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 

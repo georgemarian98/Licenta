@@ -57,7 +57,7 @@ namespace SceneEditor{
 		static bool m_ShowPopUp;
 		static std::string m_PopUpText;
 
-		static std::pair<std::string, uint32_t> m_SelectedNode;
+		static Component m_SelectedNode;
 		static std::vector<std::shared_ptr<ModelController>> m_Controllers;
 
 		//Functions
