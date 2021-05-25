@@ -1,10 +1,20 @@
 #pragma once
 
-#include <core/Camera.h>
-#include <OpenGL/Shader.h>
-#include <Renderer/Model.h>
+#include "core/Camera.h"
+#include "OpenGL/Shader.h"
+#include "Renderer/Model.h"
+#include "Controllers/LightController.h"
 
 namespace SceneEditor{
+
+	struct SceneParameters{
+		std::vector<std::shared_ptr<Model>>& SceneModels;
+		Camera& SceneCamera;
+		std::shared_ptr<LightController> SceneLight;
+
+		SceneParameters(std::vector<std::shared_ptr<Model>>& SceneModels, Camera& SceneCamera, std::shared_ptr<LightController> SceneLight) :
+			SceneModels{SceneModels}, SceneCamera{SceneCamera}, SceneLight{SceneLight} {}
+	};
 
 	class Serializer;
 
@@ -16,7 +26,7 @@ namespace SceneEditor{
 			m_Shader = std::make_unique<Shader>(ShaderVertexPath, ShaderFragmentPath);
 		};
 
-		virtual void Execute(const std::vector< std::shared_ptr< Model>>& Models,const Camera& ) = 0;
+		virtual void Execute(const SceneParameters& ) = 0;
 
 	protected:
 		std::string m_Name;

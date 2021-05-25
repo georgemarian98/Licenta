@@ -24,13 +24,13 @@ namespace SceneEditor{
             std::string number;
             std::string name = m_Textures[i].type;
 
-            if(name == "texture_diffuse")
+            if(name == "u_TextureDiffuse")
                 number = std::to_string(diffuseNr++);
-            else if(name == "texture_specular")
+            else if(name == "u_TextureSpecular")
                 number = std::to_string(specularNr++); 
-            else if(name == "texture_normal")
+            else if(name == "u_TextureNormal")
                 number = std::to_string(normalNr++); 
-            else if(name == "texture_height")
+            else if(name == "u_TextureHeight")
                 number = std::to_string(heightNr++); 
 
             // now set the sampler to the correct texture unit

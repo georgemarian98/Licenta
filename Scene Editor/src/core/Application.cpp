@@ -81,9 +81,12 @@ namespace SceneEditor{
 
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 		m_Scene = std::make_unique<Scene>( );
+		UIManager::SetLightController(m_Scene->GetLightController( ));
 
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
+		/*Serializer imp;
+		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");*/
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
@@ -93,11 +96,12 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		//uint32_t aux;
-		//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
-		//UIManager::AddPannel(temp);
+		uint32_t aux;
+		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
+		UIManager::AddPannel(temp);
+		UIManager::UpdateNumberVertices(aux);
 
-		m_Window.SetVsync(false);
+		m_Window.SetVsync(true);
 		while(m_Window.IsRunning( ) == false){
 			KeyboardInput( );
 
@@ -121,6 +125,17 @@ namespace SceneEditor{
 
 		if(glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
 			glfwSetWindowShouldClose(m_Window, GL_TRUE);
+		}
+		if(glfwGetKey(m_Window, GLFW_KEY_F1) == GLFW_PRESS){
+			Renderer::SetDrawMode(DrawMode::Normal);
+		}
+
+		if(glfwGetKey(m_Window, GLFW_KEY_F2) == GLFW_PRESS){
+			Renderer::SetDrawMode(DrawMode::Line);
+		}
+
+		if(glfwGetKey(m_Window, GLFW_KEY_F3) == GLFW_PRESS){
+			Renderer::SetDrawMode(DrawMode::Point);
 		}
 
 		//Camera

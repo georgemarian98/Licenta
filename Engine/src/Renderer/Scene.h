@@ -1,8 +1,10 @@
 #pragma once
-#include "Model.h"
 
-#include "Renderer/RenderPass.h"
+#include "Model.h"
 #include "Renderer.h"
+#include "Renderer/RenderPass.h"
+
+#include "Controllers/LightController.h"
 
 namespace SceneEditor{
 
@@ -12,9 +14,9 @@ namespace SceneEditor{
 
 	public:
 		friend Serializer;
-		Scene( ) { Renderer::Initiliaze( ); };
+		Scene( ) { Renderer::Initiliaze( ); m_Light = std::make_shared<LightController>( ); };
 
-		void Draw(const Camera& SceneCamera);
+		void Draw(Camera& SceneCamera);
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
 		void ClearScene( ) { m_SceneModels.clear( ); };
 
@@ -22,6 +24,7 @@ namespace SceneEditor{
 		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
 
 		std::shared_ptr<ModelController> GetController(int Index) { return m_SceneModels[Index]->GetModelController( ); };
+		std::shared_ptr<LightController> GetLightController( ){	return m_Light; };
 
 	private:
 		std::vector<std::shared_ptr<Model>>& GetModels( ) { return m_SceneModels; };
@@ -29,6 +32,8 @@ namespace SceneEditor{
 	private:
 		std::vector<std::shared_ptr<Model>> m_SceneModels;
 		std::vector<std::unique_ptr<Pass>> m_Passes;
+
+		std::shared_ptr<LightController> m_Light;
 	};
 }
 

@@ -3,12 +3,14 @@
 
 namespace SceneEditor{
 
-	void Scene::Draw(const Camera& SceneCamera)
+	void Scene::Draw(Camera& SceneCamera)
 	{
 		Renderer::Clear( );
 
+		SceneParameters parameters{m_SceneModels, SceneCamera, m_Light};
+
 		for(auto& pass : m_Passes){
-			pass->Execute(m_SceneModels, SceneCamera);
+			pass->Execute(parameters);
 		}
 	}
 

@@ -5,6 +5,7 @@
 
 #include "core/Window.h"
 #include "Controllers/ModelController.h"
+#include "Controllers/LightController.h"
 
 namespace SceneEditor{
 
@@ -31,6 +32,8 @@ namespace SceneEditor{
 		/// <param name="Panel"></param>
 		static void AddPannel(std::shared_ptr<ModelController>& Panel);
 
+		static void SetLightController(std::shared_ptr<LightController> LightController) { m_LightController = LightController; };
+
 		static void SetNewSceneFunction   (std::function<void(void)> Function)               { m_NewSceneFunction    = std::move(Function); };
 		static void SetImportFunction     (std::function<void(const std::string&)> Function) { m_ImportModelFunction = std::move(Function); };
 		static void SetImportSceneFunction(std::function<void(const std::string&)> Function) { m_ImportSceneFunction = std::move(Function); };
@@ -45,6 +48,7 @@ namespace SceneEditor{
 		static void DrawModels( );
 		static void DrawProperties( );
 		static void DrawStats( );
+		static void DrawLightProperties( );
 
 		static void ImportModel( );
 		static void ImportScene( );
@@ -59,9 +63,10 @@ namespace SceneEditor{
 
 		static Component m_SelectedNode;
 		static std::vector<std::shared_ptr<ModelController>> m_Controllers;
+		static std::shared_ptr<LightController> m_LightController;
 
 		//Functions
-		static std::function<void(void)>        m_NewSceneFunction;
+		static std::function<void(void)>               m_NewSceneFunction;
 		static std::function<void(const std::string&)> m_ImportModelFunction;
 		static std::function<void(const std::string&)> m_ImportSceneFunction;
 		static std::function<void(const std::string&)> m_ExportSceneFunction;

@@ -124,6 +124,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Controllers\LightController.h" />
     <ClInclude Include="src\utility\FolderDialog.h" />
     <ClInclude Include="src\utility\FileDialog.h" />
     <ClInclude Include="src\utility\Serializer.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="src\Controllers\ModelController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Controllers\LightController.cpp" />
     <ClCompile Include="src\utility\FolderDialog.cpp" />
     <ClCompile Include="src\utility\FileDialog.cpp" />
     <ClCompile Include="src\utility\Serializer.cpp" />

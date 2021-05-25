@@ -24,17 +24,16 @@ namespace SceneEditor{
             m_Id = Renderer::GenerateID( );
         };
 
+        std::string GetModelName( ) { return m_Name; };
         void SetModelName(std::string& Name) { m_Name = Name; };
-        void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
         const MeshProperties& GetNodeProperties(std::string& Name, bool& Status);
         MeshProperties& GetModelProperties( ) { return m_MainTransforms; };
-
-        std::string GetModelName( ) { return m_Name; };
-
-        void Draw(Component& SelectedEntity);
+        void SetMainProperties(const MeshProperties& Properties) { m_MainTransforms = Properties; };
 
     private:
+        void Draw(Component& SelectedComponent);
+
         void AddChild(const std::string& Name);
 
         MeshProperties& FindNodeProperties(const std::string& Name, bool& Status);

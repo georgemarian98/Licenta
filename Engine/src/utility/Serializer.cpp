@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Serializer.h"
-//#include "Controllers/UIManager.h"
 
 #include <regex>
 
+//TODO: relative path
 #define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
 #define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
 #define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
@@ -101,11 +101,17 @@ namespace SceneEditor{
 		}
 		m_YAMLEmitter << YAML::EndSeq; //Models Properties sequence
 
+		m_YAMLEmitter << YAML::Key << "Light Position" << YAML::Value << CurrentScene->m_Light->GetPosition( );
+		m_YAMLEmitter << YAML::Comment("Light Properties"); 
+		m_YAMLEmitter << YAML::Key << "Light Color" << YAML::Value << CurrentScene->m_Light->GetColor( );
+
 		m_YAMLEmitter << YAML::EndMap; //Start
+
 
 		if(m_YAMLEmitter.good() == false)
 			std::cout << "Emitter error: " << m_YAMLEmitter.GetLastError( ) << "\n";
 
+		//TODO: relative path
 		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\assimp\\include\\assimp"] = "assimp";
 		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\glad"] = "glad";
 		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\KHR"] = "KHR";
@@ -161,9 +167,12 @@ namespace SceneEditor{
 		auto&& models = ImportModels(FolderPath, &rootData);
 		importedScene->m_SceneModels = std::move(models);
 
+		importedScene->m_Light->SetPosition(rootData["Light Position"].as<glm::vec3>( ));
+		importedScene->m_Light->SetColor(rootData["Light Color"].as<glm::vec3>( ));
+
 		std::string vertexFile = FolderPath + "\\shaders\\vertex.glsl";
 		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.data(), pixelFile.data());
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.c_str(), pixelFile.c_str());
 		importedScene->AddPass(renderPass);
 
 		return importedScene;

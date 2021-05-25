@@ -14,19 +14,19 @@ namespace SceneEditor{
 		return FindNodeProperties(Name, Status);
 	}
 
-	void ModelController::Draw(Component& SelectedEntity)
+	void ModelController::Draw(Component& SelectedComponent)
 	{	
 		static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		if(ImGui::TreeNodeEx((void*)(intptr_t)m_Id, base_flags, m_Name.c_str( ))){
 
 			if(ImGui::IsItemClicked( ))	
-				SelectedEntity = {m_Name, m_Id};
+				SelectedComponent = {m_Name, m_Id};
 
 			for(auto& [key, _] : m_MeshControllers){
 			
-				if(ImGui::Selectable(key.c_str( ), SelectedEntity.first == key)){
-					SelectedEntity = {key, m_Id};
+				if(ImGui::Selectable(key.c_str( ), SelectedComponent.first == key)){
+					SelectedComponent = {key, m_Id};
 				}
 			}
 			ImGui::TreePop( );

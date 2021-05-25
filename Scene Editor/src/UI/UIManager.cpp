@@ -10,15 +10,16 @@
 
 namespace SceneEditor{
 
-	uint32_t UIManager::m_NumVertices = 0;
-	bool UIManager::m_Clear = false;
+	uint32_t									  UIManager::m_NumVertices = 0;
+	bool										  UIManager::m_Clear = false;
 
-	bool UIManager::m_ShowPopUp = false;
-	std::string UIManager::m_PopUpText;
-	Component UIManager::m_SelectedNode;
+	bool                                          UIManager::m_ShowPopUp = false;
+	std::string                                   UIManager::m_PopUpText;
+	Component                                     UIManager::m_SelectedNode;
 	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
+	std::shared_ptr<LightController>              UIManager::m_LightController;
 
-	std::function<void(void)>         UIManager::m_NewSceneFunction;
+	std::function<void(void)>                UIManager::m_NewSceneFunction;
 	std::function<void(const std::string&)>  UIManager::m_ImportModelFunction;
 	std::function<void(const std::string&)>  UIManager::m_ImportSceneFunction;
 	std::function<void(const std::string&)>  UIManager::m_ExportSceneFunction;
@@ -119,13 +120,17 @@ namespace SceneEditor{
 		ImGui::End( );
 
 	
-		ImGui::Begin("Properties");
+		ImGui::Begin("Model Properties");
 		UIManager::DrawProperties( );
 		ImGui::End( );
 		
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 		ImGui::Begin("Stats", (bool*)0, window_flags);
 		UIManager::DrawStats( );
+		ImGui::End( );
+		
+		ImGui::Begin("Light");
+		UIManager::DrawLightProperties( );
 		ImGui::End( );
 
 		if(m_ShowPopUp == true)
@@ -200,6 +205,12 @@ namespace SceneEditor{
 		ImGui::Separator( );
 		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
 		ImGui::Text("Vertices: %d", m_NumVertices);
+	}
+
+	void UIManager::DrawLightProperties( )
+	{
+		ImGui::DragFloat3("Position", glm::value_ptr(m_LightController->GetPosition( )));
+		ImGui::ColorEdit3("Color", glm::value_ptr(m_LightController->GetColor()));
 	}
 
 	void UIManager::ImportModel( )

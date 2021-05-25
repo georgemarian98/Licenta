@@ -22,9 +22,9 @@ namespace SceneEditor{
             auto& [translation, scale, rotation] = properties.TransformMatrices;
             auto& [Translation, Scale, Rotation] = NodeMatricies.TransformMatrices;
 
-            Translation += translation;
-            Scale *= scale;
-            Rotation += rotation;
+            Translation             += translation;
+            Scale                   *= scale;
+            Rotation                += rotation;
             NodeMatricies.TintColor *= properties.TintColor;
 
             glm::mat4 model = glm::mat4(1.0f);
@@ -34,8 +34,8 @@ namespace SceneEditor{
             model = glm::rotate(model, Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
             model = glm::rotate(model, Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-            ModelShader->UploadUniformMat4("model", model);
-            ModelShader->UploadUniformVec3("tintColor", NodeMatricies.TintColor);
+            ModelShader->UploadUniformMat4("u_Model", model);
+            ModelShader->UploadUniformVec3("u_TintColor", NodeMatricies.TintColor);
         }
 
         for(auto& mesh : Node->m_Meshes)
@@ -54,10 +54,7 @@ namespace SceneEditor{
                                                             aiProcess_CalcTangentSpace | 
                                                             aiProcess_JoinIdenticalVertices);
 
-        if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-            std::cerr << "ERROR::ASSIMP::" << import.GetErrorString( ) << std::endl;
-            return;
-        }
+        assert(scene && scene->mRootNode);
         m_Directory = Path.substr(0, Path.find_last_of('\\'));
 
         m_RootMesh = ProcessNode(scene->mRootNode, scene);
@@ -147,16 +144,16 @@ namespace SceneEditor{
 
         aiMaterial* material = Scene->mMaterials[ImportedMesh->mMaterialIndex];
 
-        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "u_TextureDiffuse");
         textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
 
-        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "u_TextureSpecular");
         textures.insert(textures.end( ), specularMaps.begin( ), specularMaps.end( ));
 
-        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "u_TextureNormal");
         textures.insert(textures.end( ), normalMaps.begin( ), normalMaps.end( ));
 
-        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "u_TextureHeight");
         textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
         return std::make_unique<Mesh>(vertices, indices, textures);
@@ -195,8 +192,7 @@ namespace SceneEditor{
 
     uint32_t  Model::LoadTextureFromFile(const char* Path)
     {
-        std::string filename = std::string(Path);
-        filename = m_Directory + '\\' + filename;
+        std::string filename = m_Directory + '\\' + std::string(Path);
 
         uint32_t textureID;
         glGenTextures(1, &textureID);
