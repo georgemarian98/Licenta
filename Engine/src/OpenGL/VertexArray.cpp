@@ -2,7 +2,20 @@
 #include "VertexArray.h"
 
 namespace SceneEditor{
+	VertexArray::VertexArray(const std::array<GLfloat, 108>& Vertices)
+	{
+		glGenVertexArrays(1, &(this->m_VAO));
+		glGenBuffers(1, &m_VBO);
 
+		glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, Vertices.size( ) * sizeof(glm::vec3), &Vertices[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+		glBindVertexArray(0);
+	}
 	VertexArray::VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices)
 	{
 		// Create buffers/arrays

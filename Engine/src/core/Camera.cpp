@@ -5,7 +5,7 @@ namespace SceneEditor{
 
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 10000.0f
-#define FOV 75.0f
+#define FOV 45.0f
 
 	Camera::Camera( int Width, int Height) :
 		m_CameraPosition(glm::vec3(0.0f, 8.0f, 15.0f)), m_CameraTarget(glm::vec3(0.0f, 0.0f, -10.0f)), m_Up(glm::vec3(0.0f, 1.0f, 0.0f))

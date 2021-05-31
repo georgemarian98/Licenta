@@ -8,6 +8,7 @@ namespace SceneEditor{
 
 	public:
 		VertexArray( ) = default;
+		VertexArray(const std::array<GLfloat, 108>& Vertices);
 		VertexArray(const std::vector<Vertex>& Vertices, const std::vector<uint32_t>& Indices);
 		VertexArray(VertexArray&& Other) noexcept;
 		~VertexArray( );

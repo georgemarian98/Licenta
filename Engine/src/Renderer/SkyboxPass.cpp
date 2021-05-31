@@ -13,9 +13,7 @@ namespace SceneEditor{
 		m_Shader->UploadUniformMat4("view", transformedView);
 		m_Shader->UploadUniformMat4("projection", SceneCamera.GetPojection( ));
 
-		m_Skybox.Bind( );
 		m_Skybox.Draw( );
-		m_Skybox.Unbind( );
 		glDepthFunc(GL_LESS);
 	}
 }

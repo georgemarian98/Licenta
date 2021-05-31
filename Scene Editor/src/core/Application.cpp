@@ -199,8 +199,8 @@ namespace SceneEditor{
 		lastX = Xpos;
 		lastY = Ypos;
 
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
+		xoffset *= -sensitivity;
+		yoffset *= -sensitivity;
 
 		m_Camera.Rotate(yoffset, xoffset);
 	}
