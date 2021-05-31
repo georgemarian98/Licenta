@@ -5,7 +5,7 @@ namespace SceneEditor{
 
 	class RenderPass : public Pass{
 	public:
-		RenderPass(const char* ShaderVertexPath, const char* ShaderFragmentPath) : Pass{"Render Pass", ShaderVertexPath, ShaderFragmentPath} { };
+		RenderPass(const char* ShaderVertexPath, const char* ShaderFragmentPath) : Pass{"Render", ShaderVertexPath, ShaderFragmentPath} { };
 
 		virtual void Execute(const SceneParameters& Parameter) override;
 	};

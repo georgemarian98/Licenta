@@ -14,24 +14,26 @@ namespace SceneEditor{
 
 	class SkyBox{
 	public:
-			SkyBox(const char* VertexPath, const char* FragmentPath);
+			SkyBox();
 			~SkyBox( );
 
-			void Load(const std::vector<const GLchar*>& CubeMapFaces, const glm::mat4& Projection);
-			void Draw(const glm::mat4& ViewMatrix);
+			void Load(const std::array<const GLchar*, 6>& CubeMapFaces);
+			void Draw();
 
-			void SetProjection(const glm::mat4& Projection) { m_Projection = Projection; };
+			void Bind( ) {
+				glBindVertexArray(m_VAO);
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTexture);
+			};
+			void Unbind( ) { glBindVertexArray(0); };
 
 	private:
 			void InitSkyBox( );
-			GLuint LoadSkyBoxTextures(const std::vector<const GLchar*>& CubeMapFaces);
+			GLuint LoadSkyBoxTextures(const std::array<const GLchar*, 6>& CubeMapFaces);
 
 	private:
 			GLuint m_VAO = 0;
 			GLuint m_VBO = 0;
 			GLuint m_CubemapTexture = 0;
-
-			glm::mat4 m_Projection;
-			Shader m_Shader;
 	};
 }

@@ -5,6 +5,7 @@
 #include "Renderer/Renderer.h"
 #include "../UI/UIManager.h"
 #include "utility/Serializer.h"
+#include "Renderer/SkyboxPass.h"
 
 namespace SceneEditor{
 
@@ -85,12 +86,29 @@ namespace SceneEditor{
 
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
+		
+		std::array<const char*, 6> faces = {
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
+			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
+		};
+
+		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", faces);
+		m_Scene->AddPass(skyboxPass);
 		/*Serializer imp;
 		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");*/
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
 			app->ResizeWindow(window, width, height);
+		});
+
+		glfwSetCursorPosCallback(m_Window, [ ](GLFWwindow* window, double xpos, double ypos){
+			auto app = Application::GetInstance( );
+			app->MouseInput(window, xpos, ypos);
 		});
 	}
 
@@ -154,6 +172,37 @@ namespace SceneEditor{
 		if(glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS){
 			m_Camera.Move(MOVE_DIRECTION::MOVE_LEFT, TS);
 		}
+	}
+
+	void Application::MouseInput(GLFWwindow* Window, double Xpos, double Ypos)
+	{
+		static bool firstMouse = true;
+
+		if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+		{
+			firstMouse = true;
+			return;
+		}
+
+		static double lastX = m_Width / 2.0;
+		static double lastY = m_Height / 2.0;
+		const float sensitivity = 0.05f;
+
+		if(firstMouse == true){
+			lastX = Xpos;
+			lastY = Ypos;
+			firstMouse = false;
+		}
+
+		double xoffset = Xpos - lastX;
+		double yoffset = lastY - Ypos;
+		lastX = Xpos;
+		lastY = Ypos;
+
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		m_Camera.Rotate(yoffset, xoffset);
 	}
 
 	void Application::ResizeWindow(GLFWwindow* window, int width, int height)

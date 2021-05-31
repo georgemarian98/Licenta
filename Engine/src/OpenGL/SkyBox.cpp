@@ -11,33 +11,18 @@
 
 namespace SceneEditor{
 
-	void SkyBox::Load(const std::vector<const GLchar*>& CubeMapFaces, const glm::mat4& Projection)
+	void SkyBox::Load(const std::array<const GLchar*, 6>& CubeMapFaces)
 	{
 		m_CubemapTexture = LoadSkyBoxTextures(CubeMapFaces);
-		m_Projection = Projection;
 		InitSkyBox( );
 	}
 
-	void SkyBox::Draw(const glm::mat4& ViewMatrix)
+	void SkyBox::Draw()
 	{
-		glDepthFunc(GL_LEQUAL);
-		m_Shader.Bind( );
-
-		glm::mat4 transformedView = glm::mat4(glm::mat3(ViewMatrix));
-		m_Shader.UploadUniformMat4("view", transformedView);
-		m_Shader.UploadUniformMat4("projection", m_Projection);
-		m_Shader.UploadUniformInt("skybox", 0);
-
-		glBindVertexArray(m_VAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-
-		glDepthFunc(GL_LESS);
 	}
 
-	GLuint SkyBox::LoadSkyBoxTextures(const std::vector<const GLchar*>& SkyBoxFaces)
+	GLuint SkyBox::LoadSkyBoxTextures(const std::array<const GLchar*, 6>& SkyBoxFaces)
 	{
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
@@ -46,7 +31,7 @@ namespace SceneEditor{
 		int width, height, nrChannels;
 		stbi_set_flip_vertically_on_load(false);
 
-		for(uint32_t i = 0; i < SkyBoxFaces.size( ); i++){
+		for(uint32_t i = 0; i < 6; i++){
 			uint8_t* data = stbi_load(SkyBoxFaces[i], &width, &height, &nrChannels, 0);
 			if(data){
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -125,9 +110,8 @@ namespace SceneEditor{
 		glBindVertexArray(0);
 	}
 
-	SkyBox::SkyBox(const char* VertexPath, const char* FragmentPath) : m_Shader(VertexPath, FragmentPath)
+	SkyBox::SkyBox()
 	{
-		m_Projection = glm::mat4(1.0f);
 	}
 
 	SkyBox::~SkyBox( )

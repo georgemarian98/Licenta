@@ -204,6 +204,7 @@ namespace SceneEditor{
 		ImGui::Text("Version: %s", version);
 		ImGui::Separator( );
 		ImGui::Text("Frame rate: %.1f", ImGui::GetIO( ).Framerate);
+		ImGui::Text("Frame time: %.2f ms", 1000.0 / ImGui::GetIO( ).Framerate);
 		ImGui::Text("Vertices: %d", m_NumVertices);
 	}
 
