@@ -178,7 +178,7 @@ namespace SceneEditor{
 	{
 		static bool firstMouse = true;
 
-		if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+		if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE || Xpos < UIManager::GetModelPanelWidth())
 		{
 			firstMouse = true;
 			return;

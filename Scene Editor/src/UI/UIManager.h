@@ -44,6 +44,8 @@ namespace SceneEditor{
 		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
 		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices;};
 
+		static int GetModelPanelWidth() { return m_ModelPanelWidth;};
+
 	private:
 		static void DrawModels( );
 		static void DrawProperties( );
@@ -55,6 +57,8 @@ namespace SceneEditor{
 		static void ExportScene( );
 
 	private:
+		static int32_t m_ModelPanelWidth;
+
 		static uint32_t m_NumVertices;
 		static bool m_Clear;
 

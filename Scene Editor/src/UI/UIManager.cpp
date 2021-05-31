@@ -10,6 +10,7 @@
 
 namespace SceneEditor{
 
+	int32_t										  UIManager::m_ModelPanelWidth = 0;
 	uint32_t									  UIManager::m_NumVertices = 0;
 	bool										  UIManager::m_Clear = false;
 
@@ -116,7 +117,12 @@ namespace SceneEditor{
 
 
 		ImGui::Begin("Scene Models");
+		
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax( );
+		auto viewportOffset = ImGui::GetWindowPos( );
+		UIManager::m_ModelPanelWidth = (int32_t)(viewportMaxRegion.x + viewportOffset.x);
 		UIManager::DrawModels( );
+
 		ImGui::End( );
 
 	
