@@ -1,15 +1,15 @@
 #version 410 core
 
-layout (location = 0) in vec3 vertexPosition;
+layout (location = 0) in vec3 aVertexPosition;
 
-out vec3 textureCoordinates;
+out vec3 TextureCoordinates;
 
-uniform mat4 projection;
-uniform mat4 view;
+uniform mat4 u_Projection;
+uniform mat4 u_View;
 
 void main()
 {
-    textureCoordinates = vertexPosition;
-    vec4 tempPos = projection * view * vec4(vertexPosition, 1.0);
+    TextureCoordinates = aVertexPosition;
+    vec4 tempPos = u_Projection * u_View * vec4(aVertexPosition, 1.0);
     gl_Position = tempPos.xyww;
 }

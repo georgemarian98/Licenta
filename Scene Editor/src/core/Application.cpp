@@ -87,13 +87,22 @@ namespace SceneEditor{
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
 		
-		std::array<const char*, 6> faces = {
+		/*std::array<const char*, 6> faces = {
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
+		};*/
+		
+		std::array<const char*, 6> faces = {
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_px.jpg",
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_nx.jpg",
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_py.jpg",
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_ny.jpg",
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_pz.jpg",
+			"C:\\Users\\George\\Desktop\\textures\\skybox3_nz.jpg",
 		};
 
 		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", faces);

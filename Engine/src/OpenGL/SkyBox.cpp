@@ -78,7 +78,6 @@ namespace SceneEditor{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
 		int width, height, nrChannels;
-		stbi_set_flip_vertically_on_load(false);
 
 		for(uint32_t i = 0; i < 6; i++){
 			uint8_t* data = stbi_load(SkyBoxFaces[i], &width, &height, &nrChannels, 0);
