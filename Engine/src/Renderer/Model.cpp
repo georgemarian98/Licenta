@@ -144,22 +144,22 @@ namespace SceneEditor{
 
         aiMaterial* material = Scene->mMaterials[ImportedMesh->mMaterialIndex];
 
-        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "u_TextureDiffuse");
+        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::Diffuse);
         textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
 
-        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "u_TextureSpecular");
+        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, TextureType::Specular);
         textures.insert(textures.end( ), specularMaps.begin( ), specularMaps.end( ));
 
-        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, "u_TextureNormal");
+        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::Normal);
         textures.insert(textures.end( ), normalMaps.begin( ), normalMaps.end( ));
 
-        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "u_TextureHeight");
+        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::Height);
         textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
         return std::make_unique<Mesh>(vertices, indices, textures);
     }
 
-    std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string& TypeName)
+    std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, TextureType TypeName)
     {
         static std::vector<Texture> loadedTextures;
 

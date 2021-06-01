@@ -34,7 +34,7 @@ namespace SceneEditor{
         void LoadModel(const std::string_view& Path);
         std::unique_ptr<MeshNode> ProcessNode(aiNode* Node, const aiScene* Scene);
         std::unique_ptr<Mesh> ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
-        std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, const std::string& TypeName);
+        std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, TextureType TypeName);
         uint32_t LoadTextureFromFile(const char* Path);
 
     private:

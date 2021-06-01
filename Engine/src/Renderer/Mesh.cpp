@@ -21,20 +21,26 @@ namespace SceneEditor{
         for(uint32_t i = 0; i < texturesSize; i++){
             glActiveTexture(GL_TEXTURE0 + i); 
             // retrieve texture number (the N in diffuse_textureN)
-            std::string number;
-            std::string name = m_Textures[i].type;
+            std::string name;
 
-            if(name == "u_TextureDiffuse")
-                number = std::to_string(diffuseNr++);
-            else if(name == "u_TextureSpecular")
-                number = std::to_string(specularNr++); 
-            else if(name == "u_TextureNormal")
-                number = std::to_string(normalNr++); 
-            else if(name == "u_TextureHeight")
-                number = std::to_string(heightNr++); 
+            switch (m_Textures[i].type)
+            {
+            case TextureType::Diffuse:
+                name = "u_TextureDiffuse" + std::to_string(diffuseNr++);
+                break;
+            case TextureType::Specular:
+                name = "u_TextureSpecular" + std::to_string(specularNr++);
+                break;
+            case TextureType::Normal:
+                name = "u_TextureNormal" + std::to_string(normalNr++);
+                break;
+            case TextureType::Height:
+                name = "u_TextureHeight" + std::to_string(heightNr++);
+                break;
+            }
 
             // now set the sampler to the correct texture unit
-            shader->UploadUniformInt((name + number).c_str( ), i);
+            shader->UploadUniformInt(name, i);
             glBindTexture(GL_TEXTURE_2D, m_Textures[i].id);
         }
 

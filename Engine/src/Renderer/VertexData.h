@@ -10,12 +10,19 @@ namespace SceneEditor{
 		glm::vec3 Bitangent;
 	};
 
+	enum class TextureType {
+		Diffuse,
+		Specular,
+		Normal,
+		Height
+	};
+
 	struct Texture{
 		uint32_t id = 0;
-		std::string type;
+		TextureType type;
 		std::string path;
 
-		Texture(uint32_t id, std::string type, std::string path) :id(id), type(type), path(path) { };
+		Texture(uint32_t id, TextureType type, std::string path) :id(id), type(type), path(path) { };
 	};
 
 	struct Transforms{
