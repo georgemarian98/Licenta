@@ -3,9 +3,9 @@
 namespace SceneEditor{
 
 	enum class DrawMode	{
-		Normal = GL_FILL,
+		Point = GL_POINT,
 		Line = GL_LINE,
-		Point = GL_POINT
+		Normal = GL_FILL
 	};
 
 	class Renderer{
@@ -15,6 +15,7 @@ namespace SceneEditor{
 
 		static uint32_t GenerateID( ) { return m_Ids++; };
 		static void Reset( ) { m_Ids = 0; };
+		static void DeleteId( ) { m_Ids--; };
 
 		static void SetDrawMode(DrawMode Mode) { glPolygonMode(GL_FRONT_AND_BACK, (int)Mode); };
 

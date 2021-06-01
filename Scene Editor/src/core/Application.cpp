@@ -27,58 +27,7 @@ namespace SceneEditor{
 		m_Width = windowSize[0];
 		m_Height = windowSize[1];
 
-		// Setup ImGui
-		UIManager::Initiliaze(m_Window);
-
-		UIManager::SetNewSceneFunction([ & ]( ){
-			m_Scene->ClearScene( );
-			UIManager::ClearScene( );
-			Renderer::Reset( );
-		});
-
-		UIManager::SetImportFunction([ & ](const std::string& Path){
-
-			if(Path.empty( ) == true){
-				return;
-			}
-
-			uint32_t noVertices;
-			auto controller = m_Scene->AddModel(Path, noVertices);
-
-			UIManager::AddPannel(controller);
-			UIManager::UpdateNumberVertices(noVertices);
-		});
-
-		UIManager::SetImportSceneFunction([ & ](const std::string& Path){
-
-			if(Path.empty( ) == true){
-				return;
-			}
-
-			Serializer srl;
-			auto models = srl.ImportModels(Path);
-
-			for(auto& model : models){
-				UIManager::UpdateNumberVertices(model->GetNoVertices( ));
-
-				auto controller = m_Scene->AddModel(model);
-
-				UIManager::AddPannel(controller);
-			}
-		});
-
-		UIManager::SetExportSceneFunction([ & ](const std::string& Path){
-
-			if(Path.empty() == true){
-				return;
-			}
-
-			Serializer exp(m_Scene);
-			exp.ExportScene(Path);
-
-			std::string message = "Scene exported successfully to " + std::string{Path};
-			UIManager::ShowPopUp(message);
-		});
+		InitializeHandlers();
 
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 		m_Scene = std::make_unique<Scene>( );
@@ -87,25 +36,16 @@ namespace SceneEditor{
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
 		
-		/*std::array<const char*, 6> faces = {
+		std::array<const char*, 6> faces = {
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
 			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
-		};*/
-		
-		std::array<const char*, 6> faces = {
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_px.jpg",
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_nx.jpg",
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_py.jpg",
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_ny.jpg",
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_pz.jpg",
-			"C:\\Users\\George\\Desktop\\textures\\skybox3_nz.jpg",
 		};
 
-		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", faces);
+		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl");
 		m_Scene->AddPass(skyboxPass);
 		/*Serializer imp;
 		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");*/
@@ -223,5 +163,65 @@ namespace SceneEditor{
 			m_SceneBuffer->Resize(width, height);
 		}
 
+	}
+
+	void Application::InitializeHandlers()
+	{
+		// Setup ImGui
+		UIManager::Initiliaze(m_Window);
+
+		UIManager::SetDeleteModelFunction([&](uint32_t Index) {
+			m_Scene->DeleteModel(Index);
+		});
+
+		UIManager::SetNewSceneFunction([&]() {
+			m_Scene->ClearScene();
+			UIManager::ClearScene();
+			Renderer::Reset();
+			});
+
+		UIManager::SetImportFunction([&](const std::string& Path) {
+
+			if (Path.empty() == true) {
+				return;
+			}
+
+			uint32_t noVertices;
+			auto controller = m_Scene->AddModel(Path, noVertices);
+
+			UIManager::AddPannel(controller);
+			UIManager::UpdateNumberVertices(noVertices);
+			});
+
+		UIManager::SetImportSceneFunction([&](const std::string& Path) {
+
+			if (Path.empty() == true) {
+				return;
+			}
+
+			Serializer srl;
+			auto models = srl.ImportModels(Path);
+
+			for (auto& model : models) {
+				UIManager::UpdateNumberVertices(model->GetNoVertices());
+
+				auto controller = m_Scene->AddModel(model);
+
+				UIManager::AddPannel(controller);
+			}
+			});
+
+		UIManager::SetExportSceneFunction([&](const std::string& Path) {
+
+			if (Path.empty() == true) {
+				return;
+			}
+
+			Serializer exp(m_Scene);
+			exp.ExportScene(Path);
+
+			std::string message = "Scene exported successfully to " + std::string{ Path };
+			UIManager::ShowPopUp(message);
+			});
 	}
 }

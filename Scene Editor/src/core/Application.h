@@ -22,6 +22,8 @@ namespace SceneEditor{
 		Application( ) = default;
 		Application(const char* Name);
 
+		void InitializeHandlers();
+
 		void KeyboardInput( );
 		void MouseInput(GLFWwindow* Window, double Xpos, double Ypos);
 		void ResizeWindow(GLFWwindow* window, int width, int height);

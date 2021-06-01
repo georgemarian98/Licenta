@@ -34,6 +34,7 @@ namespace SceneEditor{
 
 		static void SetLightController(std::shared_ptr<LightController> LightController) { m_LightController = LightController; };
 
+		static void SetDeleteModelFunction(std::function<void(uint32_t)> Function)           { m_DeleteModel         = std::move(Function); };
 		static void SetNewSceneFunction   (std::function<void(void)> Function)               { m_NewSceneFunction    = std::move(Function); };
 		static void SetImportFunction     (std::function<void(const std::string&)> Function) { m_ImportModelFunction = std::move(Function); };
 		static void SetImportSceneFunction(std::function<void(const std::string&)> Function) { m_ImportSceneFunction = std::move(Function); };
@@ -70,6 +71,8 @@ namespace SceneEditor{
 		static std::shared_ptr<LightController> m_LightController;
 
 		//Functions
+		static std::function<void(uint32_t)>           m_DeleteModel;
+
 		static std::function<void(void)>               m_NewSceneFunction;
 		static std::function<void(const std::string&)> m_ImportModelFunction;
 		static std::function<void(const std::string&)> m_ImportSceneFunction;

@@ -20,6 +20,7 @@ namespace SceneEditor{
 	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
 	std::shared_ptr<LightController>              UIManager::m_LightController;
 
+	std::function<void(uint32_t)>            UIManager::m_DeleteModel;
 	std::function<void(void)>                UIManager::m_NewSceneFunction;
 	std::function<void(const std::string&)>  UIManager::m_ImportModelFunction;
 	std::function<void(const std::string&)>  UIManager::m_ImportSceneFunction;
@@ -98,6 +99,7 @@ namespace SceneEditor{
 
 				if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 				if(ImGui::BeginMenu("Import")){
+					if (ImGui::MenuItem("Import Skybox")) std::cout << "Skybox\n";
 					if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
 					if(ImGui::MenuItem("Import Scene")) UIManager::ImportScene( );
 					ImGui::EndMenu( );
@@ -191,6 +193,20 @@ namespace SceneEditor{
 		Transforms& selectedNodeTransforms = selectedNodeProperties->TransformMatrices;
 
 		ImGui::Text(m_SelectedNode.first.c_str() );
+		ImGui::SameLine();
+
+		if (ImGui::Button("Delete")){
+
+			UIManager::m_DeleteModel(m_SelectedNode.second);
+
+			for (auto controller = m_Controllers.begin() + m_SelectedNode.second + 1; controller != m_Controllers.end(); ++controller) {
+				(*controller)->m_Id--;
+			}
+			m_Controllers.erase(m_Controllers.begin() + m_SelectedNode.second);
+			m_Clear = true;
+			Renderer::DeleteId();
+		}
+
 		ImGui::Separator( );
 		ImGui::DragFloat3("Translation", glm::value_ptr(selectedNodeTransforms.Translation), 0.5f);
 		ImGui::DragFloat3("Rotation", glm::value_ptr(selectedNodeTransforms.Rotation), 0.5f);

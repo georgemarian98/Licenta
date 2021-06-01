@@ -23,6 +23,8 @@ namespace SceneEditor{
 		std::shared_ptr<ModelController> AddModel(const std::string_view& Path, uint32_t& NoVertices);
 		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
 
+		void DeleteModel(uint32_t Index) { m_SceneModels.erase(m_SceneModels.begin() + Index); };
+
 		std::shared_ptr<ModelController> GetController(int Index) { return m_SceneModels[Index]->GetModelController( ); };
 		std::shared_ptr<LightController> GetLightController( ){	return m_Light; };
 
