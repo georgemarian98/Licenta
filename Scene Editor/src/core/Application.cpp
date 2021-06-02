@@ -36,16 +36,17 @@ namespace SceneEditor{
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
 		
-		std::array<const char*, 6> faces = {
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
-			"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
-		};
+		//std::array<const char*, 6> faces = {
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
+		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
+		//};
 
-		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl");
+		m_Skybox = std::make_shared<SkyBox>();
+		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", m_Skybox);
 		m_Scene->AddPass(skyboxPass);
 		/*Serializer imp;
 		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");*/
@@ -169,6 +170,27 @@ namespace SceneEditor{
 	{
 		// Setup ImGui
 		UIManager::Initiliaze(m_Window);
+
+		UIManager::SetSkyboxFunction([&](const std::string& Path) {
+
+			if (Path.empty() == true)
+				return;
+
+			std::array<std::string, 6> faces;
+
+			for (auto& p : std::filesystem::directory_iterator(Path)) {
+
+				std::string filename = p.path().filename().string().substr(0, 1);
+				int index = std::stoi(filename);
+
+				if (1 <= index && index <= 6) {
+					faces[index - 1] = p.path().string();
+				}
+				
+			}
+
+			m_Skybox->Load(faces);
+		});
 
 		UIManager::SetDeleteModelFunction([&](uint32_t Index) {
 			m_Scene->DeleteModel(Index);

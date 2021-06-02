@@ -17,14 +17,17 @@ namespace SceneEditor{
 			SkyBox();
 			~SkyBox( );
 
-			void Load(const std::array<const GLchar*, 6>& CubeMapFaces);
 			void Draw();
+			void Load(const std::array<std::string, 6>& CubeMapFaces);
 
+			bool IsLoaded() { return m_LoadSkybox; };
 	private:
-			GLuint LoadSkyBoxTextures(const std::array<const GLchar*, 6>& CubeMapFaces);
+			GLuint LoadSkyBoxTextures(const std::array<std::string, 6>& CubeMapFaces);
 
 	private:
 			VertexArray m_VertexBuffer;
 			GLuint m_CubemapTexture = 0;
+
+			bool m_LoadSkybox = false;
 	};
 }

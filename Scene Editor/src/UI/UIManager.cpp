@@ -20,8 +20,9 @@ namespace SceneEditor{
 	std::vector<std::shared_ptr<ModelController>> UIManager::m_Controllers;
 	std::shared_ptr<LightController>              UIManager::m_LightController;
 
-	std::function<void(uint32_t)>            UIManager::m_DeleteModel;
 	std::function<void(void)>                UIManager::m_NewSceneFunction;
+	std::function<void(uint32_t)>            UIManager::m_DeleteModel;
+	std::function<void(const std::string&)>  UIManager::m_SetSkybox;
 	std::function<void(const std::string&)>  UIManager::m_ImportModelFunction;
 	std::function<void(const std::string&)>  UIManager::m_ImportSceneFunction;
 	std::function<void(const std::string&)>  UIManager::m_ExportSceneFunction;
@@ -99,7 +100,7 @@ namespace SceneEditor{
 
 				if(ImGui::MenuItem("New Scene")) UIManager::m_NewSceneFunction();
 				if(ImGui::BeginMenu("Import")){
-					if (ImGui::MenuItem("Import Skybox")) std::cout << "Skybox\n";
+					if (ImGui::MenuItem("Import Skybox")) UIManager::SetSkybox();
 					if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
 					if(ImGui::MenuItem("Import Scene")) UIManager::ImportScene( );
 					ImGui::EndMenu( );
@@ -236,6 +237,17 @@ namespace SceneEditor{
 		ImGui::ColorEdit3("Color", glm::value_ptr(m_LightController->GetColor()));
 	}
 
+	void UIManager::SetSkybox()
+	{
+		static FolderDialog dialog;
+
+		dialog.Open();
+
+		std::string folderPath = dialog.GetFolderPath();
+
+		m_SetSkybox(folderPath);
+	}
+
 	void UIManager::ImportModel( )
 	{
 		static FileDialog modelDialog(L"Obj (*.obj)\0*.obj\0All (*.*)\0*.*\0");
@@ -243,7 +255,7 @@ namespace SceneEditor{
 		if(modelDialog.Open( ) == true){
 			std::string fileName = modelDialog.GetFilePath( );
 
-			m_ImportModelFunction(fileName.c_str());
+			m_ImportModelFunction(fileName);
 		}
 		
 	}
@@ -255,7 +267,7 @@ namespace SceneEditor{
 		if(modelDialog.Open() == true){
 			std::string fileName = modelDialog.GetFilePath( );
 
-			m_ImportSceneFunction(fileName.c_str());
+			m_ImportSceneFunction(fileName);
 		}
 	}
 
@@ -267,6 +279,6 @@ namespace SceneEditor{
 
 		std::string folderPath = dialog.GetFolderPath( );
 
-		UIManager::m_ExportSceneFunction(folderPath.c_str());
+		UIManager::m_ExportSceneFunction(folderPath);
 	}
 }

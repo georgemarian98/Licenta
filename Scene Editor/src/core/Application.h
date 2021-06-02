@@ -33,8 +33,10 @@ namespace SceneEditor{
 		Window m_Window;
 		ApplicationCamera m_Camera;
 
-		std::unique_ptr<Framebuffer> m_SceneBuffer;
 		std::unique_ptr<Scene> m_Scene;
+		std::unique_ptr<Framebuffer> m_SceneBuffer;
+
+		std::shared_ptr<SkyBox> m_Skybox;
 	};
 }
 

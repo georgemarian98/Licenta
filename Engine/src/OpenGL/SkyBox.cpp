@@ -55,8 +55,12 @@ namespace SceneEditor{
 			1.0f, -1.0f,  1.0f
 	};
 
-	void SkyBox::Load(const std::array<const GLchar*, 6>& CubeMapFaces)
+	void SkyBox::Load(const std::array<std::string, 6>& CubeMapFaces)
 	{
+		if (m_LoadSkybox == true) {
+			glDeleteTextures(1, &m_CubemapTexture);
+		}
+
 		m_CubemapTexture = LoadSkyBoxTextures(CubeMapFaces);
 	}
 
@@ -71,7 +75,7 @@ namespace SceneEditor{
 		m_VertexBuffer.Unbind( );
 	}
 
-	GLuint SkyBox::LoadSkyBoxTextures(const std::array<const GLchar*, 6>& SkyBoxFaces)
+	GLuint SkyBox::LoadSkyBoxTextures(const std::array<std::string, 6>& SkyBoxFaces)
 	{
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
@@ -80,7 +84,7 @@ namespace SceneEditor{
 		int width, height, nrChannels;
 
 		for(uint32_t i = 0; i < 6; i++){
-			uint8_t* data = stbi_load(SkyBoxFaces[i], &width, &height, &nrChannels, 0);
+			uint8_t* data = stbi_load(SkyBoxFaces[i].c_str(), &width, &height, &nrChannels, 0);
 			if(data){
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			}
@@ -94,6 +98,8 @@ namespace SceneEditor{
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		m_LoadSkybox = true;
 
 		return textureID;
 	}

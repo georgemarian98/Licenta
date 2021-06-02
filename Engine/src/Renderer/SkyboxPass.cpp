@@ -6,7 +6,7 @@ namespace SceneEditor{
 	{
 		auto& SceneCamera = Parameter.SceneCamera;
 
-		if (m_LoadSkybox == false)
+		if (m_Skybox->IsLoaded() == false)
 			return;
 
 		glDepthFunc(GL_LEQUAL);
@@ -16,7 +16,7 @@ namespace SceneEditor{
 		m_Shader->UploadUniformMat4("u_View", transformedView);
 		m_Shader->UploadUniformMat4("u_Projection", SceneCamera.GetPojection( ));
 
-		m_Skybox.Draw( );
+		m_Skybox->Draw( );
 		glDepthFunc(GL_LESS);
 	}
 }

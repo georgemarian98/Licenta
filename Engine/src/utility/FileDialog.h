@@ -1,5 +1,4 @@
 #pragma once
-//#include <ShlObj.h>
 
 namespace SceneEditor{
 
