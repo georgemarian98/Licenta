@@ -18,7 +18,7 @@ namespace SceneEditor{
 		/// Initialize ImGui context
 		/// </summary>
 		/// <param name="Window">: reference to the application GLFW window</param>
-		static void Initiliaze(Window& Window);
+		static void Initiliaze(Window& Window, float* CameraSpeed);
 
 		/// <summary>
 		/// 
@@ -47,12 +47,14 @@ namespace SceneEditor{
 		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices;};
 
 		static int GetModelPanelWidth() { return m_ModelPanelWidth;};
+		static bool IsSceneFocused() { return m_IsSceneFocused;};
 
 	private:
 		static void DrawModels( );
 		static void DrawProperties( );
 		static void DrawStats( );
 		static void DrawLightProperties( );
+		static void DrawCameraProperties( );
 
 		static void SetSkybox( );
 		static void ImportModel( );
@@ -60,6 +62,9 @@ namespace SceneEditor{
 		static void ExportScene( );
 
 	private:
+		static float* m_CameraSpeed;
+
+		static bool m_IsSceneFocused;
 		static int32_t m_ModelPanelWidth;
 
 		static uint32_t m_NumVertices;

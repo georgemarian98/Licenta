@@ -10,9 +10,11 @@
 
 namespace SceneEditor{
 
+	float*										  UIManager::m_CameraSpeed = nullptr;
 	int32_t										  UIManager::m_ModelPanelWidth = 0;
 	uint32_t									  UIManager::m_NumVertices = 0;
 	bool										  UIManager::m_Clear = false;
+	bool										  UIManager::m_IsSceneFocused = false;
 
 	bool                                          UIManager::m_ShowPopUp = false;
 	std::string                                   UIManager::m_PopUpText;
@@ -27,12 +29,14 @@ namespace SceneEditor{
 	std::function<void(const std::string&)>  UIManager::m_ImportSceneFunction;
 	std::function<void(const std::string&)>  UIManager::m_ExportSceneFunction;
 
-	void UIManager::Initiliaze(Window& Window)
+	void UIManager::Initiliaze(Window& Window, float* CameraSpeed)
 	{
 		ImGui::CreateContext( );
 		ImGui::StyleColorsDark( );
 		ImGui_ImplGlfw_InitForOpenGL(Window, true);
 		ImGui_ImplOpenGL3_Init("#version 130");
+
+		m_CameraSpeed = CameraSpeed;
 	}
 
 	void UIManager::Draw(const uint32_t SceneId)
@@ -116,6 +120,7 @@ namespace SceneEditor{
 		ImGui::Begin("View");
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail( );
 		ImGui::Image((void*)(intptr_t)(SceneId), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
+		m_IsSceneFocused = ImGui::IsWindowFocused();
 		ImGui::End( );
 
 
@@ -136,6 +141,21 @@ namespace SceneEditor{
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 		ImGui::Begin("Stats", (bool*)0, window_flags);
 		UIManager::DrawStats( );
+		ImGui::End( );
+		
+		const float PAD = 10.0f;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImVec2 work_pos = viewport->WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+		ImVec2 work_size = viewport->WorkSize;
+		ImVec2 window_pos, window_pos_pivot;
+		window_pos.x = (work_pos.x + work_size.x - PAD);
+		window_pos.y = (work_pos.y + work_size.y - PAD);
+		window_pos_pivot.x = 1.0f;
+		window_pos_pivot.y = 1.0f;
+		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::Begin("Camera", (bool*)0, window_flags);
+		UIManager::DrawCameraProperties( );
 		ImGui::End( );
 		
 		ImGui::Begin("Light");
@@ -235,6 +255,13 @@ namespace SceneEditor{
 	{
 		ImGui::DragFloat3("Position", glm::value_ptr(m_LightController->GetPosition( )));
 		ImGui::ColorEdit3("Color", glm::value_ptr(m_LightController->GetColor()));
+	}
+
+	void UIManager::DrawCameraProperties()
+	{
+		ImGui::Text("Camera");
+		ImGui::Separator();
+		ImGui::SliderFloat("Movement Speed", m_CameraSpeed, 1.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
 	}
 
 	void UIManager::SetSkybox()

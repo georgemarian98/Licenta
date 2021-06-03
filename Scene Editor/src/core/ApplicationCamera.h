@@ -20,6 +20,10 @@ namespace SceneEditor{
 		//pitch - rotate around x axis
 		void Rotate(double Pitch, double Yaw);
 
+		float* GetMovementSpeed() { return &m_MovementSpeed; };
+	private:
+		float m_MovementSpeed = 10.0f;
+
 	};
 }
 

@@ -1,12 +1,10 @@
 #include "ApplicationCamera.h"
 
-#define CAMERA_SPEED 10.0f
-
 namespace SceneEditor{
 
 	void ApplicationCamera::Move(MOVE_DIRECTION Direction, double TimeStep)
 	{
-		float speed = CAMERA_SPEED * (float)TimeStep;
+		float speed = m_MovementSpeed * (float)TimeStep;
 
 		switch(Direction){
 			case MOVE_DIRECTION::MOVE_FORWARD:

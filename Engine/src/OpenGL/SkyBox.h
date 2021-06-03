@@ -25,9 +25,11 @@ namespace SceneEditor{
 			GLuint LoadSkyBoxTextures(const std::array<std::string, 6>& CubeMapFaces);
 
 	private:
+			bool m_LoadSkybox = false;
+
 			VertexArray m_VertexBuffer;
 			GLuint m_CubemapTexture = 0;
 
-			bool m_LoadSkybox = false;
+			std::array<std::string, 6> m_CubeTexturesPaths;
 	};
 }

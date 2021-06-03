@@ -61,6 +61,7 @@ namespace SceneEditor{
 			glDeleteTextures(1, &m_CubemapTexture);
 		}
 
+		m_CubeTexturesPaths = CubeMapFaces;
 		m_CubemapTexture = LoadSkyBoxTextures(CubeMapFaces);
 	}
 

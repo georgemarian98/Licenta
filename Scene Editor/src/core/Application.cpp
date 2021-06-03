@@ -35,15 +35,6 @@ namespace SceneEditor{
 
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
 		m_Scene->AddPass(renderPass);
-		
-		//std::array<const char*, 6> faces = {
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\right.jpg",
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\left.jpg",
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\top.jpg",
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\bottom.jpg",
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\front.jpg",
-		//	"D:\\Proiecte\\Proiect-Grafica\\Proiect\\Proiect\\objects\\skybox\\back.jpg"
-		//};
 
 		m_Skybox = std::make_shared<SkyBox>();
 		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", m_Skybox);
@@ -127,9 +118,8 @@ namespace SceneEditor{
 	void Application::MouseInput(GLFWwindow* Window, double Xpos, double Ypos)
 	{
 		static bool firstMouse = true;
-
-		if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE || Xpos < UIManager::GetModelPanelWidth())
-		{
+		
+		if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE || Xpos < UIManager::GetModelPanelWidth() || UIManager::IsSceneFocused() == false){
 			firstMouse = true;
 			return;
 		}
@@ -169,7 +159,7 @@ namespace SceneEditor{
 	void Application::InitializeHandlers()
 	{
 		// Setup ImGui
-		UIManager::Initiliaze(m_Window);
+		UIManager::Initiliaze(m_Window, m_Camera.GetMovementSpeed());
 
 		UIManager::SetSkyboxFunction([&](const std::string& Path) {
 
@@ -181,10 +171,10 @@ namespace SceneEditor{
 			for (auto& p : std::filesystem::directory_iterator(Path)) {
 
 				std::string filename = p.path().filename().string().substr(0, 1);
-				int index = std::stoi(filename);
+				int index = std::stoi(filename) - 1;
 
-				if (1 <= index && index <= 6) {
-					faces[index - 1] = p.path().string();
+				if (0 <= index && index <= 5) {
+					faces[index] = p.path().string();
 				}
 				
 			}
