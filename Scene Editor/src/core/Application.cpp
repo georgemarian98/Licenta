@@ -33,14 +33,16 @@ namespace SceneEditor{
 		m_Scene = std::make_unique<Scene>( );
 		UIManager::SetLightController(m_Scene->GetLightController( ));
 
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
-		m_Scene->AddPass(renderPass);
+		//std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
+		//m_Scene->AddPass(renderPass);
 
-		m_Skybox = std::make_shared<SkyBox>();
-		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", m_Skybox);
-		m_Scene->AddPass(skyboxPass);
-		/*Serializer imp;
-		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");*/
+		//std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
+		//std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", Skybox);
+		//m_Scene->SetSkybox(Skybox);
+		//m_Scene->AddPass(skyboxPass);
+
+		Serializer imp;
+		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
@@ -56,10 +58,10 @@ namespace SceneEditor{
 	void Application::Run( )
 	{
 		{
-			uint64_t aux;
-			auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
-			UIManager::AddPannel(temp);
-			UIManager::UpdateNumberVertices(aux);
+			//uint64_t aux;
+			//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
+			//UIManager::AddPannel(temp);
+			//UIManager::UpdateNumberVertices(aux);
 		}
 		
 
@@ -182,7 +184,7 @@ namespace SceneEditor{
 				
 			}
 
-			m_Skybox->Load(faces);
+			m_Scene->GetSkybox()->Load(faces);
 		});
 
 		UIManager::SetDeleteModelFunction([&](uint32_t Index) {

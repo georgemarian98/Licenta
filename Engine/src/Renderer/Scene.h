@@ -28,6 +28,9 @@ namespace SceneEditor{
 		std::shared_ptr<ModelController> GetController(int Index) { return m_SceneModels[Index]->GetModelController( ); };
 		std::shared_ptr<LightController> GetLightController( ){	return m_Light; };
 
+		void SetSkybox(std::shared_ptr<SkyBox> SkyboxP) { m_Skybox = SkyboxP; };
+		std::shared_ptr<SkyBox> GetSkybox() { return m_Skybox; };
+
 	private:
 		std::vector<std::shared_ptr<Model>>& GetModels( ) { return m_SceneModels; };
 
@@ -36,6 +39,7 @@ namespace SceneEditor{
 		std::vector<std::unique_ptr<Pass>> m_Passes;
 
 		std::shared_ptr<LightController> m_Light;
+		std::shared_ptr<SkyBox> m_Skybox;
 	};
 }
 

@@ -163,9 +163,9 @@ namespace SceneEditor{
 		ImGui::End( );
 
 		if(m_ShowPopUp == true)
-			ImGui::OpenPopup("Modal window");
+			ImGui::OpenPopup("Export Scene");
 
-		if(ImGui::BeginPopupModal("Modal window", &m_ShowPopUp, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)){
+		if(ImGui::BeginPopupModal("Export Scene", &m_ShowPopUp, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)){
 			ImGui::Text(m_PopUpText.c_str());
 			if(ImGui::Button("Close")){
 				ImGui::CloseCurrentPopup( );

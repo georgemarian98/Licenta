@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "Serializer.h"
 
+#include "Renderer/SkyboxPass.h"
+
 #include <regex>
 
 //TODO: relative path
-#define VERTEX_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl"
-#define PIXEL_SHADER "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl"
+#define SHADER_FOLDER "D:\\Proiecte\\Licenta\\Engine\\shaders"
+
 #define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
 #define SRC_PATH "D:\\Proiecte\\Licenta\\Engine\\src"
 
@@ -105,6 +107,17 @@ namespace SceneEditor{
 		m_YAMLEmitter << YAML::Comment("Light Properties"); 
 		m_YAMLEmitter << YAML::Key << "Light Color" << YAML::Value << CurrentScene->m_Light->GetColor( );
 
+		if (CurrentScene->m_Skybox->IsLoaded() == true) {
+			m_YAMLEmitter << YAML::Key << "Skybox" << YAML::Value << YAML::BeginSeq; // Skybox cube textures path
+			auto& skyboxPaths = CurrentScene->m_Skybox->GetTexturePaths();
+
+			for (auto& path : skyboxPaths) {
+				m_YAMLEmitter << path;
+			}
+
+			m_YAMLEmitter << YAML::EndSeq;
+		}
+		
 		m_YAMLEmitter << YAML::EndMap; //Start
 
 
@@ -174,6 +187,28 @@ namespace SceneEditor{
 		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.c_str(), pixelFile.c_str());
 		importedScene->AddPass(renderPass);
+
+		YAML::Node skybox = rootData["Skybox"];
+		if (skybox) {
+			std::array<std::string, 6> cubeTexturesPaths;
+			int index = 0;
+
+			for (auto& texturePath : skybox) {
+				std::string path = texturePath.as<std::string>();
+				cubeTexturesPaths[index++] = path;
+			}
+
+			std::shared_ptr<SkyBox> skybox = std::make_shared<SkyBox>();
+			skybox->Load(cubeTexturesPaths);
+			importedScene->SetSkybox(skybox);
+
+			std::string SkyboxVertexFile = FolderPath + "\\shaders\\skyboxVertex.glsl";
+			std::string SkyboxPixelFile = FolderPath + "\\shaders\\skyboxFrag.glsl";
+
+			std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>(SkyboxVertexFile.c_str(), SkyboxPixelFile.c_str() , skybox);
+			importedScene->AddPass(skyboxPass);
+		}
+
 
 		return importedScene;
 	}
@@ -274,11 +309,12 @@ namespace SceneEditor{
 		if(std::filesystem::exists(folderDirectory) == false)
 			assert(std::filesystem::create_directories(folderDirectory));
 
-		std::string vertexShaderPath = folderDirectory + "\\vertex.glsl";
-		std::string fragmentShaderPath = folderDirectory + "\\fragment.glsl";
+		for (auto& path : std::filesystem::directory_iterator(SHADER_FOLDER)) {
 
-		assert(std::filesystem::copy_file(VERTEX_SHADER, vertexShaderPath, std::filesystem::copy_options::overwrite_existing));
-		assert(std::filesystem::copy_file(PIXEL_SHADER, fragmentShaderPath, std::filesystem::copy_options::overwrite_existing));
+			std::string outputFile = folderDirectory + "\\" + path.path().filename().string();
+
+			assert(std::filesystem::copy_file(path, outputFile, std::filesystem::copy_options::overwrite_existing));
+		}
 	}
 	void Serializer::CopyHeaders(const std::string& Path)
 	{
@@ -288,11 +324,11 @@ namespace SceneEditor{
 		const std::regex headerRegex("[^\\s]+(\\.(h|hpp))$");
 
 		for(const auto& entry : std::filesystem::recursive_directory_iterator(SRC_PATH)){
-			std::string path = entry.path( ).u8string( );
+			std::string path = entry.path( ).string( );
 
 			if(path.find("pch") == std::string::npos && std::regex_match(path, headerRegex) == true){
-				std::string parentDirectory = depsPath + entry.path( ).parent_path( ).filename( ).u8string( );
-				std::string destPath = parentDirectory + "\\" + entry.path( ).filename( ).u8string( );
+				std::string parentDirectory = depsPath + entry.path( ).parent_path( ).filename( ).string( );
+				std::string destPath = parentDirectory + "\\" + entry.path( ).filename( ).string( );
 
 				if(std::filesystem::exists(parentDirectory) == false)
 					assert(std::filesystem::create_directories(parentDirectory));
