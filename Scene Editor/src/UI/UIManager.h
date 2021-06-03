@@ -37,14 +37,14 @@ namespace SceneEditor{
 		static void SetDeleteModelFunction(std::function<void(uint32_t)> Function)           { m_DeleteModel         = std::move(Function); };
 		static void SetSkyboxFunction(std::function<void(const std::string&)> Function)      { m_SetSkybox           = std::move(Function); };
 		static void SetNewSceneFunction   (std::function<void(void)> Function)               { m_NewSceneFunction    = std::move(Function); };
-		static void SetImportFunction     (std::function<void(const std::string&)> Function) { m_ImportModelFunction = std::move(Function); };
+		static void SetImportModelFunction(std::function<void(const std::string&)> Function) { m_ImportModelFunction = std::move(Function); };
 		static void SetImportSceneFunction(std::function<void(const std::string&)> Function) { m_ImportSceneFunction = std::move(Function); };
 		static void SetExportSceneFunction(std::function<void(const std::string&)> Function) { m_ExportSceneFunction = std::move(Function); };
 
 		static void ClearScene( ) { m_Controllers.clear( ); m_NumVertices = 0;  m_Clear = true; };
 
 		static void ShowPopUp(const std::string& Message) { m_ShowPopUp = true; m_PopUpText = Message; };
-		static void UpdateNumberVertices(int Vertices) { m_NumVertices += Vertices;};
+		static void UpdateNumberVertices(uint64_t Vertices) { m_NumVertices += Vertices;};
 
 		static int GetModelPanelWidth() { return m_ModelPanelWidth;};
 		static bool IsSceneFocused() { return m_IsSceneFocused;};
@@ -67,7 +67,7 @@ namespace SceneEditor{
 		static bool m_IsSceneFocused;
 		static int32_t m_ModelPanelWidth;
 
-		static uint32_t m_NumVertices;
+		static uint64_t m_NumVertices;
 		static bool m_Clear;
 
 		static bool m_ShowPopUp;

@@ -12,7 +12,7 @@ namespace SceneEditor{
 
 	float*										  UIManager::m_CameraSpeed = nullptr;
 	int32_t										  UIManager::m_ModelPanelWidth = 0;
-	uint32_t									  UIManager::m_NumVertices = 0;
+	uint64_t									  UIManager::m_NumVertices = 0;
 	bool										  UIManager::m_Clear = false;
 	bool										  UIManager::m_IsSceneFocused = false;
 

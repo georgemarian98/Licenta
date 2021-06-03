@@ -55,10 +55,13 @@ namespace SceneEditor{
 
 	void Application::Run( )
 	{
-		uint32_t aux;
-		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
-		UIManager::AddPannel(temp);
-		UIManager::UpdateNumberVertices(aux);
+		{
+			uint64_t aux;
+			auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
+			UIManager::AddPannel(temp);
+			UIManager::UpdateNumberVertices(aux);
+		}
+		
 
 		m_Window.SetVsync(true);
 		while(m_Window.IsRunning( ) == false){
@@ -192,13 +195,13 @@ namespace SceneEditor{
 			Renderer::Reset();
 			});
 
-		UIManager::SetImportFunction([&](const std::string& Path) {
+		UIManager::SetImportModelFunction([&](const std::string& Path) {
 
 			if (Path.empty() == true) {
 				return;
 			}
 
-			uint32_t noVertices;
+			uint64_t noVertices;
 			auto controller = m_Scene->AddModel(Path, noVertices);
 
 			UIManager::AddPannel(controller);
