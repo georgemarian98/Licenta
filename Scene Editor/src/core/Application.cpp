@@ -27,12 +27,14 @@ namespace SceneEditor{
 		m_Width = windowSize[0];
 		m_Height = windowSize[1];
 
+		Shader::m_Directory = SHADER_FOLDER;
+
 		m_Scene = std::make_unique<Scene>( );
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
 		m_Scene->AddPass(renderPass);
 
 		std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
-		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", Skybox);
+		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("skybox_vertex.glsl", "skybox_fragment.glsl", Skybox);
 		m_Scene->SetSkybox(Skybox);
 		m_Scene->AddPass(skyboxPass);
 
@@ -64,7 +66,7 @@ namespace SceneEditor{
 			UIManager::AddPannel(temp);
 			UIManager::UpdateNumberVertices(aux);
 		}
-		
+		std::cout << std::filesystem::current_path() << std::endl;
 
 		m_Window.SetVsync(true);
 		while(m_Window.IsRunning( ) == false){

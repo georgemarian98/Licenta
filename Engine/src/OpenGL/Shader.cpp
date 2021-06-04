@@ -3,7 +3,9 @@
 
 namespace SceneEditor{
 
-	std::string Shader::readShaderFile(const char* FileName)
+	std::string Shader::m_Directory;
+
+	std::string Shader::ReadShaderFile(const std::string& FileName)
 	{
 		std::ifstream shaderFile;
 		std::stringstream shaderStringStream;
@@ -14,16 +16,16 @@ namespace SceneEditor{
 			shaderFile.close( );
 		}
 		catch(const std::exception&){
-			fprintf(stderr, "Shader Error: Failed to load shader '%s'\n", FileName);
+			std::cerr << "Shader Error: Failed to load shader: " << FileName << std::endl;
 			return "ERROR";
 		}
 
 		return shaderStringStream.str( );
 	}
 
-	void Shader::CreateShader(const char* File, GLuint& Id, GLuint Type)
+	void Shader::CreateShader(const std::string& File, GLuint& Id, GLuint Type)
 	{
-		std::string v = readShaderFile(File);
+		std::string v = ReadShaderFile(File);
 		const GLchar* shaderString = v.c_str( );
 		Id = glCreateShader(Type);
 		glShaderSource(Id, 1, &shaderString, NULL);
@@ -31,12 +33,12 @@ namespace SceneEditor{
 		ShaderLog(Id);
 	}
 
-	void Shader::Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName)
+	void Shader::Create(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
 	{
 		GLuint vertexShaderID = -1;
 		GLuint fragmentShaderID = -1;
 		GLuint geometryShaderID = -1;
-		bool enableGeometryShader = (GeometryShaderFileName != nullptr);
+		bool enableGeometryShader = GeometryShaderFileName.empty();
 
 		CreateShader(VertexShaderFileName, vertexShaderID, GL_VERTEX_SHADER);
 		CreateShader(FragmentShaderFileName, fragmentShaderID, GL_FRAGMENT_SHADER);
@@ -80,16 +82,16 @@ namespace SceneEditor{
 		glCheckError( );
 	}
 
-	Shader::Shader(const char* VertexShaderFileName, const  char* FragmentShaderFileName)
+	Shader::Shader(const std::string& VertexShaderFileName, const  std::string& FragmentShaderFileName)
 		: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName)
 	{
-		Create(VertexShaderFileName, FragmentShaderFileName);
+		Create(m_Directory + VertexShaderFileName, m_Directory + FragmentShaderFileName);
 	}
 
-	Shader::Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName)
+	Shader::Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
 		: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName), m_GeometryName(GeometryShaderFileName)
 	{
-		Create(VertexShaderFileName, FragmentShaderFileName, GeometryShaderFileName);
+		Create(m_Directory + VertexShaderFileName, m_Directory + FragmentShaderFileName, m_Directory + GeometryShaderFileName);
 	}
 
 	void Shader::Bind( )

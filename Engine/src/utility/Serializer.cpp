@@ -5,11 +5,9 @@
 
 #include <regex>
 
-//TODO: relative path
-#define SHADER_FOLDER "D:\\Proiecte\\Licenta\\Engine\\shaders"
-
-#define LIB_PATH "D:\\Proiecte\\Licenta\\bin\\Release\\Engine.lib"
-#define SRC_PATH "D:\\Proiecte\\Licenta\\Engine\\src"
+#define LIB_PATH "..\\bin\\Release\\Engine.lib"
+#define SRC_PATH "..\\Engine\\src"
+#define DEPENDENCY_PATH "..\\Engine\\deps\\"
 
 namespace YAML{
 
@@ -123,21 +121,12 @@ namespace SceneEditor{
 
 		if(m_YAMLEmitter.good() == false)
 			std::cout << "Emitter error: " << m_YAMLEmitter.GetLastError( ) << "\n";
-
-		//TODO: relative path
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\assimp\\include\\assimp"] = "assimp";
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\glad"] = "glad";
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glad\\include\\KHR"] = "KHR";
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glfw\\include\\GLFW"] = "glfw";
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\glm\\glm"] = "glm";
-		m_DependencyDirectories["D:\\Proiecte\\Licenta\\Engine\\deps\\yaml\\include\\yaml-cpp"] = "yaml-cpp";
+		
 	}
 
 	void Serializer::ExportScene(const std::string& Path)
 	{
 		std::string filePath = Path + "\\Scene.yaml";
-
-		std::cout << std::filesystem::current_path( ) << std::endl;
 
 		//Shaders
 		CopyShaders(Path);
@@ -183,9 +172,8 @@ namespace SceneEditor{
 		importedScene->m_Light->SetPosition(rootData["Light Position"].as<glm::vec3>( ));
 		importedScene->m_Light->SetColor(rootData["Light Color"].as<glm::vec3>( ));
 
-		std::string vertexFile = FolderPath + "\\shaders\\vertex.glsl";
-		std::string pixelFile = FolderPath + "\\shaders\\fragment.glsl";
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>(vertexFile.c_str(), pixelFile.c_str());
+		Shader::m_Directory = FolderPath + "\\shaders\\";
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
 		importedScene->AddPass(renderPass);
 
 		YAML::Node skybox = rootData["Skybox"];
@@ -202,10 +190,7 @@ namespace SceneEditor{
 			skybox->LoadTextures(cubeTexturesPaths);
 			importedScene->SetSkybox(skybox);
 
-			std::string SkyboxVertexFile = FolderPath + "\\shaders\\skyboxVertex.glsl";
-			std::string SkyboxPixelFile = FolderPath + "\\shaders\\skyboxFrag.glsl";
-
-			std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>(SkyboxVertexFile.c_str(), SkyboxPixelFile.c_str() , skybox);
+			std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("skybox_vertex.glsl", "skybox_fragment.glsl" , skybox);
 			importedScene->AddPass(skyboxPass);
 		}
 
@@ -316,6 +301,7 @@ namespace SceneEditor{
 			assert(std::filesystem::copy_file(path, outputFile, std::filesystem::copy_options::overwrite_existing));
 		}
 	}
+
 	void Serializer::CopyHeaders(const std::string& Path)
 	{
 		std::string depsPath = Path + "\\include\\";
@@ -340,11 +326,19 @@ namespace SceneEditor{
 			}
 		}
 
-		for(auto& directory : m_DependencyDirectories){
+		static std::unordered_map<std::string, std::string> dependencyDirectories;
+		dependencyDirectories["assimp\\include\\assimp"] = "assimp";
+		dependencyDirectories["glad\\include\\glad"] = "glad";
+		dependencyDirectories["glad\\include\\KHR"] = "KHR";
+		dependencyDirectories["glfw\\include\\GLFW"] = "glfw";
+		dependencyDirectories["glm\\glm"] = "glm";
+		dependencyDirectories["yaml\\include\\yaml-cpp"] = "yaml-cpp";
+
+		for(auto& directory : dependencyDirectories){
 
 			std::error_code code;
 			std::string destPath = depsPath + directory.second;
-			std::filesystem::copy(directory.first, destPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive, code);
+			std::filesystem::copy(DEPENDENCY_PATH + directory.first, destPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive, code);
 
 			assert(code != std::error_condition( ));
 		}

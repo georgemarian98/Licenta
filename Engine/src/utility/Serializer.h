@@ -4,6 +4,8 @@
 
 namespace SceneEditor{
 
+#define SHADER_FOLDER "..\\Engine\\shaders\\"
+
 	class Serializer{
 	public:
 		Serializer() = default;
@@ -20,8 +22,6 @@ namespace SceneEditor{
 		void CopyHeaders(const std::string& Path);
 	private:
 		YAML::Emitter m_YAMLEmitter;
-
-		std::unordered_map<std::string, std::string> m_DependencyDirectories;;
 	};
 }
 

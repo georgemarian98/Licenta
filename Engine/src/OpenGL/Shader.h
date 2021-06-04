@@ -5,16 +5,18 @@ namespace SceneEditor{
 
 	class Shader{
 	public:
+		static std::string m_Directory;
+
 		Shader( ) = default;
-		Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName);
-		Shader(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName);
+		Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName);
+		Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName);
 		~Shader( );
 
 		std::string GetVertexShaderName( )   { return m_VertexName; };
 		std::string GetFragmentShaderName( ) { return m_FragmentName; };
 		std::string GetGeometryShaderName( ) { return m_GeometryName; };
 
-		void Create(const char* VertexShaderFileName, const char* FragmentShaderFileName, const char* GeometryShaderFileName = nullptr);
+		void Create(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName = "");
 		void Destroy( );
 	
 		void Bind( );
@@ -31,12 +33,12 @@ namespace SceneEditor{
 		void UploadUniformMat4(const std::string& Name, const glm::mat4& Matrix);
 
 	private:
-		void CreateShader(const char* File, GLuint& Id, GLuint Type);
+		void CreateShader(const std::string& File, GLuint& Id, GLuint Type);
 
 		void ShaderLog(GLuint ShaderId, bool Compile = true);
 		GLint GetUniformLocation(const std::string& Name);
 
-		std::string readShaderFile(const char* FileName);
+		std::string ReadShaderFile(const std::string& FileName);
 
 	private:
 		GLuint m_ShaderProgram = 0;
@@ -45,5 +47,7 @@ namespace SceneEditor{
 		std::string m_VertexName;
 		std::string m_FragmentName;
 		std::string m_GeometryName;
+
+		
 	};
 }
