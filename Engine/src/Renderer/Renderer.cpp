@@ -7,6 +7,11 @@ namespace SceneEditor{
 
 	void Renderer::Initiliaze(glm::vec4 ClearColor)
 	{
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+			fprintf(stderr, "Failed to init GLAD\n");
+			return;
+		}
+
 		glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"

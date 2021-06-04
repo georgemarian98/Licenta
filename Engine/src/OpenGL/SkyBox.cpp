@@ -55,14 +55,14 @@ namespace SceneEditor{
 			1.0f, -1.0f,  1.0f
 	};
 
-	void SkyBox::Load(const std::array<std::string, 6>& CubeMapFaces)
+	void SkyBox::LoadTextures(const std::array<std::string, 6>& CubeMapFaces)
 	{
 		if (m_LoadSkybox == true) {
-			glDeleteTextures(1, &m_CubemapTexture);
+			glDeleteTextures(1, &m_CubemapTexture.id);
 		}
 
 		m_CubeTexturesPaths = CubeMapFaces;
-		m_CubemapTexture = LoadSkyBoxTextures(CubeMapFaces);
+		m_CubemapTexture.id = LoadSkyBoxTextures(CubeMapFaces);
 	}
 
 	void SkyBox::Draw( )
@@ -70,7 +70,7 @@ namespace SceneEditor{
 		m_VertexBuffer.Bind( );
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTexture);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTexture.id);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		m_VertexBuffer.Unbind( );
@@ -106,10 +106,10 @@ namespace SceneEditor{
 	}
 
 
-	SkyBox::SkyBox( ) : m_VertexBuffer{skyboxVertices}{	}
+	SkyBox::SkyBox() : m_VertexBuffer{ skyboxVertices }, m_CubemapTexture{0}{	}
 
 	SkyBox::~SkyBox( )
 	{
-		glDeleteTextures(1, &m_CubemapTexture);
+		glDeleteTextures(1, &m_CubemapTexture.id);
 	}
 }

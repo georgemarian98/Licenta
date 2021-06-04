@@ -9,6 +9,7 @@
 #pragma once
 
 #include "OpenGL/Shader.h"
+#include <array>
 
 namespace SceneEditor{
 
@@ -18,7 +19,7 @@ namespace SceneEditor{
 			~SkyBox( );
 
 			void Draw();
-			void Load(const std::array<std::string, 6>& CubeMapFaces);
+			void LoadTextures(const std::array<std::string, 6>& CubeMapFaces);
 
 			bool IsLoaded() { return m_LoadSkybox; };
 
@@ -29,8 +30,8 @@ namespace SceneEditor{
 	private:
 			bool m_LoadSkybox = false;
 
+			Texture m_CubemapTexture;
 			VertexArray m_VertexBuffer;
-			GLuint m_CubemapTexture = 0;
 
 			std::array<std::string, 6> m_CubeTexturesPaths;
 	};

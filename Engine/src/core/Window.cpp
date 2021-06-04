@@ -65,14 +65,7 @@ namespace SceneEditor{
 		}
 
 		glfwMakeContextCurrent(m_Window);
-
 		glfwWindowHint(GLFW_SAMPLES, 4);
-
-		if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-			fprintf(stderr, "Failed to init GLAD\n");
-			return;
-		}
-
 		glfwSwapInterval(0);
 	}
 

@@ -27,22 +27,21 @@ namespace SceneEditor{
 		m_Width = windowSize[0];
 		m_Height = windowSize[1];
 
-		InitializeHandlers();
+		m_Scene = std::make_unique<Scene>( );
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
+		m_Scene->AddPass(renderPass);
+
+		std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
+		std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", Skybox);
+		m_Scene->SetSkybox(Skybox);
+		m_Scene->AddPass(skyboxPass);
 
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
-		m_Scene = std::make_unique<Scene>( );
 		UIManager::SetLightController(m_Scene->GetLightController( ));
 
-		//std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\vertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\fragment.glsl");
-		//m_Scene->AddPass(renderPass);
 
-		//std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
-		//std::unique_ptr<Pass> skyboxPass = std::make_unique<SkyboxPass>("D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxVertex.glsl", "D:\\Proiecte\\Licenta\\Engine\\shaders\\skyboxFrag.glsl", Skybox);
-		//m_Scene->SetSkybox(Skybox);
-		//m_Scene->AddPass(skyboxPass);
-
-		Serializer imp;
-		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
+		//Serializer imp;
+		//m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
@@ -53,15 +52,17 @@ namespace SceneEditor{
 			auto app = Application::GetInstance( );
 			app->MouseInput(window, xpos, ypos);
 		});
+
+		InitializeHandlers();
 	}
 
 	void Application::Run( )
 	{
 		{
-			//uint64_t aux;
-			//auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
-			//UIManager::AddPannel(temp);
-			//UIManager::UpdateNumberVertices(aux);
+			uint64_t aux;
+			auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
+			UIManager::AddPannel(temp);
+			UIManager::UpdateNumberVertices(aux);
 		}
 		
 
@@ -184,7 +185,7 @@ namespace SceneEditor{
 				
 			}
 
-			m_Scene->GetSkybox()->Load(faces);
+			m_Scene->GetSkybox()->LoadTextures(faces);
 		});
 
 		UIManager::SetDeleteModelFunction([&](uint32_t Index) {

@@ -199,7 +199,7 @@ namespace SceneEditor{
 			}
 
 			std::shared_ptr<SkyBox> skybox = std::make_shared<SkyBox>();
-			skybox->Load(cubeTexturesPaths);
+			skybox->LoadTextures(cubeTexturesPaths);
 			importedScene->SetSkybox(skybox);
 
 			std::string SkyboxVertexFile = FolderPath + "\\shaders\\skyboxVertex.glsl";

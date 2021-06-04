@@ -2,6 +2,8 @@
 
 #include "Model.h"
 #include "Renderer.h"
+#include "OpenGL/SkyBox.h"
+
 #include "Renderer/RenderPass.h"
 
 #include "Controllers/LightController.h"
