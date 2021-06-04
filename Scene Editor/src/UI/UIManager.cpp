@@ -255,6 +255,9 @@ namespace SceneEditor{
 	{
 		ImGui::DragFloat3("Position", glm::value_ptr(m_LightController->GetPosition( )));
 		ImGui::ColorEdit3("Color", glm::value_ptr(m_LightController->GetColor()));
+		ImGui::SliderFloat("Ambient", m_LightController->GetAmbient(), 0.0f, 1.0f);
+		ImGui::SliderFloat("Diffuse", m_LightController->GetDiffuse(), 0.0f, 1.0f);
+		ImGui::SliderFloat("Specular",m_LightController->GetSpecular(), 0.0f, 1.0f);
 	}
 
 	void UIManager::DrawCameraProperties()

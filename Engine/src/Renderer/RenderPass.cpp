@@ -12,9 +12,14 @@ namespace SceneEditor{
 		m_Shader->Bind( );
 		m_Shader->UploadUniformMat4("u_Projection", SceneCamera.GetPojection( ));
 		m_Shader->UploadUniformMat4("u_View", SceneCamera.GetViewMatrix( ));
+
 		//Lighting
-		m_Shader->UploadUniformVec3("u_LightPosition", SceneLight->GetPosition());
-		m_Shader->UploadUniformVec3("u_LightColor", SceneLight->GetColor());
+		m_Shader->UploadUniformVec3("u_LightProperties.position", SceneLight->GetPosition());
+		m_Shader->UploadUniformVec3("u_LightProperties.color", SceneLight->GetColor());
+		m_Shader->UploadUniformVec3("u_LightProperties.ambient", glm::vec3(*SceneLight->GetAmbient()));
+		m_Shader->UploadUniformVec3("u_LightProperties.diffuse", glm::vec3(*SceneLight->GetDiffuse()));
+		m_Shader->UploadUniformVec3("u_LightProperties.specular", glm::vec3(*SceneLight->GetSpecular()));
+
 		m_Shader->UploadUniformVec3("u_CameraPosition", SceneCamera.GetPosition());
 
 		//// render the loaded model

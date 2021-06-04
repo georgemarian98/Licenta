@@ -18,6 +18,7 @@ namespace SceneEditor{
         uint32_t heightNr = 1;
 
         size_t texturesSize = m_Textures.size( );
+
         for(uint32_t i = 0; i < texturesSize; i++){
             glActiveTexture(GL_TEXTURE0 + i); 
             // retrieve texture number (the N in diffuse_textureN)
