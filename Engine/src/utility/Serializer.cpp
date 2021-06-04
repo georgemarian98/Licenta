@@ -326,13 +326,14 @@ namespace SceneEditor{
 			}
 		}
 
-		static std::unordered_map<std::string, std::string> dependencyDirectories;
-		dependencyDirectories["assimp\\include\\assimp"] = "assimp";
-		dependencyDirectories["glad\\include\\glad"] = "glad";
-		dependencyDirectories["glad\\include\\KHR"] = "KHR";
-		dependencyDirectories["glfw\\include\\GLFW"] = "glfw";
-		dependencyDirectories["glm\\glm"] = "glm";
-		dependencyDirectories["yaml\\include\\yaml-cpp"] = "yaml-cpp";
+		static std::unordered_map<std::string, std::string> dependencyDirectories = {
+			std::make_pair<std::string, std::string>("assimp\\include\\assimp", "assimp"),
+			std::make_pair<std::string, std::string>("glad\\include\\glad", "glad"),
+			std::make_pair<std::string, std::string>("glad\\include\\KHR", "KHR"),
+			std::make_pair<std::string, std::string>("glfw\\include\\GLFW", "glfw"),
+			std::make_pair<std::string, std::string>("glm\\glm", "glm"),
+			std::make_pair<std::string, std::string>("yaml\\include\\yaml-cpp", "yaml-cpp"),
+		};
 
 		for(auto& directory : dependencyDirectories){
 

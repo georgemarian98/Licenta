@@ -41,7 +41,6 @@ namespace SceneEditor{
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 		UIManager::SetLightController(m_Scene->GetLightController( ));
 
-
 		//Serializer imp;
 		//m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
@@ -66,7 +65,6 @@ namespace SceneEditor{
 			UIManager::AddPannel(temp);
 			UIManager::UpdateNumberVertices(aux);
 		}
-		std::cout << std::filesystem::current_path() << std::endl;
 
 		m_Window.SetVsync(true);
 		while(m_Window.IsRunning( ) == false){

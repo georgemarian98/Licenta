@@ -6,6 +6,8 @@ in vec3 NormCoords;
 in vec3 FragPosition;
 
 uniform sampler2D u_TextureDiffuse1;
+uniform sampler2D u_TextureSpecular1;
+
 uniform vec3 u_TintColor;
 
 uniform vec3 u_LightPosition;
@@ -21,9 +23,9 @@ vec3 PhongLightingComponent( )
 
     //Diffuse component
     vec3 normal = normalize(NormCoords);
-    vec3 lightDirection = normalize(u_LightPosition - FragPosition);
+    vec3 lightDirection = normalize(-u_LightPosition);
     float diffuseCoeficient = max(dot(normal, lightDirection), 0.0);
-    vec3 diffuse = diffuseCoeficient * u_LightColor;
+    vec3 diffuse = diffuseCoeficient * u_LightColor * vec3(texture(u_TextureDiffuse1, TexCoords));
 
     //Specular component
     float specularStrength = 0.5;
@@ -31,7 +33,7 @@ vec3 PhongLightingComponent( )
     vec3 reflectDirection = reflect(-lightDirection, normal); 
 
     float specularCoefficient = pow(max(dot(viewDirection, reflectDirection), 0.0), 32);
-    vec3 specular = specularStrength * specularCoefficient * u_LightColor; 
+    vec3 specular = specularStrength * specularCoefficient * u_LightColor * vec3(texture(u_TextureSpecular1, TexCoords)); 
 
     return ambient + diffuse + specular;
 }
@@ -39,6 +41,5 @@ vec3 PhongLightingComponent( )
 void main()
 {    
     vec3 light = PhongLightingComponent( );
-    FragColor = vec4(u_TintColor, 1.0f) * vec4(texture(u_TextureDiffuse1, TexCoords).rgb, 1.0f);
-    FragColor *= vec4(light, 1.0f);
+    FragColor = vec4(u_TintColor * light, 1.0f);
 }

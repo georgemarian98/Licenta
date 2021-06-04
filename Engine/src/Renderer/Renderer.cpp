@@ -14,6 +14,7 @@ namespace SceneEditor{
 
 		glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_MULTISAMPLE);
 		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 		glCullFace(GL_BACK); // cull back face
 		glFrontFace(GL_CCW); // GL_CCW for counter clock-wise

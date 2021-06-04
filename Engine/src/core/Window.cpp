@@ -56,6 +56,8 @@ namespace SceneEditor{
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+		glfwWindowHint(GLFW_SAMPLES, 4);
+
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Name.c_str() , NULL, NULL);
 		if(m_Window == NULL){
 			fprintf(stderr, "ERROR: could not open window with GLFW3\n");
@@ -65,7 +67,6 @@ namespace SceneEditor{
 		}
 
 		glfwMakeContextCurrent(m_Window);
-		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwSwapInterval(0);
 	}
 
