@@ -9,8 +9,9 @@ namespace SceneEditor{
 		if (m_Skybox->IsLoaded() == false)
 			return;
 
-		glDepthFunc(GL_LEQUAL);
 		m_Shader->Bind( );
+
+		glDepthFunc(GL_LEQUAL);
 
 		glm::mat4 transformedView = glm::mat4(glm::mat3(SceneCamera.GetViewMatrix()));
 		m_Shader->UploadUniformMat4("u_View", transformedView);
@@ -18,5 +19,7 @@ namespace SceneEditor{
 
 		m_Skybox->Draw( );
 		glDepthFunc(GL_LESS);
+
+		m_Shader->Unbind();
 	}
 }

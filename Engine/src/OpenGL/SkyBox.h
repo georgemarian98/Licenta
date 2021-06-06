@@ -22,6 +22,7 @@ namespace SceneEditor{
 			void LoadTextures(const std::array<std::string, 6>& CubeMapFaces);
 
 			bool IsLoaded() { return m_LoadSkybox; };
+			void ClearSkybox();
 
 			std::array<std::string, 6> GetTexturePaths() { return m_CubeTexturesPaths; };
 	private:

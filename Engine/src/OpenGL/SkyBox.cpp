@@ -65,6 +65,12 @@ namespace SceneEditor{
 		m_CubemapTexture.id = LoadSkyBoxTextures(CubeMapFaces);
 	}
 
+	void SkyBox::ClearSkybox()
+	{
+		glDeleteTextures(1, &m_CubemapTexture.id);
+		m_LoadSkybox = false;
+	}
+
 	void SkyBox::Draw( )
 	{
 		m_VertexBuffer.Bind( );
@@ -81,6 +87,13 @@ namespace SceneEditor{
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
 
 		int width, height, nrChannels;
 
@@ -94,12 +107,8 @@ namespace SceneEditor{
 			}
 			stbi_image_free(data);
 		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+		glCheckError();
 		m_LoadSkybox = true;
 
 		return textureID;

@@ -25,14 +25,19 @@ uniform vec3 u_CameraPosition;
 
 vec3 BlinnPhongLightingComponent( )
 {
+    vec4 diffuseTexture = texture(u_TextureDiffuse1, TexCoords);
+    // if(diffuseTexture.a < 0.5){
+    //     discard;
+    // }
+
     //Ambient component
-    vec3 ambient = u_LightProperties.ambient * texture(u_TextureDiffuse1, TexCoords).rgb;
+    vec3 ambient = u_LightProperties.ambient * diffuseTexture.rgb;
 
     //Diffuse component
     vec3 normal = normalize(NormCoords);
     vec3 lightDirection = normalize(-u_LightProperties.position);
     float diffuseCoeficient = max(dot(normal, lightDirection), 0.0);
-    vec3 diffuse = u_LightProperties.diffuse * diffuseCoeficient * texture(u_TextureDiffuse1, TexCoords).rgb;
+    vec3 diffuse = u_LightProperties.diffuse * diffuseCoeficient * diffuseTexture.rgb;
 
     //Specular component
     vec3 viewDirection = normalize(u_CameraPosition - FragPosition);

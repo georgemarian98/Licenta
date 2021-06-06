@@ -104,6 +104,9 @@ namespace SceneEditor{
 		m_YAMLEmitter << YAML::Key << "Light Position" << YAML::Value << CurrentScene->m_Light->GetPosition( );
 		m_YAMLEmitter << YAML::Comment("Light Properties"); 
 		m_YAMLEmitter << YAML::Key << "Light Color" << YAML::Value << CurrentScene->m_Light->GetColor( );
+		m_YAMLEmitter << YAML::Key << "Light Ambient" << YAML::Value << *CurrentScene->m_Light->GetAmbient( );
+		m_YAMLEmitter << YAML::Key << "Light Diffuse" << YAML::Value << *CurrentScene->m_Light->GetDiffuse( );
+		m_YAMLEmitter << YAML::Key << "Light Specular" << YAML::Value << *CurrentScene->m_Light->GetSpecular( );
 
 		if (CurrentScene->m_Skybox->IsLoaded() == true) {
 			m_YAMLEmitter << YAML::Key << "Skybox" << YAML::Value << YAML::BeginSeq; // Skybox cube textures path
@@ -171,6 +174,9 @@ namespace SceneEditor{
 
 		importedScene->m_Light->SetPosition(rootData["Light Position"].as<glm::vec3>( ));
 		importedScene->m_Light->SetColor(rootData["Light Color"].as<glm::vec3>( ));
+		importedScene->m_Light->SetAmbient(rootData["Light Ambient"].as<float>( ));
+		importedScene->m_Light->SetDiffuse(rootData["Light Diffuse"].as<float>( ));
+		importedScene->m_Light->SetSpecular(rootData["Light Specular"].as<float>( ));
 
 		Shader::m_Directory = FolderPath + "\\shaders\\";
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");

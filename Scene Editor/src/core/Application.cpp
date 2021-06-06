@@ -7,6 +7,8 @@
 #include "utility/Serializer.h"
 #include "Renderer/SkyboxPass.h"
 
+#define TESTING
+
 namespace SceneEditor{
 
 	std::shared_ptr<Application> Application::GetInstance(const char* Name)
@@ -29,6 +31,7 @@ namespace SceneEditor{
 
 		Shader::m_Directory = SHADER_FOLDER;
 
+#ifdef TESTING
 		m_Scene = std::make_unique<Scene>( );
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
 		m_Scene->AddPass(renderPass);
@@ -38,11 +41,20 @@ namespace SceneEditor{
 		m_Scene->SetSkybox(Skybox);
 		m_Scene->AddPass(skyboxPass);
 
+		uint64_t aux;
+		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
+		UIManager::AddPannel(temp);
+		UIManager::UpdateNumberVertices(aux);
+
+#else 
+		Serializer imp;
+		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
+#endif // 1
+
+
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
 		UIManager::SetLightController(m_Scene->GetLightController( ));
 
-		//Serializer imp;
-		//m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
@@ -58,14 +70,7 @@ namespace SceneEditor{
 	}
 
 	void Application::Run( )
-	{
-		{
-			uint64_t aux;
-			auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
-			UIManager::AddPannel(temp);
-			UIManager::UpdateNumberVertices(aux);
-		}
-
+	{		
 		m_Window.SetVsync(true);
 		while(m_Window.IsRunning( ) == false){
 			KeyboardInput( );

@@ -20,7 +20,7 @@ namespace SceneEditor{
 
 		void Draw(Camera& SceneCamera);
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
-		void ClearScene( ) { m_SceneModels.clear( ); };
+		void ClearScene() { m_SceneModels.clear(); m_Skybox->ClearSkybox(); };
 
 		std::shared_ptr<ModelController> AddModel(const std::string_view& Path, uint64_t& NoVertices);
 		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
