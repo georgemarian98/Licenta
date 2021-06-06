@@ -4,10 +4,12 @@
 
 namespace SceneEditor{
 
-#define SHADER_FOLDER "..\\Engine\\shaders\\"
+#define SHADER_FOLDER Serializer::m_RootFolder + "\\..\\Engine\\shaders\\"
 
 	class Serializer{
 	public:
+		static std::string m_RootFolder;
+
 		Serializer() = default;
 		Serializer(const std::unique_ptr<Scene>& CurrentScene);
 

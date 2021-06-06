@@ -63,6 +63,7 @@ namespace SceneEditor{
 		}
 		ShaderLog(this->m_ShaderProgram, false);
 
+		//Populare the map with all uniforms
 		int uniformCount;
 		glGetProgramiv(this->m_ShaderProgram, GL_ACTIVE_UNIFORMS, &uniformCount);
 
@@ -76,7 +77,7 @@ namespace SceneEditor{
 
 			GLuint uniformLocation = glGetUniformLocation(this->m_ShaderProgram, name);
 
-			m_Uniforms.insert(std::pair<const char*, GLuint>(name, uniformLocation));
+			m_Uniforms.insert(std::pair<std::string, GLuint>(name, uniformLocation));
 		}
 
 		glCheckError( );

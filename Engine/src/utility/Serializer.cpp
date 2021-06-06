@@ -5,9 +5,7 @@
 
 #include <regex>
 
-#define LIB_PATH "..\\bin\\Release\\Engine.lib"
-#define SRC_PATH "..\\Engine\\src"
-#define DEPENDENCY_PATH "..\\Engine\\deps\\"
+
 
 namespace YAML{
 
@@ -64,6 +62,11 @@ namespace YAML{
 }
 
 namespace SceneEditor{
+	std::string Serializer::m_RootFolder;
+
+#define LIB_PATH m_RootFolder + "\\..\\bin\\Release\\Engine.lib"
+#define SRC_PATH m_RootFolder + "\\..\\Engine\\src"
+#define DEPENDENCY_PATH m_RootFolder + "\\..\\Engine\\deps\\"
 
 	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 	{
@@ -86,9 +89,7 @@ namespace SceneEditor{
 		m_YAMLEmitter << YAML::Key << "Models" << YAML::Value <<YAML::BeginSeq; // Models paths
 		{
 			for(auto& model : CurrentScene->m_SceneModels){
-				m_YAMLEmitter << YAML::BeginMap;
-				m_YAMLEmitter << YAML::Key << "Path" << YAML::Value << model->GetModelName( );
-				m_YAMLEmitter << YAML::EndMap;
+				m_YAMLEmitter << model->GetModelName( );
 			}
 		}
 		m_YAMLEmitter << YAML::EndSeq; //Models paths
@@ -110,9 +111,8 @@ namespace SceneEditor{
 
 		if (CurrentScene->m_Skybox->IsLoaded() == true) {
 			m_YAMLEmitter << YAML::Key << "Skybox" << YAML::Value << YAML::BeginSeq; // Skybox cube textures path
-			auto& skyboxPaths = CurrentScene->m_Skybox->GetTexturePaths();
 
-			for (auto& path : skyboxPaths) {
+			for (auto& path : CurrentScene->m_Skybox->GetTexturePaths()) {
 				m_YAMLEmitter << path;
 			}
 
@@ -225,7 +225,7 @@ namespace SceneEditor{
 		assert(models);
 
 		for(auto& model : models){
-			std::string modelPath = model["Path"].as<std::string>( );
+			std::string modelPath = model.as<std::string>( );
 
 			auto&& model = std::make_shared<Model>(modelPath.c_str());
 			importedModels.emplace_back(model);
@@ -236,7 +236,6 @@ namespace SceneEditor{
 
 		int i = 0;
 		for(auto& modelProperties : modelsProperties){
-			std::string modelName = modelProperties["Name"].as<std::string>( );
 
 			MeshProperties mainProp;
 			mainProp.TransformMatrices.Translation = modelProperties["Translation"].as<glm::vec3>( );
@@ -244,7 +243,7 @@ namespace SceneEditor{
 			mainProp.TransformMatrices.Rotation = modelProperties["Rotation"].as<glm::vec3>( );
 			mainProp.TintColor = modelProperties["Color"].as<glm::vec3>( );
 
-			auto modelController = importedModels[i]->GetModelController( );;
+			auto modelController = importedModels[i++]->GetModelController( );;
 			modelController->m_MainTransforms = mainProp;
 
 			YAML::Node meshes = modelProperties["Meshes"];
@@ -260,7 +259,6 @@ namespace SceneEditor{
 					modelController->m_MeshControllers[meshName] = meshProp;
 				}
 			}
-			i++;
 		}
 
 		return importedModels;
@@ -269,7 +267,6 @@ namespace SceneEditor{
 	void Serializer::SerializeModel(std::shared_ptr<ModelController> Controller)
 	{
 		m_YAMLEmitter << YAML::BeginMap; // Model properties
-		m_YAMLEmitter << YAML::Key << "Name" << YAML::Value << Controller->m_Name;
 		auto& mainProperties = Controller->m_MainTransforms;
 
 		m_YAMLEmitter << YAML::Key << "Translation" << YAML::Value << mainProperties.TransformMatrices.Translation;
