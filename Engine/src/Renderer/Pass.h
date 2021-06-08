@@ -21,9 +21,13 @@ namespace SceneEditor{
 	class Pass{
 	public:
 		Pass( ) = default;
-		Pass(const char* Name,const char* ShaderVertexPath, const char* ShaderFragmentPath) : m_Name(Name)
+		Pass(const std::string& Name,const std::string& VertexShaderPath, const std::string& FragmentShaderPath) : m_Name(Name)
 		{
-			m_Shader = std::make_unique<Shader>(ShaderVertexPath, ShaderFragmentPath);
+			m_Shader = std::make_unique<Shader>(VertexShaderPath, FragmentShaderPath);
+		};
+		Pass(const std::string& Name,const std::string& VertexShaderPath, const std::string& FragmentShaderPath, const std::string& GeometryShaderPath) : m_Name(Name)
+		{
+			m_Shader = std::make_unique<Shader>(VertexShaderPath, FragmentShaderPath, GeometryShaderPath);
 		};
 
 		virtual void Execute(const SceneParameters& ) = 0;

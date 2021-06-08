@@ -109,7 +109,8 @@ namespace SceneEditor{
 	{
 		bool found =  m_Uniforms.find(Name) != m_Uniforms.end( );
 		if(found == false){
-			m_Uniforms[Name] = glGetUniformLocation(m_ShaderProgram, Name.c_str( ));
+			//m_Uniforms[Name] = glGetUniformLocation(m_ShaderProgram, Name.c_str( ));
+			m_Uniforms[Name] = -1;
 			std::cerr << Name << " :Uniform name unkown!!\n";
 		}
 

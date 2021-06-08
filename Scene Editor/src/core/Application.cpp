@@ -6,6 +6,7 @@
 #include "../UI/UIManager.h"
 #include "utility/Serializer.h"
 #include "Renderer/SkyboxPass.h"
+#include "Renderer/ShadowPass.h"
 
 #define TESTING
 
@@ -23,17 +24,21 @@ namespace SceneEditor{
 	}
 
 	Application::Application(const char* Name) :
-		m_Window(Name), m_Camera(m_Window.GetWindowSize( )[0], m_Window.GetWindowSize( )[1])
+		m_Window(Name), m_Width(m_Window.GetWindowWidth()), m_Height(m_Window.GetWindowHeight()),
+		m_Camera(m_Width, m_Height)
 	{
-		auto windowSize = m_Window.GetWindowSize( );
-		m_Width = windowSize[0];
-		m_Height = windowSize[1];
 
 		Shader::m_Directory = SHADER_FOLDER;
 
 #ifdef TESTING
 		m_Scene = std::make_unique<Scene>( );
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
+		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
+
+		
+		std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", m_Width, m_Height);
+		m_Scene->AddPass(shadowPass);
+		
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", m_SceneBuffer);
 		m_Scene->AddPass(renderPass);
 
 		std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
@@ -52,7 +57,7 @@ namespace SceneEditor{
 #endif // 1
 
 
-		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
+		
 		UIManager::SetLightController(m_Scene->GetLightController( ));
 
 
@@ -161,6 +166,8 @@ namespace SceneEditor{
 		fprintf(stdout, "window resized to width: %d , and height: %d\n", width, height);
 
 		if(width != 0 && height != 0){
+			m_Width = width;
+			m_Height = height;
 			m_Camera.SetProjection(width, height);
 			m_SceneBuffer->Resize(width, height);
 		}

@@ -16,6 +16,8 @@ namespace SceneEditor{
         std::vector<uint32_t> m_Indices;
         std::vector<Texture>  m_Textures;
 
+        std::unordered_map<std::string, uint32_t> m_TexturesLocations;
+
         std::unique_ptr<VertexArray> m_Vertexbuffer;
     };
 }

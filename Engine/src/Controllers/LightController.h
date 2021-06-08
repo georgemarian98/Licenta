@@ -1,21 +1,28 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace SceneEditor{
 
-	class LightController{
+namespace SceneEditor{
+	constexpr float left = -100.0f, right = 100.0f, bottom = -100.0f, top = 100.0f, near_plane = 1.0f, far_plane = 25.5f ;
+
+	class LightController {
 	public:
-		LightController( ) : 
-			m_Position{glm::vec3(-9.0f, -8.0f, -39.0f)}, m_Color{glm::vec3(1.0f)}, m_Ambient{ 0.2f }, m_Diffuse{ 0.5f }, m_Specular{ 0.5f } { };
+		LightController() :
+			m_Position{ glm::vec3(-9.0f, 8.0f, -3.0f) }, m_Color{ glm::vec3(1.0f) }, m_Ambient{ 0.2f }, m_Diffuse{ 0.5f }, m_Specular{ 0.5f },
+			m_LightProjection{glm::ortho(left, right, bottom, top, near_plane, far_plane)}
+		{};
 
 		LightController(glm::vec3& Position, glm::vec3 Color, float Ambient, float Diffuse, float Specular) :
-			m_Position(Position), m_Color{Color}, m_Ambient{ Ambient }, m_Diffuse{ Diffuse }, m_Specular{ Specular } { };
+			m_Position(Position), m_Color{Color}, m_Ambient{ Ambient }, m_Diffuse{ Diffuse }, m_Specular{ Specular },
+			m_LightProjection{ glm::ortho(left, right, bottom, top, near_plane, far_plane) } { };
 
 		glm::vec3& GetPosition( ) { return m_Position; };
 		glm::vec3& GetColor( ) { return m_Color; };
 		float* GetAmbient( ) { return &m_Ambient; };
 		float* GetDiffuse( ) { return &m_Diffuse; };
 		float* GetSpecular( ) { return &m_Specular; };
+
+		glm::mat4 GetSpaceMatrix();
 
 		void SetPosition(glm::vec3 Position) { m_Position = Position; };
 		void SetColor(glm::vec3 Color) { m_Color = Color; };
@@ -29,6 +36,8 @@ namespace SceneEditor{
 		float m_Ambient;
 		float m_Diffuse;
 		float m_Specular;
+
+		glm::mat4 m_LightProjection;
 	};
 }
 

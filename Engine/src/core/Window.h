@@ -15,7 +15,8 @@ namespace SceneEditor{
 		bool IsRunning( ) { return (bool)glfwWindowShouldClose(m_Window); };
 		bool IsVsyncEnabled( ) { return m_VsyncEnabled;};
 		void SetVsync(bool Vsync) { m_VsyncEnabled = Vsync; glfwSwapInterval((int)m_VsyncEnabled);}
-		glm::u32vec2 GetWindowSize( ) { return {m_Width, m_Height}; }
+		uint32_t& GetWindowWidth( ) { return m_Width; }
+		uint32_t& GetWindowHeight( ) { return m_Height; }
 
 		operator GLFWwindow* () { return m_Window; };
 

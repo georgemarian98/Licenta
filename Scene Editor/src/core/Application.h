@@ -29,8 +29,11 @@ namespace SceneEditor{
 		void ResizeWindow(GLFWwindow* window, int width, int height);
 
 	private:
-		uint32_t m_Width = 0, m_Height = 0;
 		Window m_Window;
+
+		uint32_t& m_Width;
+		uint32_t& m_Height;
+
 		ApplicationCamera m_Camera;
 
 		std::unique_ptr<Scene> m_Scene;

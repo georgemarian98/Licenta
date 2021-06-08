@@ -7,21 +7,16 @@ namespace SceneEditor{
         m_Vertices(std::move(Vertices)), m_Indices(std::move(Indices)), m_Textures(std::move(Textures))
     {
         m_Vertexbuffer = std::make_unique<VertexArray>(m_Vertices, m_Indices);
-    }
 
-    void Mesh::Draw(const std::unique_ptr<Shader>& shader)
-    {
         // bind appropriate textures
         uint32_t diffuseNr = 1;
         uint32_t specularNr = 1;
         uint32_t normalNr = 1;
         uint32_t heightNr = 1;
 
-        size_t texturesSize = m_Textures.size( );
+        size_t texturesSize = m_Textures.size();
+        for (uint32_t i = 0; i < texturesSize; i++) {
 
-        for(uint32_t i = 0; i < texturesSize; i++){
-            glActiveTexture(GL_TEXTURE0 + i); 
-            // retrieve texture number (the N in diffuse_textureN)
             std::string name;
 
             switch (m_Textures[i].type)
@@ -40,9 +35,21 @@ namespace SceneEditor{
                 break;
             }
 
-            // now set the sampler to the correct texture unit
+            m_TexturesLocations[name] = m_Textures[i].id;
+        }
+
+    }
+
+    void Mesh::Draw(const std::unique_ptr<Shader>& shader)
+    {    
+        uint32_t i = 0;
+        for(auto& [name, id] : m_TexturesLocations){
+
+            glActiveTexture(GL_TEXTURE0 + i); 
+            
             shader->UploadUniformInt(name, i);
-            glBindTexture(GL_TEXTURE_2D, m_Textures[i].id);
+            glBindTexture(GL_TEXTURE_2D, id);
+            i++;
         }
 
         // draw mesh
@@ -50,6 +57,9 @@ namespace SceneEditor{
         glDrawElements(GL_TRIANGLES, (GLsizei)m_Indices.size( ), GL_UNSIGNED_INT, 0);
         m_Vertexbuffer->Unbind();
 
-        glActiveTexture(GL_TEXTURE0);
+        for (int index = 0; index < i; index++) {
+            glActiveTexture(GL_TEXTURE0 + index);
+
+        }
     }
 }

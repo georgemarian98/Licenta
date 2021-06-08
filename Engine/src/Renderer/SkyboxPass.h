@@ -5,8 +5,8 @@ namespace SceneEditor{
 	class SkyboxPass : public Pass{
 	public:
 		SkyboxPass( ) = default;
-		SkyboxPass(const char* ShaderVertexPath, const char* ShaderFragmentPath, std::shared_ptr<SkyBox> Skybox) :
-			Pass{ "Skybox", ShaderVertexPath, ShaderFragmentPath }, m_Skybox{Skybox} { };
+		SkyboxPass(const std::string& VertexShaderPath, const std::string& FragmentShaderPath, std::shared_ptr<SkyBox> Skybox) :
+			Pass{ "Skybox", VertexShaderPath, FragmentShaderPath }, m_Skybox{Skybox} { };
 
 		virtual void Execute(const SceneParameters& Parameter) override;
 
