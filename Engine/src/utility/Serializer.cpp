@@ -2,10 +2,7 @@
 #include "Serializer.h"
 
 #include "Renderer/SkyboxPass.h"
-
-#include <regex>
-
-
+#include "Renderer/ShadowPass.h"
 
 namespace YAML{
 
@@ -67,6 +64,11 @@ namespace SceneEditor{
 #define LIB_PATH m_RootFolder + "\\..\\bin\\Release\\Engine.lib"
 #define SRC_PATH m_RootFolder + "\\..\\Engine\\src"
 #define DEPENDENCY_PATH m_RootFolder + "\\..\\Engine\\deps\\"
+
+	static bool endsWith(const std::string& str, const std::string& suffix)
+	{
+		return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+	}
 
 	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 	{
@@ -179,7 +181,11 @@ namespace SceneEditor{
 		importedScene->m_Light->SetSpecular(rootData["Light Specular"].as<float>( ));
 
 		Shader::m_Directory = FolderPath + "\\shaders\\";
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", std::make_unique<Framebuffer>());
+		//uint32_t width = 1920, height = 1080;
+		//std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", width, height);
+		//importedScene->AddPass(shadowPass);
+		std::unique_ptr<Framebuffer> aux;
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", aux);
 		importedScene->AddPass(renderPass);
 
 		YAML::Node skybox = rootData["Skybox"];
@@ -310,12 +316,12 @@ namespace SceneEditor{
 		std::string depsPath = Path + "\\include\\";
 		std::filesystem::create_directories(depsPath);
 
-		const std::regex headerRegex("[^\\s]+(\\.(h|hpp))$");
-
 		for(const auto& entry : std::filesystem::recursive_directory_iterator(SRC_PATH)){
 			std::string path = entry.path( ).string( );
+			
 
-			if(path.find("pch") == std::string::npos && std::regex_match(path, headerRegex) == true){
+			if(path.find("pch") == std::string::npos && endsWith(path, ".h") == true){
+
 				std::string parentDirectory = depsPath + entry.path( ).parent_path( ).filename( ).string( );
 				std::string destPath = parentDirectory + "\\" + entry.path( ).filename( ).string( );
 
