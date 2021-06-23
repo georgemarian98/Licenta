@@ -45,7 +45,7 @@ namespace SceneEditor{
             DrawNodes(child, ModelShader, NodeMatricies);
     }
 
-    void Model::LoadModel(const std::string_view& Path)
+    void Model::LoadModel(const std::string& Path)
     {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(Path.data(), aiProcess_Triangulate |
@@ -169,30 +169,27 @@ namespace SceneEditor{
         for(uint32_t i = 0; i < textureCount; i++){
             aiString str;
             Material->GetTexture(Type, i, &str);
-            bool skip = false;
+            std::string texturePath(str.C_Str());
 
-            for(auto& texture : loadedTextures){
-                if(texture.path == std::string(str.C_Str( ))){
-                    textures.push_back(texture);
-                    skip = true; 
-                    break;
-                }
+            auto& foundTexture = std::find_if(loadedTextures.begin(), loadedTextures.end(), [&texturePath](const Texture& el) {
+                return el.path == texturePath;
+            });
+
+            if(foundTexture == loadedTextures.end()){
+                uint32_t id = LoadTextureFromFile(texturePath);
+                Texture& texture = textures.emplace_back(id, TypeName, texturePath);
+                loadedTextures.push_back(texture);
             }
-
-            if(skip == false){ 
-                uint32_t id = LoadTextureFromFile(str.C_Str( ));
-                std::string path = str.C_Str( );
-
-                Texture& texture = textures.emplace_back(id, TypeName, path);
-                loadedTextures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+            else {
+                textures.push_back(*foundTexture);
             }
         }
         return textures;
     }
 
-    uint32_t  Model::LoadTextureFromFile(const char* Path)
+    uint32_t  Model::LoadTextureFromFile(const std::string& Path)
     {
-        std::string filename = m_Directory + '\\' + std::string(Path);
+        std::string filename = m_Directory + '\\' + Path;
 
         uint32_t textureID;
         glGenTextures(1, &textureID);

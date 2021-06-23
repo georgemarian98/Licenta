@@ -31,11 +31,11 @@ namespace SceneEditor{
         void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
         void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies);
 
-        void LoadModel(const std::string_view& Path);
+        void LoadModel(const std::string& Path);
         std::unique_ptr<MeshNode> ProcessNode(aiNode* Node, const aiScene* Scene);
         std::unique_ptr<Mesh> ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
         std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, TextureType TypeName);
-        uint32_t LoadTextureFromFile(const char* Path);
+        uint32_t LoadTextureFromFile(const std::string& Path);
 
     private:
         uint64_t m_NoVertex = 0;
