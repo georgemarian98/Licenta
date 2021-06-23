@@ -3,9 +3,9 @@
 
 namespace SceneEditor{
 
-	std::string Shader::m_Directory;
+	std::filesystem::path Shader::m_Directory;
 
-	std::string Shader::ReadShaderFile(const std::string& FileName)
+	std::string Shader::ReadShaderFile(const std::filesystem::path& FileName)
 	{
 		std::ifstream shaderFile;
 		std::stringstream shaderStringStream;
@@ -23,7 +23,7 @@ namespace SceneEditor{
 		return shaderStringStream.str( );
 	}
 
-	void Shader::CreateShader(const std::string& File, GLuint& Id, GLuint Type)
+	void Shader::CreateShader(const std::filesystem::path& File, GLuint& Id, GLuint Type)
 	{
 		std::string v = ReadShaderFile(File);
 		const GLchar* shaderString = v.c_str( );
@@ -33,7 +33,7 @@ namespace SceneEditor{
 		ShaderLog(Id);
 	}
 
-	void Shader::Create(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
+	void Shader::Create(const std::filesystem::path& VertexShaderFileName, const std::filesystem::path& FragmentShaderFileName, const std::filesystem::path& GeometryShaderFileName)
 	{
 		GLuint vertexShaderID = -1;
 		GLuint fragmentShaderID = -1;
@@ -86,13 +86,13 @@ namespace SceneEditor{
 	Shader::Shader(const std::string& VertexShaderFileName, const  std::string& FragmentShaderFileName)
 		: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName)
 	{
-		Create(m_Directory + VertexShaderFileName, m_Directory + FragmentShaderFileName);
+		Create(m_Directory / VertexShaderFileName, m_Directory / FragmentShaderFileName);
 	}
 
 	Shader::Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName)
 		: m_VertexName(VertexShaderFileName), m_FragmentName(FragmentShaderFileName), m_GeometryName(GeometryShaderFileName)
 	{
-		Create(m_Directory + VertexShaderFileName, m_Directory + FragmentShaderFileName, m_Directory + GeometryShaderFileName);
+		Create(m_Directory / VertexShaderFileName, m_Directory / FragmentShaderFileName, m_Directory / GeometryShaderFileName);
 	}
 
 	void Shader::Bind( )

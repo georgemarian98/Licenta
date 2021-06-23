@@ -45,17 +45,17 @@ namespace SceneEditor{
             DrawNodes(child, ModelShader, NodeMatricies);
     }
 
-    void Model::LoadModel(const std::string& Path)
+    void Model::LoadModel(const std::filesystem::path& Path)
     {
         Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(Path.data(), aiProcess_Triangulate |
+        const aiScene* scene = import.ReadFile(Path.string(), aiProcess_Triangulate |
                                                             aiProcess_GenSmoothNormals | 
                                                             aiProcess_FlipUVs | 
                                                             aiProcess_CalcTangentSpace | 
                                                             aiProcess_JoinIdenticalVertices);
 
         assert(scene && scene->mRootNode);
-        m_Directory = Path.substr(0, Path.find_last_of('\\'));
+        m_Directory = Path.parent_path().string();
 
         m_RootMesh = ProcessNode(scene->mRootNode, scene);
         m_ModelView->SetModelName(std::string{scene->mRootNode->mName.C_Str( )});

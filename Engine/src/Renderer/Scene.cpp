@@ -14,9 +14,9 @@ namespace SceneEditor{
 		}
 	}
 
-	std::shared_ptr<ModelController> Scene::AddModel(const std::string_view& Path, uint64_t& NoVertices)
+	std::shared_ptr<ModelController> Scene::AddModel(const std::filesystem::path& Path, uint64_t& NoVertices)
 	{
-		auto&& model = std::make_shared<Model>(Path.data());
+		auto&& model = std::make_shared<Model>(Path);
 		m_SceneModels.emplace_back(model);
 		NoVertices = model->GetNoVertices( );
 

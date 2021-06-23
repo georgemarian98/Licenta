@@ -5,7 +5,7 @@ namespace SceneEditor{
 
 	class Shader{
 	public:
-		static std::string m_Directory;
+		static std::filesystem::path m_Directory;
 
 		Shader( ) = default;
 		Shader(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName);
@@ -16,7 +16,7 @@ namespace SceneEditor{
 		std::string GetFragmentShaderName( ) { return m_FragmentName; };
 		std::string GetGeometryShaderName( ) { return m_GeometryName; };
 
-		void Create(const std::string& VertexShaderFileName, const std::string& FragmentShaderFileName, const std::string& GeometryShaderFileName = "");
+		void Create(const std::filesystem::path& VertexShaderFileName, const std::filesystem::path& FragmentShaderFileName, const std::filesystem::path& GeometryShaderFileName = "");
 		void Destroy( );
 	
 		void Bind( );
@@ -33,21 +33,19 @@ namespace SceneEditor{
 		void UploadUniformMat4(const std::string& Name, const glm::mat4& Matrix);
 
 	private:
-		void CreateShader(const std::string& File, GLuint& Id, GLuint Type);
+		void CreateShader(const std::filesystem::path& File, GLuint& Id, GLuint Type);
 
 		void ShaderLog(GLuint ShaderId, bool Compile = true);
 		GLint GetUniformLocation(const std::string& Name);
 
-		std::string ReadShaderFile(const std::string& FileName);
+		std::string ReadShaderFile(const std::filesystem::path& FileName);
 
 	private:
 		GLuint m_ShaderProgram = 0;
-
-		std::unordered_map<std::string, GLint> m_Uniforms;
 		std::string m_VertexName;
 		std::string m_FragmentName;
-		std::string m_GeometryName;
+		std::string m_GeometryName;		
 
-		
+		std::unordered_map<std::string, GLint> m_Uniforms;
 	};
 }

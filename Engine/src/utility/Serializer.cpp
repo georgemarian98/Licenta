@@ -59,11 +59,11 @@ namespace YAML{
 }
 
 namespace SceneEditor{
-	std::string Serializer::m_RootFolder;
+	std::filesystem::path Serializer::m_RootFolder;
 
-#define LIB_PATH m_RootFolder + "\\..\\bin\\Release\\Engine.lib"
-#define SRC_PATH m_RootFolder + "\\..\\Engine\\src"
-#define DEPENDENCY_PATH m_RootFolder + "\\..\\Engine\\deps\\"
+#define LIB_PATH m_RootFolder / "..\\bin\\Release\\Engine.lib"
+#define SRC_PATH m_RootFolder / "..\\Engine\\src"
+#define DEPENDENCY_PATH m_RootFolder / "..\\Engine\\deps\\"
 
 	static bool endsWith(const std::string& str, const std::string& suffix)
 	{
@@ -129,25 +129,24 @@ namespace SceneEditor{
 		
 	}
 
-	void Serializer::ExportScene(const std::string& Path)
+	void Serializer::ExportScene(const std::filesystem::path& Path)
 	{
-		std::string filePath = Path + "\\Scene.yaml";
-
 		//Shaders
 		CopyShaders(Path);
 
 		//Lib
-		std::string libDirectory = Path + "\\lib";
+		std::filesystem::path libDirectory = Path / "lib";
 		if(std::filesystem::exists(libDirectory) == false)
 			assert(std::filesystem::create_directories(libDirectory));
 		
-		std::string libPath = libDirectory + "\\Engine.lib";
+		std::filesystem::path libPath = libDirectory / "Engine.lib";
 		assert(std::filesystem::copy_file(LIB_PATH, libPath, std::filesystem::copy_options::overwrite_existing));
 
 		//Dependency Directories
 		CopyHeaders(Path);
 
 		//Scene file
+		std::filesystem::path filePath = Path / "Scene.yaml";
 		std::ofstream outputFile(filePath);
 		if(outputFile.is_open() == true){
 			outputFile << m_YAMLEmitter.c_str( );
@@ -155,15 +154,15 @@ namespace SceneEditor{
 		}
 	}
 
-	std::unique_ptr<Scene> Serializer::ImportScene(const std::string& FolderPath)
+	std::unique_ptr<Scene> Serializer::ImportScene(const std::filesystem::path& FolderPath)
 	{
-		std::string filePath = FolderPath + "\\Scene.yaml";
+		std::filesystem::path filePath = FolderPath / "Scene.yaml";
 
 		std::unique_ptr<Scene> importedScene = std::make_unique<Scene>( );
 
 		YAML::Node rootData;
 		try	{
-			rootData = YAML::LoadFile(filePath);
+			rootData = YAML::LoadFile(filePath.string());
 		}
 		catch(const std::exception& e){
 			std::cerr << e.what( );
@@ -180,7 +179,7 @@ namespace SceneEditor{
 		importedScene->m_Light->SetDiffuse(rootData["Light Diffuse"].as<float>( ));
 		importedScene->m_Light->SetSpecular(rootData["Light Specular"].as<float>( ));
 
-		Shader::m_Directory = FolderPath + "\\shaders\\";
+		Shader::m_Directory = FolderPath / "shaders";
 		//uint32_t width = 1920, height = 1080;
 		//std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", width, height);
 		//importedScene->AddPass(shadowPass);
@@ -210,14 +209,14 @@ namespace SceneEditor{
 		return importedScene;
 	}
 
-	std::vector<std::shared_ptr<Model>> Serializer::ImportModels(const std::string& ScenePath, YAML::Node* Root)
+	std::vector<std::shared_ptr<Model>> Serializer::ImportModels(const std::filesystem::path& ScenePath, YAML::Node* Root)
 	{
 		std::vector<std::shared_ptr<Model>> importedModels;
 		YAML::Node root;
 
 		if(Root == nullptr){
 			try{
-				root = YAML::LoadFile(ScenePath);
+				root = YAML::LoadFile(ScenePath.string());
 			}
 			catch(const std::exception& e){
 				std::cerr << e.what( );
@@ -297,24 +296,26 @@ namespace SceneEditor{
 		m_YAMLEmitter << YAML::EndMap; // Model properties
 	}
 
-	void Serializer::CopyShaders(const std::string& Path)
+	void Serializer::CopyShaders(const std::filesystem::path& Path)
 	{
-		std::string folderDirectory = Path + "\\shaders";
+		std::filesystem::path folderDirectory = Path / "shaders";
 		if(std::filesystem::exists(folderDirectory) == false)
 			assert(std::filesystem::create_directories(folderDirectory));
 
 		for (auto& path : std::filesystem::directory_iterator(SHADER_FOLDER)) {
 
-			std::string outputFile = folderDirectory + "\\" + path.path().filename().string();
+			std::filesystem::path outputFile = folderDirectory / path.path().filename();
 
 			assert(std::filesystem::copy_file(path, outputFile, std::filesystem::copy_options::overwrite_existing));
 		}
 	}
 
-	void Serializer::CopyHeaders(const std::string& Path)
+	void Serializer::CopyHeaders(const std::filesystem::path& Path)
 	{
-		std::string depsPath = Path + "\\include\\";
-		std::filesystem::create_directories(depsPath);
+		std::filesystem::path depsPath = Path / "include";
+
+		if (std::filesystem::exists(depsPath) == false)
+			assert(std::filesystem::create_directories(depsPath));
 
 		for(const auto& entry : std::filesystem::recursive_directory_iterator(SRC_PATH)){
 			std::string path = entry.path( ).string( );
@@ -322,8 +323,8 @@ namespace SceneEditor{
 
 			if(path.find("pch") == std::string::npos && endsWith(path, ".h") == true){
 
-				std::string parentDirectory = depsPath + entry.path( ).parent_path( ).filename( ).string( );
-				std::string destPath = parentDirectory + "\\" + entry.path( ).filename( ).string( );
+				std::filesystem::path parentDirectory = depsPath / entry.path( ).parent_path( ).filename( );
+				std::filesystem::path destPath = parentDirectory / entry.path( ).filename( );
 
 				if(std::filesystem::exists(parentDirectory) == false)
 					assert(std::filesystem::create_directories(parentDirectory));
@@ -347,8 +348,8 @@ namespace SceneEditor{
 		for(auto& directory : dependencyDirectories){
 
 			std::error_code code;
-			std::string destPath = depsPath + directory.second;
-			std::filesystem::copy(DEPENDENCY_PATH + directory.first, destPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive, code);
+			std::filesystem::path destPath = depsPath / directory.second;
+			std::filesystem::copy(DEPENDENCY_PATH / directory.first, destPath, std::filesystem::copy_options::overwrite_existing | std::filesystem::copy_options::recursive, code);
 
 			assert(code != std::error_condition( ));
 		}

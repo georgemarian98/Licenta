@@ -1,9 +1,10 @@
 #pragma once
 
 #include <assimp/scene.h>
+#include <filesystem>
 
 #include "Mesh.h"
-#include <Controllers/ModelController.h>
+#include "Controllers/ModelController.h"
 
 /// <summary>
 /// Code inspired from: https://learnopengl.com/Model-Loading/Assimp
@@ -15,7 +16,7 @@ namespace SceneEditor{
 
     class Model{
     public:
-        Model(const char* Path)
+        Model(const std::filesystem::path& Path)
         {
             m_ModelView = std::make_shared<ModelController>( );
             LoadModel(Path);
@@ -23,7 +24,7 @@ namespace SceneEditor{
 
         void Draw(const std::unique_ptr<Shader>& ModelShader);
         std::shared_ptr<ModelController> GetModelController( ) { return m_ModelView; };
-        std::string GetModelName( ) { return m_Directory + "\\" + m_ModelView->GetModelName( ); };
+        std::string GetModelName() { return m_Directory + "\\" + m_ModelView->GetModelName(); };
 
         uint64_t GetNoVertices( ) { return m_NoVertex; };
 
@@ -31,7 +32,7 @@ namespace SceneEditor{
         void PrintTree(std::unique_ptr<MeshNode>& Node, int level);
         void DrawNodes(const std::unique_ptr<MeshNode>& Node, const std::unique_ptr<Shader>& ModelShader, MeshProperties NodeMatricies);
 
-        void LoadModel(const std::string& Path);
+        void LoadModel(const std::filesystem::path& Path);
         std::unique_ptr<MeshNode> ProcessNode(aiNode* Node, const aiScene* Scene);
         std::unique_ptr<Mesh> ProcessMesh(aiMesh* Mesh, const aiScene* Scene);
         std::vector<Texture> LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, TextureType TypeName);

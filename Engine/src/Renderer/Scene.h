@@ -22,7 +22,7 @@ namespace SceneEditor{
 		void AddPass(std::unique_ptr<Pass>& Pass_p);
 		void ClearScene() { m_SceneModels.clear(); m_Skybox->ClearSkybox(); };
 
-		std::shared_ptr<ModelController> AddModel(const std::string_view& Path, uint64_t& NoVertices);
+		std::shared_ptr<ModelController> AddModel(const std::filesystem::path& Path, uint64_t& NoVertices);
 		std::shared_ptr<ModelController> AddModel(std::shared_ptr<Model>& Model);
 
 		void DeleteModel(uint32_t Index) { m_SceneModels.erase(m_SceneModels.begin() + Index); };
