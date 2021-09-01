@@ -23,8 +23,8 @@ namespace SceneEditor{
             auto& [Translation, Scale, Rotation] = NodeMatricies.TransformMatrices;
 
             Translation             += translation;
-            Scale                   *= scale;
             Rotation                += rotation;
+            Scale                   *= scale;
             NodeMatricies.TintColor *= properties.TintColor;
 
             glm::mat4 model = glm::mat4(1.0f);
@@ -48,11 +48,11 @@ namespace SceneEditor{
     void Model::LoadModel(const std::filesystem::path& Path)
     {
         Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(Path.string(), aiProcess_Triangulate |
-                                                            aiProcess_GenSmoothNormals | 
-                                                            aiProcess_FlipUVs | 
-                                                            aiProcess_CalcTangentSpace | 
-                                                            aiProcess_JoinIdenticalVertices);
+        const aiScene* scene = import.ReadFile(Path.string(), aiProcess_Triangulate      |
+                                                              aiProcess_GenSmoothNormals | 
+                                                              aiProcess_FlipUVs          | 
+                                                              aiProcess_CalcTangentSpace | 
+                                                              aiProcess_JoinIdenticalVertices);
 
         assert(scene && scene->mRootNode);
         m_Directory = Path.parent_path().string();
@@ -198,12 +198,22 @@ namespace SceneEditor{
         uint8_t* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
         if(data != nullptr){
             GLenum format = 0;
-            if(nrComponents == 1)
+
+            switch (nrComponents)
+            {
+            case 1:
                 format = GL_RED;
-            else if(nrComponents == 3)
+                break;
+            case 3:
                 format = GL_RGB;
-            else if(nrComponents == 4)
+                break;
+            case 4:
                 format = GL_RGBA;
+                break;
+            default:
+                format = GL_RGBA;
+                break;
+            }
 
             glBindTexture(GL_TEXTURE_2D, textureID);
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);

@@ -7,7 +7,7 @@
 
 int main( )
 {
-    SceneEditor::Serializer::m_RootFolder = std::filesystem::current_path().string();
+    SceneEditor::Serializer::m_RootFolder = std::filesystem::current_path();
 
     auto app = SceneEditor::Application::GetInstance("Licenta");
     glCheckError( );

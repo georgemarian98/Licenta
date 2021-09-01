@@ -10,7 +10,7 @@ namespace SceneEditor{
 		glm::vec3 Bitangent;
 	};
 
-	enum class TextureType {
+	enum TextureType {
 		Diffuse,
 		Specular,
 		Normal,
@@ -23,7 +23,7 @@ namespace SceneEditor{
 		TextureType type;
 		std::string path;
 
-		Texture(uint32_t id) : id(id), type(TextureType::Cubemap), path("") {};
+		Texture(uint32_t id) : id(id), type(Cubemap), path("") {};
 		Texture(uint32_t id, TextureType type, std::string path) :id(id), type(type), path(path) { };
 	};
 

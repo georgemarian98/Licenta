@@ -320,7 +320,6 @@ namespace SceneEditor{
 		for(const auto& entry : std::filesystem::recursive_directory_iterator(SRC_PATH)){
 			std::string path = entry.path( ).string( );
 			
-
 			if(path.find("pch") == std::string::npos && endsWith(path, ".h") == true){
 
 				std::filesystem::path parentDirectory = depsPath / entry.path( ).parent_path( ).filename( );

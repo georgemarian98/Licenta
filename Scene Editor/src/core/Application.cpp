@@ -8,7 +8,7 @@
 #include "Renderer/SkyboxPass.h"
 #include "Renderer/ShadowPass.h"
 
-#define TESTING
+//#define TESTING
 
 namespace SceneEditor{
 
@@ -30,13 +30,11 @@ namespace SceneEditor{
 
 		Shader::m_Directory = SHADER_FOLDER;
 
-#ifdef TESTING
 		m_Scene = std::make_unique<Scene>( );
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
-
-		
-		std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", m_Width, m_Height);
-		m_Scene->AddPass(shadowPass);
+#ifndef TESTING		
+		//std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", m_Width, m_Height);
+		//m_Scene->AddPass(shadowPass);
 		
 		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", m_SceneBuffer);
 		m_Scene->AddPass(renderPass);
@@ -208,7 +206,7 @@ namespace SceneEditor{
 			m_Scene->ClearScene();
 			UIManager::ClearScene();
 			Renderer::Reset();
-			});
+		});
 
 		UIManager::SetImportModelFunction([&](const std::string& Path) {
 
@@ -221,7 +219,7 @@ namespace SceneEditor{
 
 			UIManager::AddPannel(controller);
 			UIManager::UpdateNumberVertices(noVertices);
-			});
+		});
 
 		UIManager::SetImportSceneFunction([&](const std::string& Path) {
 
@@ -239,7 +237,7 @@ namespace SceneEditor{
 
 				UIManager::AddPannel(controller);
 			}
-			});
+		});
 
 		UIManager::SetExportSceneFunction([&](const std::string& Path) {
 
@@ -252,6 +250,6 @@ namespace SceneEditor{
 
 			std::string message = "Scene exported successfully to " + std::string{ Path };
 			UIManager::ShowPopUp(message);
-			});
+		});
 	}
 }

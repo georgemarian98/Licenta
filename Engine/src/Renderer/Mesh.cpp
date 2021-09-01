@@ -21,16 +21,16 @@ namespace SceneEditor{
 
             switch (m_Textures[i].type)
             {
-            case TextureType::Diffuse:
+            case Diffuse:
                 name = "u_TextureDiffuse" + std::to_string(diffuseNr++);
                 break;
-            case TextureType::Specular:
+            case Specular:
                 name = "u_TextureSpecular" + std::to_string(specularNr++);
                 break;
-            case TextureType::Normal:
+            case Normal:
                 name = "u_TextureNormal" + std::to_string(normalNr++);
                 break;
-            case TextureType::Height:
+            case Height:
                 name = "u_TextureHeight" + std::to_string(heightNr++);
                 break;
             }
@@ -57,7 +57,7 @@ namespace SceneEditor{
         glDrawElements(GL_TRIANGLES, (GLsizei)m_Indices.size( ), GL_UNSIGNED_INT, 0);
         m_Vertexbuffer->Unbind();
 
-        for (int index = 0; index < i; index++) {
+        for (uint32_t index = 0; index < i; index++) {
             glActiveTexture(GL_TEXTURE0 + index);
 
         }
