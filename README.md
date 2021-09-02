@@ -3,7 +3,10 @@
 3D World Builder is a Blender-like application that you can easily edit and modify objects and generate worlds.
 
 # Install
-For clonning, use the following command: `git clone --recursive https://github.com/georgemarian98/Licenta.git` to load the submodules as well.
+For clonning, use the following command to load the submodules as well: 
+```
+git clone --recursive https://github.com/georgemarian98/Licenta.git
+```
 
 # Goals
 
