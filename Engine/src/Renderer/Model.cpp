@@ -95,54 +95,43 @@ namespace SceneEditor{
 
         for(uint32_t i = 0; i < ImportedMesh->mNumVertices; i++){
             Vertex vertex;
-            glm::vec3 vector;
-            // positions
-            vector.x = ImportedMesh->mVertices[i].x;
-            vector.y = ImportedMesh->mVertices[i].y;
-            vector.z = ImportedMesh->mVertices[i].z;
-            vertex.Position = vector;
 
+            // positions
+            memcpy(glm::value_ptr(vertex.Position), &ImportedMesh->mVertices[i], 3 * sizeof(float));
+
+            //normals
             if(ImportedMesh->HasNormals( )){
-                vector.x = ImportedMesh->mNormals[i].x;
-                vector.y = ImportedMesh->mNormals[i].y;
-                vector.z = ImportedMesh->mNormals[i].z;
-                vertex.Normal = vector;
+                memcpy(glm::value_ptr(vertex.Normal), &ImportedMesh->mNormals[i], 3 * sizeof(float));
             }
 
-            if(ImportedMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+            if(ImportedMesh->mTextureCoords[0])
             {
-                glm::vec2 vec;
-                vec.x = ImportedMesh->mTextureCoords[0][i].x;
-                vec.y = ImportedMesh->mTextureCoords[0][i].y;
-                vertex.TexCoords = vec;
+                //texture coordinates
+                memcpy(glm::value_ptr(vertex.TexCoords), &ImportedMesh->mTextureCoords[0][i], 2 * sizeof(float));
+
                 // tangent
-                vector.x = ImportedMesh->mTangents[i].x;
-                vector.y = ImportedMesh->mTangents[i].y;
-                vector.z = ImportedMesh->mTangents[i].z;
-                vertex.Tangent = vector;
+                memcpy(glm::value_ptr(vertex.Tangent), &ImportedMesh->mTangents[i], 3 * sizeof(float));
 
                 // bitangent
-                vector.x = ImportedMesh->mBitangents[i].x;
-                vector.y = ImportedMesh->mBitangents[i].y;
-                vector.z = ImportedMesh->mBitangents[i].z;
-                vertex.Bitangent = vector;
+                memcpy(glm::value_ptr(vertex.Bitangent), &ImportedMesh->mBitangents[i], 3 * sizeof(float));
             }
             else
                 vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 
-            vertices.push_back(vertex);
+            vertices.emplace_back(std::move(vertex));
         }
 
         indices.reserve(3ull * ImportedMesh->mNumFaces);
         for(uint32_t i = 0; i < ImportedMesh->mNumFaces; i++){
             aiFace face = ImportedMesh->mFaces[i];
 
-            // retrieve all indices of the face and store them in the indices vector
-            for(uint32_t j = 0; j < face.mNumIndices; j++)
-                indices.push_back(face.mIndices[j]);
+            indices.insert(indices.end(), &face.mIndices[0], &face.mIndices[face.mNumIndices]);
         }
 
         aiMaterial* material = Scene->mMaterials[ImportedMesh->mMaterialIndex];
+
+        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::Height);
+        textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
         std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::Diffuse);
         textures.insert(textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ));
@@ -153,8 +142,6 @@ namespace SceneEditor{
         std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::Normal);
         textures.insert(textures.end( ), normalMaps.begin( ), normalMaps.end( ));
 
-        std::vector<Texture> heightMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::Height);
-        textures.insert(textures.end( ), heightMaps.begin( ), heightMaps.end( ));
 
         return std::make_unique<Mesh>(vertices, indices, textures);
     }
