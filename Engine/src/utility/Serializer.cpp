@@ -61,7 +61,7 @@ namespace YAML{
 namespace SceneEditor{
 	std::filesystem::path Serializer::m_RootFolder;
 
-#define LIB_PATH m_RootFolder / "..\\bin\\Release\\Engine.lib"
+#define LIB_PATH m_RootFolder / "..\\bin\\Release\\"
 #define SRC_PATH m_RootFolder / "..\\Engine\\src"
 #define DEPENDENCY_PATH m_RootFolder / "..\\Engine\\deps\\"
 
@@ -139,8 +139,11 @@ namespace SceneEditor{
 		if(std::filesystem::exists(libDirectory) == false)
 			assert(std::filesystem::create_directories(libDirectory));
 		
-		std::filesystem::path libPath = libDirectory / "Engine.lib";
-		assert(std::filesystem::copy_file(LIB_PATH, libPath, std::filesystem::copy_options::overwrite_existing));
+		std::filesystem::path libPath = LIB_PATH / "Engine.lib";
+		std::filesystem::path assimpDllPath = LIB_PATH / "assimp-vc140-mt.dll";
+
+		assert(std::filesystem::copy_file(libPath, libDirectory / "Engine.lib", std::filesystem::copy_options::overwrite_existing));
+		assert(std::filesystem::copy_file(assimpDllPath, libDirectory / "assimp-vc140-mt.dll", std::filesystem::copy_options::overwrite_existing));
 
 		//Dependency Directories
 		CopyHeaders(Path);
@@ -160,13 +163,7 @@ namespace SceneEditor{
 
 		std::unique_ptr<Scene> importedScene = std::make_unique<Scene>( );
 
-		YAML::Node rootData;
-		try	{
-			rootData = YAML::LoadFile(filePath.string());
-		}
-		catch(const std::exception& e){
-			std::cerr << e.what( );
-		}		
+		YAML::Node rootData = YAML::LoadFile(filePath.string());
 
 		std::cout << "-------------IMPORT----------\n";
 

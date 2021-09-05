@@ -38,7 +38,7 @@ namespace SceneEditor{
 		GLuint vertexShaderID = -1;
 		GLuint fragmentShaderID = -1;
 		GLuint geometryShaderID = -1;
-		bool enableGeometryShader = GeometryShaderFileName.empty();
+		bool enableGeometryShader = !GeometryShaderFileName.empty();
 
 		CreateShader(VertexShaderFileName, vertexShaderID, GL_VERTEX_SHADER);
 		CreateShader(FragmentShaderFileName, fragmentShaderID, GL_FRAGMENT_SHADER);
