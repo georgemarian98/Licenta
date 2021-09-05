@@ -3,7 +3,7 @@
 
 
 namespace SceneEditor{
-	constexpr float left = -100.0f, right = 100.0f, bottom = -100.0f, top = 100.0f, near_plane = 1.0f, far_plane = 25.5f ;
+	constexpr float left = -200.0f, right = 200.0f, bottom = -200.0f, top = 200.0f, near_plane = 1.0f, far_plane = 100.5f ;
 
 	class LightController {
 	public:

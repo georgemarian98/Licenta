@@ -8,7 +8,7 @@
 #include "Renderer/SkyboxPass.h"
 #include "Renderer/ShadowPass.h"
 
-#define TESTING
+//#define TESTING
 
 namespace SceneEditor{
 
