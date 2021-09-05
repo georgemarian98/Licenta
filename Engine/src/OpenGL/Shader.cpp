@@ -43,7 +43,7 @@ namespace SceneEditor{
 		CreateShader(VertexShaderFileName, vertexShaderID, GL_VERTEX_SHADER);
 		CreateShader(FragmentShaderFileName, fragmentShaderID, GL_FRAGMENT_SHADER);
 		if(enableGeometryShader == true){
-			CreateShader(GeometryShaderFileName, geometryShaderID, GL_VERTEX_SHADER);
+			CreateShader(GeometryShaderFileName, geometryShaderID, GL_GEOMETRY_SHADER);
 		}
 
 		this->m_ShaderProgram = glCreateProgram( );
