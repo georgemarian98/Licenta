@@ -47,11 +47,6 @@ namespace SceneEditor{
 	MeshProperties* ModelController::GetNodeProperties(const std::string& Name)
 	{
 		bool status;
-		if(m_Name != Name){
-			return &FindNodeProperties(Name, status);
-		}
-		else
-			return &m_MainTransforms;
-	
+		return (m_Name != Name) ? &FindNodeProperties(Name, status) : &m_MainTransforms;	
 	}
 }

@@ -57,9 +57,6 @@ namespace SceneEditor{
         glDrawElements(GL_TRIANGLES, (GLsizei)m_Indices.size( ), GL_UNSIGNED_INT, 0);
         m_Vertexbuffer->Unbind();
 
-        for (uint32_t index = 0; index < i; index++) {
-            glActiveTexture(GL_TEXTURE0 + index);
-
-        }
+        glActiveTexture(GL_TEXTURE0);
     }
 }
