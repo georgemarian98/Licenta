@@ -8,7 +8,7 @@
 #include "Renderer/SkyboxPass.h"
 #include "Renderer/ShadowPass.h"
 
-//#define TESTING
+#define TESTING
 
 namespace SceneEditor{
 
@@ -50,14 +50,11 @@ namespace SceneEditor{
 		UIManager::UpdateNumberVertices(aux);
 
 #else 
-		Serializer imp;
-		m_Scene = imp.ImportScene("C:\\Users\\George\\Desktop\\Scene");
+		//Serializer imp;
+		m_Scene = Serializer::ImportScene("C:\\Users\\georg\\Desktop\\Scene");
 #endif // 1
-
-
 		
 		UIManager::SetLightController(m_Scene->GetLightController( ));
-
 
 		glfwSetWindowSizeCallback(m_Window, [ ](GLFWwindow* window, int width, int height){
 			auto app = Application::GetInstance( );
@@ -69,6 +66,7 @@ namespace SceneEditor{
 			app->MouseInput(window, xpos, ypos);
 		});
 
+		InitializeUI();
 		InitializeHandlers();
 	}
 
@@ -172,11 +170,14 @@ namespace SceneEditor{
 
 	}
 
+	void Application::InitializeUI()
+	{
+		UIManager::Initiliaze(m_Window, m_Camera.GetMovementSpeed());
+	}
+
 	void Application::InitializeHandlers()
 	{
 		// Setup ImGui
-		UIManager::Initiliaze(m_Window, m_Camera.GetMovementSpeed());
-
 		UIManager::SetSkyboxFunction([&](const std::string& Path) {
 
 			if (Path.empty() == true)

@@ -22,6 +22,7 @@ namespace SceneEditor{
 		Application( ) = default;
 		Application(const char* Name);
 
+		void InitializeUI();
 		void InitializeHandlers();
 
 		void KeyboardInput( );
