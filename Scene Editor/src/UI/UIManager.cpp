@@ -96,7 +96,7 @@ namespace SceneEditor{
 				if(ImGui::BeginMenu("Import")){
 					if (ImGui::MenuItem("Import Skybox")) UIManager::SetSkybox();
 					if(ImGui::MenuItem("Import Object")) UIManager::ImportModel( );
-					if(ImGui::MenuItem("Import Scene")) UIManager::ImportScene( );
+					if(ImGui::MenuItem("Import Scene Models")) UIManager::ImportSceneModels( );
 					ImGui::EndMenu( );
 				}
 				if(ImGui::MenuItem("Export Scene")) UIManager::ExportScene();
@@ -279,7 +279,7 @@ namespace SceneEditor{
 		
 	}
 
-	void UIManager::ImportScene( )
+	void UIManager::ImportSceneModels( )
 	{
 		static FileDialog modelDialog(L"Scene (*.yaml)\0*.yaml\0All (*.*)\0*.*\0");
 

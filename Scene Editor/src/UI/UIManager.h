@@ -58,7 +58,7 @@ namespace SceneEditor{
 
 		static void SetSkybox( );
 		static void ImportModel( );
-		static void ImportScene( );
+		static void ImportSceneModels( );
 		static void ExportScene( );
 
 	private:
