@@ -177,11 +177,7 @@ namespace SceneEditor{
 		importedScene->m_Light->SetSpecular(rootData["Light Specular"].as<float>( ));
 
 		Shader::m_Directory = FolderPath / "shaders";
-		//uint32_t width = 1920, height = 1080;
-		//std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", width, height);
-		//importedScene->AddPass(shadowPass);
-		std::unique_ptr<Framebuffer> aux;
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", aux);
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
 		importedScene->AddPass(renderPass);
 
 		YAML::Node skybox = rootData["Skybox"];

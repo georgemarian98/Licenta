@@ -32,11 +32,9 @@ namespace SceneEditor{
 
 		m_Scene = std::make_unique<Scene>( );
 		m_SceneBuffer = std::make_unique<Framebuffer>(m_Width, m_Height);
-#ifndef TESTING		
-		//std::unique_ptr<Pass> shadowPass = std::make_unique<ShadowPass>("shadow_vertex.glsl", "shadow_fragment.glsl", m_Width, m_Height);
-		//m_Scene->AddPass(shadowPass);
-		
-		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl", m_SceneBuffer);
+
+#ifndef TESTING				
+		std::unique_ptr<Pass> renderPass = std::make_unique<RenderPass>("texture_vertex.glsl", "texture_fragment.glsl");
 		m_Scene->AddPass(renderPass);
 
 		std::shared_ptr<SkyBox> Skybox = std::make_shared<SkyBox>();
