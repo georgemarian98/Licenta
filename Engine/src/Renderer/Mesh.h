@@ -8,7 +8,6 @@ namespace SceneEditor{
     class Mesh{
     public:
         Mesh(std::vector<Vertex>& Vertices, std::vector<uint32_t>& Indices, std::vector<Texture>& Textures);
-        ~Mesh();
 
         void Draw(const std::unique_ptr<Shader>& Shader);
 

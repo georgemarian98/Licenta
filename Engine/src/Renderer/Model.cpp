@@ -179,8 +179,7 @@ namespace SceneEditor{
         std::string filename = m_Directory + '\\' + Path;
 
         uint32_t textureID;
-        glGenTextures(1, &textureID);
-
+     
         int width, height, nrComponents;
         uint8_t* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);
         if(data != nullptr){
@@ -202,6 +201,7 @@ namespace SceneEditor{
                 break;
             }
 
+            glGenTextures(1, &textureID);
             glBindTexture(GL_TEXTURE_2D, textureID);
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);

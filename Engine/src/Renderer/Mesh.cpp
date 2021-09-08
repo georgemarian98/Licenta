@@ -40,13 +40,6 @@ namespace SceneEditor{
 
     }
 
-    Mesh::~Mesh()
-    {
-        for (Texture& texture : m_Textures) {
-            glDeleteTextures(1, &texture.id);
-        }
-    }
-
     void Mesh::Draw(const std::unique_ptr<Shader>& shader)
     {    
         uint32_t i = 0;
