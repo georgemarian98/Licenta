@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Model.h"
 
+#include "Model.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
@@ -97,23 +97,23 @@ namespace SceneEditor{
             Vertex vertex;
 
             // positions
-            memcpy(glm::value_ptr(vertex.Position), &ImportedMesh->mVertices[i], 3 * sizeof(float));
+            memcpy(glm::value_ptr(vertex.Position), &ImportedMesh->mVertices[i], sizeof(glm::vec3));
 
             //normals
             if(ImportedMesh->HasNormals( )){
-                memcpy(glm::value_ptr(vertex.Normal), &ImportedMesh->mNormals[i], 3 * sizeof(float));
+                memcpy(glm::value_ptr(vertex.Normal), &ImportedMesh->mNormals[i], sizeof(glm::vec3));
             }
 
             if(ImportedMesh->mTextureCoords[0])
             {
                 //texture coordinates
-                memcpy(glm::value_ptr(vertex.TexCoords), &ImportedMesh->mTextureCoords[0][i], 2 * sizeof(float));
+                memcpy(glm::value_ptr(vertex.TexCoords), &ImportedMesh->mTextureCoords[0][i], sizeof(glm::vec2));
 
                 // tangent
-                memcpy(glm::value_ptr(vertex.Tangent), &ImportedMesh->mTangents[i], 3 * sizeof(float));
+                memcpy(glm::value_ptr(vertex.Tangent), &ImportedMesh->mTangents[i], sizeof(glm::vec3));
 
                 // bitangent
-                memcpy(glm::value_ptr(vertex.Bitangent), &ImportedMesh->mBitangents[i], 3 * sizeof(float));
+                memcpy(glm::value_ptr(vertex.Bitangent), &ImportedMesh->mBitangents[i], sizeof(glm::vec3));
             }
             else
                 vertex.TexCoords = glm::vec2(0.0f, 0.0f);
@@ -149,7 +149,6 @@ namespace SceneEditor{
     std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* Material, aiTextureType Type, TextureType TypeName)
     {
         static std::vector<Texture> loadedTextures;
-
         std::vector<Texture> textures;
         uint32_t textureCount = Material->GetTextureCount(Type);
 
@@ -178,7 +177,7 @@ namespace SceneEditor{
     {
         std::string filename = m_Directory + '\\' + Path;
 
-        uint32_t textureID;
+        uint32_t textureID = 0;
      
         int width, height, nrComponents;
         uint8_t* data = stbi_load(filename.c_str( ), &width, &height, &nrComponents, 0);

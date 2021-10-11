@@ -42,10 +42,10 @@ namespace SceneEditor{
 		m_Scene->SetSkybox(Skybox);
 		m_Scene->AddPass(skyboxPass);
 
-		uint64_t aux;
+		/*uint64_t aux;
 		auto temp = m_Scene->AddModel("D:\\3D Models\\nanosuit\\nanosuit.obj", aux);
 		UIManager::AddPannel(temp);
-		UIManager::UpdateNumberVertices(aux);
+		UIManager::UpdateNumberVertices(aux);*/
 
 #else 
 		//Serializer imp;
